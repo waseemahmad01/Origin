@@ -7,7 +7,7 @@ import Button from '../../components/Button/Button';
 
 import theme from '../../theme';
 
-const CreatePassword = () => {
+const CreatePassword = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   return (
@@ -35,7 +35,16 @@ const CreatePassword = () => {
         />
       </View>
 
-      <Button label="Continue" style={{marginTop: 'auto'}} />
+      <Button
+        label="Continue"
+        style={{marginTop: 'auto'}}
+        onPress={() =>
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Wallet'}],
+          })
+        }
+      />
     </View>
   );
 };

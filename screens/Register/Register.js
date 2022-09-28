@@ -19,7 +19,7 @@ const screens = {
   4: CreatePassword,
 };
 
-const Register = () => {
+const Register = ({navigation}) => {
   const [active, setActive] = useState(0);
 
   const handleBackClick = () => {
@@ -54,7 +54,7 @@ const Register = () => {
           ))}
         </View>
         <View style={{flexGrow: 1, marginTop: 39}}>
-          <Component handleContinue={handleContinue} />
+          <Component handleContinue={handleContinue} navigation={navigation} />
         </View>
       </View>
     </SafeAreaView>

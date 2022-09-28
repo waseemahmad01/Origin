@@ -14,6 +14,18 @@ export default {
     color: colors.black,
     fontFamily: 'SF Pro Display',
   },
+  h3: {
+    fontSize: 20,
+    lineHeight: 30,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+  },
+  subtitle1: {
+    fontFamily: 'Inter',
+    fontSize: 15,
+    lineHeight: 26,
+    fontWeight: '400',
+  },
   body1: {
     fontSize: 16,
     fontWeight: '400',

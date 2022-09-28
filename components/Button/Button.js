@@ -3,10 +3,10 @@ import React from 'react';
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 import theme from '../../theme';
 
-const Button = ({label = 'label', style, ...rest}) => {
+const Button = ({label = 'label', style, labelStyle, ...rest}) => {
   return (
     <TouchableOpacity {...rest} style={[styles.container, style]}>
-      <Text style={styles.text}>{label}</Text>
+      <Text style={[styles.text, labelStyle]}>{label}</Text>
     </TouchableOpacity>
   );
 };
