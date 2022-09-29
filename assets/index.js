@@ -19,6 +19,16 @@ const assets = {
   tickGreen: require('./icons/tickGreen.png'),
   starLeg: require('./icons/starLeg.png'),
   star: require('./icons/star.png'),
+  wallet: require('./images/wallet.png'),
+  copyIcon: require('./icons/copyIcon.png'),
+  plus: require('./icons/plus.png'),
+  send: require('./icons/send.png'),
+  store: require('./icons/store.png'),
+  arrowUp: require('./icons/arrowUp.png'),
+  gCoin: require('./icons/gCoin.png'),
+  simpleStar: require('./icons/simpleStar.png'),
+  file: require('./icons/file.png'),
+  giftSm: require('./icons/giftSm.png'),
 };
 
 export default assets;

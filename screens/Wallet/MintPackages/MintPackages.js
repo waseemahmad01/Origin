@@ -35,7 +35,7 @@ const packages = [
   },
 ];
 
-const MintPackages = () => {
+const MintPackages = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.container}>
@@ -53,7 +53,7 @@ const MintPackages = () => {
             </View>
           )}
         />
-        <Button label="Done" />
+        <Button label="Done" onPress={() => navigation.navigate('My-Wallet')} />
       </View>
     </SafeAreaView>
   );

@@ -9,6 +9,7 @@ import SplashScreen from '../screens/SplashScreen/SplashScreen';
 import WalletGeneration from '../screens/Wallet/WalletGeneration/WalletGeneration';
 import FaceIdVerification from '../screens/Wallet/FaceIdVerification/FaceIdVerification';
 import MintPackages from '../screens/Wallet/MintPackages/MintPackages';
+import Wallet from '../screens/Wallet/Wallet/Wallet';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -22,6 +23,7 @@ const StackNavigator = () => {
       <Stack.Screen name="WalletGeneration" component={WalletGeneration} />
       <Stack.Screen name="Face-Id-verify" component={FaceIdVerification} />
       <Stack.Screen name="Mint-Packages" component={MintPackages} />
+      <Stack.Screen name="My-Wallet" component={Wallet} />
     </Stack.Navigator>
   );
 };
@@ -46,7 +48,7 @@ const TabNavigator = () => {
       })}>
       <Tab.Screen
         name="Calls"
-        component={Notification}
+        component={Wallet}
         options={{
           tabBarIcon: ({focused}) => (
             <Image
@@ -61,7 +63,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Messages"
-        component={SplashScreen}
+        component={Wallet}
         options={{
           tabBarIcon: ({focused}) => (
             <Image
@@ -92,7 +94,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="People"
-        component={Notification}
+        component={Wallet}
         options={{
           tabBarIcon: ({focused}) => (
             <Image
@@ -107,7 +109,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={Notification}
+        component={Wallet}
         options={{
           tabBarIcon: ({focused}) => (
             <Image
