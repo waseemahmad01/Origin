@@ -29,6 +29,13 @@ const assets = {
   simpleStar: require('./icons/simpleStar.png'),
   file: require('./icons/file.png'),
   giftSm: require('./icons/giftSm.png'),
+  search: require('./icons/search.png'),
+  qrCode: require('./icons/qrCode.png'),
+  closeIcon: require('./icons/closeIcon.png'),
+  faceIdWhite: require('./icons/faceIdWhite.png'),
+  success: require('./images/success.png'),
+  crossIcon: require('./icons/crossIcon.png'),
+  success2: require('./images/success2.png'),
 };
 
 export default assets;

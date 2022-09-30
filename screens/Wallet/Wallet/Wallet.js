@@ -13,6 +13,7 @@ import {
   Image,
   StatusBar,
   Platform,
+  Modal,
 } from 'react-native';
 
 const isIos = Platform.OS === 'ios';
@@ -22,174 +23,253 @@ import assets from '../../../assets';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import AssetsTab from './AssetsTab';
 import RewardsTab from './RewardsTab';
+import Input from '../../../components/Input/Input';
+import Button from '../../../components/GButton/GButton';
 
-const Wallet = () => {
+const Wallet = ({navigation}) => {
   const [tab, setTab] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [add, setAdd] = useState(false);
 
   return (
-    <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{flexGrow: 1}}>
-        <View style={[styles.header, styles.row]}>
-          <Text style={styles.headerTitle}>Wallet</Text>
+    <>
+      <LinearGradient
+        style={{
+          ...styles.gradient,
+          paddingTop: isIos ? 0 : StatusBar.currentHeight,
+        }}
+        colors={[theme.COLORS.primary, theme.COLORS.secondary]}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}>
+        <StatusBar translucent={true} backgroundColor={'transparent'} />
+        <SafeAreaView style={{flexGrow: 1}}>
+          <View style={[styles.header, styles.row]}>
+            <Text style={styles.headerTitle}>Wallet</Text>
 
-          <View style={styles.package}>
-            <View style={styles.packageNameContainer}>
-              <LinearTextGradient
-                style={styles.gradientText}
-                locations={[0, 1]}
+            <View style={styles.package}>
+              <View style={styles.packageNameContainer}>
+                <LinearTextGradient
+                  style={styles.gradientText}
+                  locations={[0, 1]}
+                  colors={[theme.COLORS.primary, theme.COLORS.secondary]}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}>
+                  <Text>Legendary</Text>
+                </LinearTextGradient>
+              </View>
+              <LinearGradient
+                style={styles.logoContainer}
                 colors={[theme.COLORS.primary, theme.COLORS.secondary]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}>
-                <Text>Legendary</Text>
-              </LinearTextGradient>
+                <Image source={assets.starLeg} />
+              </LinearGradient>
+              {/* </View> */}
             </View>
-            <LinearGradient
-              style={styles.logoContainer}
-              colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}>
-              <Image source={assets.starLeg} />
-            </LinearGradient>
-            {/* </View> */}
           </View>
-        </View>
-        <View style={styles.walletLogo}>
-          <Image source={assets.wallet} />
-        </View>
+          <View style={styles.walletLogo}>
+            <Image source={assets.wallet} />
+          </View>
 
-        <View style={styles.mainContainer}>
-          <View style={styles.walletAddress}>
-            <Text style={styles.walletAddressText}>0x9E7e...4A1F</Text>
-            <Image
-              source={assets.copyIcon}
-              style={{
-                height: 16,
-                width: 16,
-                marginLeft: 8,
-              }}
-              resizeMode="contain"
-            />
-          </View>
-          <Text style={styles.balance}>10,000 GCoins</Text>
-          <View style={styles.actionContainer}>
-            <View style={styles.action}>
-              <IconButton>
-                <Image
-                  source={assets.plus}
-                  resizeMode="center"
-                  style={{
-                    height: 18,
-                    width: 18,
-                  }}
-                />
-              </IconButton>
-              <Text style={styles.actionText}>Add</Text>
+          <View style={styles.mainContainer}>
+            <View style={styles.walletAddress}>
+              <Text style={styles.walletAddressText}>0x9E7e...4A1F</Text>
+              <Image
+                source={assets.copyIcon}
+                style={{
+                  height: 16,
+                  width: 16,
+                  marginLeft: 8,
+                }}
+                resizeMode="contain"
+              />
             </View>
-            <View style={styles.action}>
-              <IconButton>
-                <Image
-                  source={assets.send}
-                  resizeMode="center"
-                  style={{
-                    height: 18,
-                    width: 18,
-                  }}
-                />
-              </IconButton>
-              <Text style={styles.actionText}>Send</Text>
+            <Text style={styles.balance}>10,000 GCoins</Text>
+            <View style={styles.actionContainer}>
+              <View style={styles.action}>
+                <IconButton onPress={() => setModalVisible(true)}>
+                  <Image
+                    source={assets.plus}
+                    resizeMode="center"
+                    style={{
+                      height: 18,
+                      width: 18,
+                    }}
+                  />
+                </IconButton>
+                <Text style={styles.actionText}>Add</Text>
+              </View>
+              <View style={styles.action}>
+                <IconButton onPress={() => navigation.navigate('Send-Search')}>
+                  <Image
+                    source={assets.send}
+                    resizeMode="center"
+                    style={{
+                      height: 18,
+                      width: 18,
+                    }}
+                  />
+                </IconButton>
+                <Text style={styles.actionText}>Send</Text>
+              </View>
+              <View style={styles.action}>
+                <IconButton>
+                  <Image
+                    source={assets.store}
+                    resizeMode="center"
+                    style={{
+                      height: 18,
+                      width: 18,
+                    }}
+                  />
+                </IconButton>
+                <Text style={styles.actionText}>Marketplace</Text>
+              </View>
             </View>
-            <View style={styles.action}>
-              <IconButton>
-                <Image
-                  source={assets.store}
-                  resizeMode="center"
-                  style={{
-                    height: 18,
-                    width: 18,
-                  }}
-                />
-              </IconButton>
-              <Text style={styles.actionText}>Marketplace</Text>
-            </View>
-          </View>
-          {/* tabs */}
+            {/* tabs */}
 
-          <View style={styles.tabs}>
-            <Pressable onPress={() => setTab(0)}>
-              <LinearGradient
-                style={styles.tab}
-                colors={
-                  tab === 0
-                    ? [theme.COLORS.primary, theme.COLORS.secondary]
-                    : ['#F5FCF9', '#F5FCF9']
-                }
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}>
-                <Text
-                  style={{
-                    ...styles.tabLabel,
-                    color: tab === 0 ? '#F5FCF9' : '#4A4A5D',
-                  }}>
-                  Transactions
-                </Text>
-              </LinearGradient>
-            </Pressable>
-            <Pressable style={{marginHorizontal: 12}} onPress={() => setTab(1)}>
-              <LinearGradient
-                style={styles.tab}
-                colors={
-                  tab === 1
-                    ? [theme.COLORS.primary, theme.COLORS.secondary]
-                    : ['#F5FCF9', '#F5FCF9']
-                }
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}>
-                <Text
-                  style={{
-                    ...styles.tabLabel,
-                    color: tab === 1 ? '#F5FCF9' : '#4A4A5D',
-                  }}>
-                  Assets
-                </Text>
-              </LinearGradient>
-            </Pressable>
-            <Pressable onPress={() => setTab(2)}>
-              <LinearGradient
-                style={styles.tab}
-                colors={
-                  tab === 2
-                    ? [theme.COLORS.primary, theme.COLORS.secondary]
-                    : ['#F5FCF9', '#F5FCF9']
-                }
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}>
-                <Text
-                  style={{
-                    ...styles.tabLabel,
-                    color: tab === 2 ? '#F5FCF9' : '#4A4A5D',
-                  }}>
-                  Rewards
-                </Text>
-              </LinearGradient>
-            </Pressable>
+            <View style={styles.tabs}>
+              <Pressable onPress={() => setTab(0)}>
+                <LinearGradient
+                  style={styles.tab}
+                  colors={
+                    tab === 0
+                      ? [theme.COLORS.primary, theme.COLORS.secondary]
+                      : ['#F5FCF9', '#F5FCF9']
+                  }
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}>
+                  <Text
+                    style={{
+                      ...styles.tabLabel,
+                      color: tab === 0 ? '#F5FCF9' : '#4A4A5D',
+                    }}>
+                    Transactions
+                  </Text>
+                </LinearGradient>
+              </Pressable>
+              <Pressable
+                style={{marginHorizontal: 12}}
+                onPress={() => setTab(1)}>
+                <LinearGradient
+                  style={styles.tab}
+                  colors={
+                    tab === 1
+                      ? [theme.COLORS.primary, theme.COLORS.secondary]
+                      : ['#F5FCF9', '#F5FCF9']
+                  }
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}>
+                  <Text
+                    style={{
+                      ...styles.tabLabel,
+                      color: tab === 1 ? '#F5FCF9' : '#4A4A5D',
+                    }}>
+                    Assets
+                  </Text>
+                </LinearGradient>
+              </Pressable>
+              <Pressable onPress={() => setTab(2)}>
+                <LinearGradient
+                  style={styles.tab}
+                  colors={
+                    tab === 2
+                      ? [theme.COLORS.primary, theme.COLORS.secondary]
+                      : ['#F5FCF9', '#F5FCF9']
+                  }
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}>
+                  <Text
+                    style={{
+                      ...styles.tabLabel,
+                      color: tab === 2 ? '#F5FCF9' : '#4A4A5D',
+                    }}>
+                    Rewards
+                  </Text>
+                </LinearGradient>
+              </Pressable>
+            </View>
+            {/* tabs view */}
+            <View style={styles.tabsView}>
+              {tab === 0 && <TransactionsTab />}
+              {tab === 1 && <AssetsTab />}
+              {tab === 2 && <RewardsTab />}
+            </View>
           </View>
-          {/* tabs view */}
-          <View style={styles.tabsView}>
-            {tab === 0 && <TransactionsTab />}
-            {tab === 1 && <AssetsTab />}
-            {tab === 2 && <RewardsTab />}
+        </SafeAreaView>
+      </LinearGradient>
+      <Modal visible={modalVisible} animationType="fade" transparent={true}>
+        <View style={styles.modal}>
+          <View style={styles.modalContent}>
+            {add ? (
+              <>
+                <Image source={assets.success2} style={{marginTop: 24}} />
+                <LinearTextGradient
+                  style={styles.transactTitle}
+                  locations={[0, 1]}
+                  colors={[theme.COLORS.primary, theme.COLORS.secondary]}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}>
+                  <Text>Transaction Successful</Text>
+                </LinearTextGradient>
+                <Text style={styles.subtitle}>
+                  You just added
+                  <Text style={{fontWeight: '500'}}>5.00 Gcoins</Text> to your
+                  wallet from this wallet{' '}
+                  <Text style={{fontWeight: '500'}}>@johnsmith 0x...4A1F</Text>
+                </Text>
+                <View style={{width: '100%', marginTop: 48}}>
+                  <Button
+                    label="Done"
+                    onPress={() => {
+                      setAdd(false);
+                      setModalVisible(false);
+                    }}
+                  />
+                </View>
+              </>
+            ) : (
+              <>
+                <Text style={styles.modalTitle}>Add Gcoins</Text>
+                <View style={{width: '100%'}}>
+                  <View>
+                    <Input title="Enter Your Wallet Address (0x….)" />
+                  </View>
+                  <View style={{marginTop: 20}}>
+                    <Input title="Amount" />
+                  </View>
+                  <View style={{marginTop: 24}}>
+                    <Button label="Send Me" onPress={() => setAdd(true)} />
+                  </View>
+                </View>
+                <Pressable
+                  style={styles.closeButton}
+                  onPress={() => setModalVisible(false)}>
+                  <Image
+                    source={assets.crossIcon}
+                    style={{
+                      height: 12,
+                      width: 12,
+                    }}
+                    resizeMode="cover"
+                  />
+                </Pressable>
+              </>
+            )}
           </View>
         </View>
-      </SafeAreaView>
-    </LinearGradient>
+      </Modal>
+      {modalVisible && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            width: '100%',
+            height: StatusBar.currentHeight,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+          }}></View>
+      )}
+    </>
   );
 };
 
@@ -314,5 +394,57 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 16,
     paddingHorizontal: 24,
+  },
+  modal: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    alignSelf: 'flex-end',
+    backgroundColor: 'white',
+    width: '100%',
+    paddingBottom: 40,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    position: 'relative',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+  modalTitle: {
+    ...theme.TYPOGRAPHY.h2,
+    fontSize: 24,
+    fontWeight: '700',
+    lineHeight: 34,
+    fontFamily: 'Inter',
+    marginBottom: 24,
+  },
+  closeButton: {
+    position: 'absolute',
+    height: 32,
+    width: 32,
+    borderRadius: 32 / 2,
+    backgroundColor: '#EDEDEF',
+    top: 16,
+    right: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+  },
+  transactTitle: {
+    ...theme.TYPOGRAPHY.h2,
+    fontSize: 24,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+    marginBottom: 16,
+    marginTop: -15,
+  },
+  subtitle: {
+    ...theme.TYPOGRAPHY.subtitle1,
+    fontWeight: '400',
+    color: '#6E6E7E',
+    textAlign: 'center',
+    paddingHorizontal: 10,
   },
 });

@@ -1,18 +1,9 @@
 import React from 'react';
 
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Platform,
-  Image,
-} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import assets from '../../../assets';
 import theme from '../../../theme';
-
-const isIos = Platform.OS === 'ios';
 
 const AssetsTab = () => {
   return (
@@ -66,7 +57,6 @@ const AssetsTab = () => {
           </View>
         </ScrollView>
       </View>
-      {isIos && <View style={{height: 80}}></View>}
     </>
   );
 };

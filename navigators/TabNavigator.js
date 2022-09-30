@@ -10,6 +10,8 @@ import WalletGeneration from '../screens/Wallet/WalletGeneration/WalletGeneratio
 import FaceIdVerification from '../screens/Wallet/FaceIdVerification/FaceIdVerification';
 import MintPackages from '../screens/Wallet/MintPackages/MintPackages';
 import Wallet from '../screens/Wallet/Wallet/Wallet';
+import SendSearch from '../screens/Wallet/SendSearch/SendSearch';
+import SendEnterAmount from '../screens/Wallet/SendEnterAmount/SendEnterAmount';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -21,8 +23,6 @@ const StackNavigator = () => {
         headerShown: false,
       }}>
       <Stack.Screen name="WalletGeneration" component={WalletGeneration} />
-      <Stack.Screen name="Face-Id-verify" component={FaceIdVerification} />
-      <Stack.Screen name="Mint-Packages" component={MintPackages} />
       <Stack.Screen name="My-Wallet" component={Wallet} />
     </Stack.Navigator>
   );
@@ -43,7 +43,7 @@ const TabNavigator = () => {
         tabBarActiveTintColor: '#1D1D35',
         tabBarInactiveTintColor: '#6E6E7E',
         tabBarStyle: {
-          display: getTabBarVisibility(route),
+          // display: getTabBarVisibility(route),
         },
       })}>
       <Tab.Screen
@@ -129,12 +129,17 @@ const TabNavigator = () => {
 
 export default TabNavigator;
 
-const getTabBarVisibility = route => {
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Feed';
-  console.log(routeName);
-  if (routeName === 'Face-Id-verify' || routeName === 'Mint-Packages') {
-    return 'none';
-  } else {
-    return 'flex';
-  }
-};
+// const getTabBarVisibility = route => {
+//   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Feed';
+
+//   if (
+//     routeName === 'Face-Id-verify' ||
+//     routeName === 'Mint-Packages' ||
+//     routeName === 'Send-Search' ||
+//     routeName === 'Send-EnterAmount'
+//   ) {
+//     return 'none';
+//   } else {
+//     return 'flex';
+//   }
+// };
