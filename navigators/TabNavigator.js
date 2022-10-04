@@ -12,6 +12,7 @@ import MintPackages from '../screens/Wallet/MintPackages/MintPackages';
 import Wallet from '../screens/Wallet/Wallet/Wallet';
 import SendSearch from '../screens/Wallet/SendSearch/SendSearch';
 import SendEnterAmount from '../screens/Wallet/SendEnterAmount/SendEnterAmount';
+import Chat from '../screens/Chat/Chat/Chat';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -63,7 +64,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Messages"
-        component={Wallet}
+        component={Chat}
         options={{
           tabBarIcon: ({focused}) => (
             <Image

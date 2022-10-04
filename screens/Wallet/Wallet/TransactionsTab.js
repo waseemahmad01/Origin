@@ -98,6 +98,5 @@ const styles = StyleSheet.create({
     ...theme.TYPOGRAPHY.body2,
     color: '#1D1D35',
     fontWeight: '400',
-    fontFamily: 'Inter',
   },
 });

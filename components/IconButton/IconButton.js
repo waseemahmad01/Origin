@@ -5,9 +5,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Pressable, StyleSheet} from 'react-native';
 import theme from '../../theme';
 
-const IconButton = ({children, onPress, style}) => {
+const IconButton = ({children, onPress, style, containerStyle}) => {
   return (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={onPress} style={containerStyle}>
       <LinearGradient
         style={{
           ...styles.gradient,

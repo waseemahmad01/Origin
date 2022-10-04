@@ -36,6 +36,7 @@ const assets = {
   success: require('./images/success.png'),
   crossIcon: require('./icons/crossIcon.png'),
   success2: require('./images/success2.png'),
+  addUser: require('./icons/addUser.png'),
 };
 
 export default assets;
