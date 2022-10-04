@@ -1,18 +1,27 @@
 import React from 'react';
 
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import theme from '../../theme';
 
-const GButton = ({label = 'label', style, ...rest}) => {
+const GButton = ({label = 'label', style, loading, ...rest}) => {
   return (
     <LinearGradient
       style={[styles.container, style]}
       colors={[theme.COLORS.primary, theme.COLORS.secondary]}
       start={{x: 0, y: 0}}
       end={{x: 1, y: 0}}>
-      <TouchableOpacity {...rest} style={[styles.container]}>
-        <Text style={styles.text}>{label}</Text>
+      <TouchableOpacity {...rest} style={[styles.container]} disabled={loading}>
+        {loading ? (
+          <ActivityIndicator color={theme.COLORS.white} />
+        ) : (
+          <Text style={styles.text}>{label}</Text>
+        )}
       </TouchableOpacity>
     </LinearGradient>
   );

@@ -20,6 +20,7 @@ const InputField = ({
   Icon,
   error,
   secureTextEntry,
+  isValid,
   ...rest
 }) => {
   const [, setIsFocused] = useState(false);
@@ -51,6 +52,12 @@ const InputField = ({
       useNativeDriver: false,
     }).start();
   }, [anim, floatLabel]);
+
+  useEffect(() => {
+    if (value.length) {
+      setFloatLabel(true);
+    }
+  }, [value]);
 
   return (
     <>
@@ -99,7 +106,7 @@ const InputField = ({
               <Image source={assets.eyeSlash} />
             </Pressable>
           )}
-          {value.length > 0 && !error && !secureTextEntry && (
+          {isValid && (
             <View style={styles.icon}>
               <Image
                 source={assets.verify}
@@ -140,10 +147,8 @@ const styles = StyleSheet.create({
     fontFamily: 'SF Pro Display',
   },
   errorMsg: {
-    color: 'red',
-    fontSize: 14,
-    marginTop: 4,
-    fontFamily: 'SF Pro Display',
+    ...theme.TYPOGRAPHY.error,
+    marginTop: 5,
   },
   icon: {
     position: 'absolute',

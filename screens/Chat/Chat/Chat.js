@@ -21,7 +21,7 @@ import assets from '../../../assets';
 
 const isIos = Platform.OS === 'ios';
 
-const Chat = () => {
+const Chat = ({navigation}) => {
   const [tab, setTab] = useState(0);
   return (
     <LinearGradient
@@ -36,7 +36,11 @@ const Chat = () => {
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Chats</Text>
+            <Text
+              style={styles.headerTitle}
+              onPress={() => navigation.navigate('Chat-search')}>
+              Chats
+            </Text>
             <View style={styles.userInfo}>
               <View>
                 <Image

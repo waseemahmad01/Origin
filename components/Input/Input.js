@@ -1,17 +1,21 @@
 import React, {useState} from 'react';
 
-import {View, Text, StyleSheet, TextInput} from 'react-native';
+import {Text, StyleSheet, TextInput, KeyboardAvoidingView} from 'react-native';
 import theme from '../../theme';
 
-const Input = ({title = 'Label', ...rest}) => {
+const Input = ({title = 'Label', error, ...rest}) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="position">
       <TextInput
         style={{
           ...styles.input,
-          borderColor: isFocused ? '#6E6E7E' : 'transparent',
+          borderColor: error
+            ? theme.COLORS.error
+            : isFocused
+            ? '#6E6E7E'
+            : 'transparent',
         }}
         placeholder={title}
         placeholderTextColor="#6E6E7E"
@@ -19,7 +23,8 @@ const Input = ({title = 'Label', ...rest}) => {
         onBlur={() => setIsFocused(false)}
         {...rest}
       />
-    </View>
+      {error && <Text style={styles.errMsg}>{error}</Text>}
+    </KeyboardAvoidingView>
   );
 };
 
@@ -38,5 +43,10 @@ const styles = StyleSheet.create({
     color: '#1D1D35',
     lineHeight: null,
     borderWidth: 1,
+  },
+  errMsg: {
+    ...theme.TYPOGRAPHY.error,
+    marginTop: 5,
+    paddingHorizontal: 10,
   },
 });

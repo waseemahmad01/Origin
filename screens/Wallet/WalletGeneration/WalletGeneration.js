@@ -8,11 +8,15 @@ import {
   StyleSheet,
   Modal,
   Pressable,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import {LinearTextGradient} from 'react-native-text-gradient';
 import GButton from '../../../components/GButton/GButton';
 import assets from '../../../assets';
 import theme from '../../../theme';
+
+const isIos = Platform.OS === 'ios';
 
 const WalletGeneration = ({navigation}) => {
   const [showModal, setShowModal] = useState(false);
@@ -20,7 +24,12 @@ const WalletGeneration = ({navigation}) => {
     <>
       <View style={{flex: 1, backgroundColor: theme.COLORS.white}}>
         <SafeAreaView style={{flex: 1}}>
-          <View style={styles.main}>
+          <StatusBar translucent={true} backgroundColor="transparent" />
+          <View
+            style={{
+              ...styles.main,
+              marginTop: isIos ? 0 : StatusBar.currentHeight,
+            }}>
             <Text style={styles.title}>Wallet</Text>
           </View>
           <View style={styles.infoContainer}>
