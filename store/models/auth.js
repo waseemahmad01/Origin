@@ -1,5 +1,5 @@
 import {createModel} from '@rematch/core';
-import {getOTP, userLogin, userSignUp, verifyOTP} from '../../api';
+import {getOTP, userData, userLogin, userSignUp, verifyOTP} from '../../api';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -114,6 +114,18 @@ export const auth = createModel()({
           index: 0,
           routes: [{name: 'Wallet'}],
         });
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.auth.setLoading(false);
+      }
+    },
+    async getUserData() {
+      try {
+        dispatch.auth.setLoading(true);
+        const {data} = await userData();
+        console.log(data);
+        dispatch.wallet.setPublicAddress(data?.origen_public_wallet_address);
       } catch (err) {
         console.log(err.message);
       } finally {

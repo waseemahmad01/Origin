@@ -22,6 +22,7 @@ import TransactionSuccess from '../screens/Wallet/TransactionSuccess/Transaction
 import Login from '../screens/Login/Login';
 import RequireAuthentication from '../screens/RequireAuth/RequireAuth';
 import ChatSearch from '../screens/Chat/ChatSearch/ChatSearch';
+import {navigationRef} from '../utils/RootNavigation';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,14 +38,13 @@ const StackNavigator = () => {
     const token = await AsyncStorage.getItem('token');
     if (token) {
       console.log(token);
+      dispatch.auth.getUserData();
       dispatch.auth.setLoggedIn(true);
     }
     if (visit === 'true') {
       setVisited(true);
     }
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const StackNavigator = () => {
       {loading ? (
         <SplashScreen />
       ) : (
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <Stack.Navigator
             initialRouteName={loggedIn && 'Wallet'}
             screenOptions={{

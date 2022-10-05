@@ -44,7 +44,7 @@ const UserProfile = ({handleContinue}) => {
 
   return (
     <View style={{flexGrow: 1}}>
-      <ScrollView style={{flexGrow: 1}}>
+      <ScrollView style={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
         <Text style={[theme.TYPOGRAPHY.h2]}>
           What is your name and username?
         </Text>

@@ -97,6 +97,8 @@ const InputField = ({
             value={value}
             onChangeText={onChange}
             secureTextEntry={password}
+            autoCapitalize={false}
+            autoCorrect={false}
             {...rest}
           />
           {secureTextEntry && (
@@ -136,6 +138,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: theme.COLORS.black,
     fontFamily: 'SF Pro Display',
+    textTransform: 'none',
   },
   label: {
     position: 'absolute',

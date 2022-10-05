@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -13,16 +13,55 @@ import {
   Pressable,
 } from 'react-native';
 
+import {useDispatch, useSelector} from 'react-redux';
+
+import {object, string} from 'yup';
+
 import theme from '../../../theme';
 import assets from '../../../assets';
 import Button from '../../../components/GButton/GButton';
 import Input from '../../../components/Input/Input';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {validate} from '../../../utils/validations';
 
 const isIos = Platform.OS === 'ios';
 
+const schema = object({
+  target_wallet_address: string().required().label('Wallet address'),
+  amount_of_tokens: string().required().label('Amount'),
+});
+
 const SendEnterAmount = ({navigation}) => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.users.selectedUser);
+  const loading = useSelector(state => state.wallet.loading);
+  const balance = useSelector(state => state.wallet.balance);
+  const [formData, setFormData] = useState({
+    target_wallet_address: user?.origen_public_wallet_address || '',
+    amount_of_tokens: '',
+  });
+
+  const [errors, setErrors] = useState(null);
+
+  const handleChange = (text, name) => {
+    setFormData(prev => ({...prev, [name]: text}));
+    setErrors(prev => ({...prev, [name]: null}));
+  };
+
+  const handleTransferToken = async () => {
+    const validationErrors = await validate(schema, formData);
+    if (validationErrors) {
+      return setErrors(validationErrors);
+    }
+    if (formData.amount_of_tokens <= 0) {
+      return setErrors(prev => ({
+        ...prev,
+        amount_of_tokens: 'Amount must be greater than 0',
+      }));
+    }
+    dispatch.wallet.transferToken({formData, navigation});
+  };
   return (
     <LinearGradient
       style={{
@@ -75,27 +114,43 @@ const SendEnterAmount = ({navigation}) => {
         <View style={styles.bottom}>
           <View>
             <View>
-              <Input title="Username" />
+              <Input
+                title="Wallet address"
+                value={formData.target_wallet_address}
+                disabled
+                error={errors?.target_wallet_address}
+              />
             </View>
             <View style={{marginTop: 20}}>
-              <Input title="Amount" />
+              <Input
+                title="Amount"
+                value={formData.amount_of_tokens}
+                onChangeText={text => handleChange(text, 'amount_of_tokens')}
+                keyboardType="number-pad"
+                error={errors?.amount_of_tokens}
+              />
             </View>
             <Text style={styles.balance}>
               Balance:{' '}
-              <Text style={{color: theme.COLORS.primary}}>2.6345 GCoins</Text>
+              <Text style={{color: theme.COLORS.primary}}>
+                {balance} GCoins
+              </Text>
             </Text>
           </View>
 
           <Button
             label="Send"
             style={{marginTop: 'auto'}}
-            onPress={async () => {
-              const verified = await AsyncStorage.getItem('verify');
-              if (verified !== 'true') {
-                return navigation.navigate('Send-Verify');
-              }
-              navigation.navigate('Transaction-success');
-            }}
+            onPress={handleTransferToken}
+            loading={loading}
+            // onPress={() => {
+            //   handleTransferToken();
+            //   // const verified = await AsyncStorage.getItem('verify');
+            //   // if (verified !== 'true') {
+            //   //   return navigation.navigate('Send-Verify');
+            //   // }
+            //   // navigation.navigate('Transaction-success');
+            // }}
           />
         </View>
 

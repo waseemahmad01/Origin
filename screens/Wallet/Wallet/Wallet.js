@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import LinearGradient from 'react-native-linear-gradient';
 import {LinearTextGradient} from 'react-native-text-gradient';
 import IconButton from '../../../components/IconButton/IconButton';
 import TransactionsTab from './TransactionsTab';
+import {useSelector, useDispatch} from 'react-redux';
 
 import {
   View,
@@ -14,22 +15,69 @@ import {
   StatusBar,
   Platform,
   Modal,
+  Alert,
+  Pressable,
+  TouchableOpacity,
 } from 'react-native';
 
-const isIos = Platform.OS === 'ios';
+import Clipboard from '@react-native-community/clipboard';
+import {object, string} from 'yup';
 
 import theme from '../../../theme';
 import assets from '../../../assets';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import AssetsTab from './AssetsTab';
 import RewardsTab from './RewardsTab';
 import Input from '../../../components/Input/Input';
 import Button from '../../../components/GButton/GButton';
 
+import {truncateString} from '../../../utils';
+import {validate} from '../../../utils/validations';
+
+const isIos = Platform.OS === 'ios';
+
+const schema = object({
+  target_wallet_address: string().required().label('Wallet address'),
+  amount_of_tokens: string().required().label('Amount'),
+});
+
 const Wallet = ({navigation}) => {
+  const dispatch = useDispatch();
+  const wallet = useSelector(state => state.wallet.publicAddress);
+  const balance = useSelector(state => state.wallet.balance);
+  const loading = useSelector(state => state.wallet.loading);
   const [tab, setTab] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [add, setAdd] = useState(false);
+
+  const [formData, setFormData] = useState({
+    target_wallet_address: wallet || '',
+    amount_of_tokens: '',
+  });
+
+  const [errors, setErrors] = useState(null);
+
+  const handleChange = (text, name) => {
+    setFormData(prev => ({...prev, [name]: text}));
+    setErrors(prev => ({...prev, [name]: null}));
+  };
+
+  const handleCopyAddress = val => {
+    Alert.alert('Success', 'Wallet address copied to clipboard');
+    Clipboard.setString(val);
+  };
+
+  const handleGainToken = async () => {
+    const validationErrors = await validate(schema, formData);
+    if (validationErrors) {
+      return setErrors(validationErrors);
+    }
+    dispatch.wallet.addTokens({formData, setAdd});
+  };
+
+  useEffect(() => {
+    dispatch.wallet.getBalance();
+    dispatch.users.getAllUsers();
+  }, []);
 
   return (
     <>
@@ -72,8 +120,12 @@ const Wallet = ({navigation}) => {
           </View>
 
           <View style={styles.mainContainer}>
-            <View style={styles.walletAddress}>
-              <Text style={styles.walletAddressText}>0x9E7e...4A1F</Text>
+            <TouchableOpacity
+              onPress={() => handleCopyAddress(wallet)}
+              style={styles.walletAddress}>
+              <Text style={styles.walletAddressText}>
+                {truncateString(wallet)}
+              </Text>
               <Image
                 source={assets.copyIcon}
                 style={{
@@ -83,8 +135,8 @@ const Wallet = ({navigation}) => {
                 }}
                 resizeMode="contain"
               />
-            </View>
-            <Text style={styles.balance}>10,000 GCoins</Text>
+            </TouchableOpacity>
+            <Text style={styles.balance}>{balance} GCoins</Text>
             <View style={styles.actionContainer}>
               <View style={styles.action}>
                 <IconButton onPress={() => setModalVisible(true)}>
@@ -233,13 +285,32 @@ const Wallet = ({navigation}) => {
                 <Text style={styles.modalTitle}>Add Gcoins</Text>
                 <View style={{width: '100%'}}>
                   <View>
-                    <Input title="Enter Your Wallet Address (0x….)" />
+                    <Input
+                      title="Enter Your Wallet Address (0x….)"
+                      value={formData.target_wallet_address}
+                      onChangeText={text =>
+                        handleChange(text, 'target_wallet_address')
+                      }
+                      error={errors?.target_wallet_address}
+                    />
                   </View>
                   <View style={{marginTop: 20}}>
-                    <Input title="Amount" />
+                    <Input
+                      title="Amount"
+                      value={formData.amount_of_tokens}
+                      onChangeText={text =>
+                        handleChange(text, 'amount_of_tokens')
+                      }
+                      error={errors?.amount_of_tokens}
+                      keyboardType="number-pad"
+                    />
                   </View>
                   <View style={{marginTop: 24}}>
-                    <Button label="Send Me" onPress={() => setAdd(true)} />
+                    <Button
+                      label="Send Me"
+                      loading={loading}
+                      onPress={handleGainToken}
+                    />
                   </View>
                 </View>
                 <Pressable

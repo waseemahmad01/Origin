@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {
   View,
@@ -11,6 +11,7 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {LinearTextGradient} from 'react-native-text-gradient';
 import GButton from '../../../components/GButton/GButton';
 import assets from '../../../assets';
@@ -19,7 +20,16 @@ import theme from '../../../theme';
 const isIos = Platform.OS === 'ios';
 
 const WalletGeneration = ({navigation}) => {
+  const dispatch = useDispatch();
+  const loading = useSelector(state => state.wallet.loading);
   const [showModal, setShowModal] = useState(false);
+  const handleGenerateWallet = () => {
+    dispatch.wallet.createWallet({setShowModal});
+  };
+  const handleGetRewards = () => {
+    dispatch.wallet.getRewardTokens({navigation, setShowModal});
+  };
+
   return (
     <>
       <View style={{flex: 1, backgroundColor: theme.COLORS.white}}>
@@ -50,14 +60,16 @@ const WalletGeneration = ({navigation}) => {
             <View style={styles.buttonContainer}>
               <GButton
                 label="Generate Origen Wallet"
-                onPress={() => setShowModal(true)}
+                onPress={handleGenerateWallet}
+                loading={loading}
+                // onPress={() => setShowModal(true)}
               />
             </View>
           </View>
         </SafeAreaView>
       </View>
       <Modal visible={showModal} transparent={true} animationType="fade">
-        <Pressable style={styles.modal} onPress={() => setShowModal(false)}>
+        <Pressable style={styles.modal}>
           <View style={styles.modalView}>
             <Image source={assets.gift} />
             <LinearTextGradient
@@ -75,10 +87,12 @@ const WalletGeneration = ({navigation}) => {
             <View style={{width: '100%', marginTop: 32}}>
               <GButton
                 label="Confirm 10,000 Gcoins"
-                onPress={() => {
-                  setShowModal(false);
-                  navigation.navigate('Face-Id-verify');
-                }}
+                onPress={handleGetRewards}
+                loading={loading}
+                // onPress={() => {
+                //   setShowModal(false);
+                //   navigation.navigate('Face-Id-verify');
+                // }}
               />
             </View>
           </View>
