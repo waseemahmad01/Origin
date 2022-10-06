@@ -4,7 +4,8 @@ export default {
   h1: {
     fontSize: 40,
     lineHeight: 47.73,
-    fontFamily: 'SF Pro Display',
+    // fontFamily: 'SF Pro Display',
+    fontFamily: 'Inter',
     fontWeight: 'bold',
   },
   h2: {
@@ -12,7 +13,8 @@ export default {
     fontWeight: '700',
     lineHeight: 35.8,
     color: colors.black,
-    fontFamily: 'SF Pro Display',
+    // fontFamily: 'SF Pro Display',
+    fontFamily: 'Inter',
   },
   h3: {
     fontSize: 20,
@@ -31,13 +33,22 @@ export default {
     fontWeight: '400',
     lineHeight: 19.09,
     color: colors.black,
-    fontFamily: 'SF Pro Display',
+    // fontFamily: 'SF Pro Display',
+    fontFamily: 'Inter',
   },
   body2: {
     fontSize: 14,
     fontWeight: '400',
     lineHeight: 16.71,
     color: colors.textSecondary,
-    fontFamily: 'SF Pro Display',
+    // fontFamily: 'SF Pro Display',
+    fontFamily: 'Inter',
+  },
+  error: {
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 16.71,
+    color: colors.error,
+    fontFamily: 'Inter',
   },
 };

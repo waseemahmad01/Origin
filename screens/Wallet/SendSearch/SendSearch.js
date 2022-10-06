@@ -12,6 +12,8 @@ import {
   ScrollView,
 } from 'react-native';
 
+import {useDispatch, useSelector} from 'react-redux';
+
 import LinearGradient from 'react-native-linear-gradient';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import assets from '../../../assets';
@@ -21,9 +23,14 @@ import theme from '../../../theme';
 const isIos = Platform.OS === 'ios';
 
 const SendSearch = ({navigation}) => {
+  const dispatch = useDispatch();
+  const users = useSelector(state => state.users.users);
+  console.log('users =============>', users);
   const [search, setSearch] = useState('');
 
-  const handleProfileClick = () => {
+  const handleProfileClick = user => {
+    console.log(user);
+    dispatch.users.setSelectedUser(user);
     navigation.navigate('Send-EnterAmount');
   };
 
@@ -125,9 +132,9 @@ const SendSearch = ({navigation}) => {
                   Connections
                 </Text>
 
-                {Array.from({length: 10}, (_, i) => i).map(i => (
+                {users.map((user, i) => (
                   <Pressable
-                    onPress={handleProfileClick}
+                    onPress={() => handleProfileClick(user)}
                     style={{
                       ...styles.row,
                       justifyContent: 'space-between',
@@ -150,10 +157,12 @@ const SendSearch = ({navigation}) => {
                           <View style={styles.onlineIndicator}></View>
                         )}
                       </View>
-                      <Text style={styles.userName}>Jenny Wilson</Text>
+                      <Text style={styles.userName}>{user.name}</Text>
                     </View>
                     <View>
-                      <Pressable style={styles.btn}>
+                      <Pressable
+                        style={styles.btn}
+                        onPress={() => handleProfileClick(user)}>
                         <Text style={styles.transferText}>Send</Text>
                       </Pressable>
                     </View>

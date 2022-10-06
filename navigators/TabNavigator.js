@@ -1,29 +1,28 @@
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Image} from 'react-native';
 import assets from '../assets';
 
-import Notification from '../screens/Notification/Notification';
-import SplashScreen from '../screens/SplashScreen/SplashScreen';
 import WalletGeneration from '../screens/Wallet/WalletGeneration/WalletGeneration';
-import FaceIdVerification from '../screens/Wallet/FaceIdVerification/FaceIdVerification';
-import MintPackages from '../screens/Wallet/MintPackages/MintPackages';
 import Wallet from '../screens/Wallet/Wallet/Wallet';
-import SendSearch from '../screens/Wallet/SendSearch/SendSearch';
-import SendEnterAmount from '../screens/Wallet/SendEnterAmount/SendEnterAmount';
-import Chat from '../screens/Chat/Chat/Chat';
+import Chats from '../screens/Chat/Chats/Chats';
+import {useSelector} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
+  const wallet = useSelector(
+    state => state.auth?.user?.origen_public_wallet_address,
+  );
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="WalletGeneration" component={WalletGeneration} />
+      {wallet === null && (
+        <Stack.Screen name="WalletGeneration" component={WalletGeneration} />
+      )}
       <Stack.Screen name="My-Wallet" component={Wallet} />
     </Stack.Navigator>
   );
@@ -64,7 +63,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Messages"
-        component={Chat}
+        component={Chats}
         options={{
           tabBarIcon: ({focused}) => (
             <Image

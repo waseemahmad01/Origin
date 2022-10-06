@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import Button from '../../components/Button/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import assets from '../../assets';
 import theme from '../../theme';
@@ -111,11 +112,13 @@ const Onboarding = ({navigation}) => {
                     label="Get Started"
                     onPress={
                       activeSlide === 2
-                        ? () =>
+                        ? () => {
+                            AsyncStorage.setItem('visited', 'true');
                             navigation.reset({
                               index: 0,
                               routes: [{name: 'Notification'}],
-                            })
+                            });
+                          }
                         : goToNextSlide
                     }
                   />

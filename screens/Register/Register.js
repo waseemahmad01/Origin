@@ -1,6 +1,14 @@
 import React, {useState} from 'react';
 
-import {View, SafeAreaView, StyleSheet, Pressable, Image} from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  StyleSheet,
+  Pressable,
+  Image,
+  StatusBar,
+  Platform,
+} from 'react-native';
 
 import MobileVerification from '../MobileVerification/MobileVerification';
 import UserProfile from '../UserProfile/UserProfile';
@@ -18,6 +26,8 @@ const screens = {
   3: UserEmail,
   4: CreatePassword,
 };
+
+const isIos = Platform.OS === 'ios';
 
 const Register = ({navigation}) => {
   const [active, setActive] = useState(0);
@@ -38,7 +48,12 @@ const Register = ({navigation}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <View style={styles.container}>
+      <StatusBar translucent={true} backgroundColor="transparent" />
+      <View
+        style={{
+          ...styles.container,
+          marginTop: isIos ? 0 : StatusBar.currentHeight,
+        }}>
         <View style={styles.indiCatorRow}>
           <Pressable style={styles.backButton} onPress={handleBackClick}>
             <Image source={assets.arrowBack} />

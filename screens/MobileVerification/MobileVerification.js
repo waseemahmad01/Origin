@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {View, Text, StyleSheet, Image, Pressable} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import assets from '../../assets';
 import Button from '../../components/Button/Button';
 import InputField from '../../components/InputField/InputField';
@@ -8,7 +9,31 @@ import InputField from '../../components/InputField/InputField';
 import theme from '../../theme';
 
 const MobileVerification = ({handleContinue}) => {
-  const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const {loading, phone_number} = useSelector(state => state.auth);
+  const [number, setNumber] = useState(phone_number || '');
+  const [error, setError] = useState('');
+  const [isValid, setIsValid] = useState('');
+
+  const handleClick = () => {
+    setError('');
+    if (isValid) {
+      dispatch.auth.generateOTP({number, handleContinue});
+      console.log('Valid number');
+    } else {
+      console.log('Invalid');
+      setError('Invalid mobile number');
+    }
+  };
+
+  useEffect(() => {
+    if (number.match(/^\+(?:[0-9] ?){6,14}[0-9]$/)) {
+      setIsValid(true);
+      setError(null);
+    } else {
+      setIsValid(false);
+    }
+  }, [number]);
 
   return (
     <View style={{flexGrow: 1}}>
@@ -21,6 +46,8 @@ const MobileVerification = ({handleContinue}) => {
         keyboardType="phone-pad"
         value={number}
         onChange={setNumber}
+        error={error}
+        isValid={isValid}
       />
       <Text
         style={[
@@ -52,7 +79,8 @@ const MobileVerification = ({handleContinue}) => {
       <Button
         label="I agree"
         style={{marginTop: 'auto'}}
-        onPress={handleContinue}
+        onPress={handleClick}
+        loading={loading}
       />
     </View>
   );
