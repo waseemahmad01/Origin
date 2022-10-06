@@ -6,4 +6,5 @@ export default {
   grey: '#C6C6C6',
   textSecondary: '#6E6E7E',
   error: '#F03738',
+  background: '#EDEDED',
 };

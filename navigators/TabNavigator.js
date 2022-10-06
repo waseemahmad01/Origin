@@ -5,7 +5,7 @@ import assets from '../assets';
 
 import WalletGeneration from '../screens/Wallet/WalletGeneration/WalletGeneration';
 import Wallet from '../screens/Wallet/Wallet/Wallet';
-import Chat from '../screens/Chat/Chat/Chat';
+import Chats from '../screens/Chat/Chats/Chats';
 import {useSelector} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
@@ -63,7 +63,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Messages"
-        component={Chat}
+        component={Chats}
         options={{
           tabBarIcon: ({focused}) => (
             <Image

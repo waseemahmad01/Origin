@@ -23,6 +23,8 @@ import Login from '../screens/Login/Login';
 import RequireAuthentication from '../screens/RequireAuth/RequireAuth';
 import ChatSearch from '../screens/Chat/ChatSearch/ChatSearch';
 import {navigationRef} from '../utils/RootNavigation';
+import Chat from '../screens/Chat/Chat/Chat';
+import AudioCall from '../screens/calls/AudioCall/AudioCall';
 
 const Stack = createNativeStackNavigator();
 
@@ -99,6 +101,14 @@ const StackNavigator = () => {
             <Stack.Screen
               name="Chat-search"
               component={RequireAuthentication(ChatSearch, loggedIn)}
+            />
+            <Stack.Screen
+              name="Chat"
+              component={RequireAuthentication(Chat, loggedIn)}
+            />
+            <Stack.Screen
+              name="AudioCall"
+              component={RequireAuthentication(AudioCall, loggedIn)}
             />
           </Stack.Navigator>
         </NavigationContainer>

@@ -38,6 +38,14 @@ const assets = {
   success2: require('./images/success2.png'),
   addUser: require('./icons/addUser.png'),
   noTextLogo: require('./icons/noTextLogo.png'),
+  audioCall: require('./icons/audioCall.png'),
+  videoCall: require('./icons/videoCall.png'),
+  recordIcon: require('./icons/recordIcon.png'),
+  mood: require('./icons/mood.png'),
+  clip: require('./icons/clip.png'),
+  camera: require('./icons/camera.png'),
+  callBg: require('./images/callBg.png'),
+  chevronLeft: require('./icons/chevronLeft.png'),
 };
 
 export default assets;
