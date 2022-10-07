@@ -12,17 +12,19 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
-  const wallet = useSelector(
-    state => state.auth?.user?.origen_public_wallet_address,
-  );
+  const wallet = useSelector(state => state.wallet.publicAddress);
+  // .origen_public_wallet_address,
+  console.log('wallet address =====>', wallet);
   return (
     <Stack.Navigator
+      initialRouteName={
+        typeof wallet === 'string' ? 'My-Wallet' : 'WalletGeneration'
+      }
       screenOptions={{
         headerShown: false,
       }}>
-      {wallet === null && (
-        <Stack.Screen name="WalletGeneration" component={WalletGeneration} />
-      )}
+      <Stack.Screen name="WalletGeneration" component={WalletGeneration} />
+
       <Stack.Screen name="My-Wallet" component={Wallet} />
     </Stack.Navigator>
   );

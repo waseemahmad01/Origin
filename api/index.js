@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {navigate} from '../utils/RootNavigation';
 
 const api = axios.create({
-  baseURL: 'https://696e-103-152-101-21.ap.ngrok.io',
+  baseURL: 'https://1285-182-179-148-147.in.ngrok.io',
   headers: {
     'Content-type': 'application/json',
   },
@@ -79,3 +79,7 @@ export const sendToken = data => api.post('/v1/account/transfer-tokens', data);
 // Add Gcoins
 
 export const addGcoins = data => api.post('/v1/account/add-gcoins', data);
+
+// Buy voximplant number
+
+export const getNumber = () => api.get('/v1/voxim/phone-number');

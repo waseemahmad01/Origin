@@ -5,6 +5,7 @@ import {
   rewardTokens,
   sendToken,
   walletBalance,
+  getNumber,
 } from '../../api';
 
 export const wallet = createModel()({
@@ -30,6 +31,7 @@ export const wallet = createModel()({
       try {
         dispatch.wallet.setLoading(true);
         const {data} = await generateWallet();
+        await getNumber();
         console.log(data.publicAddress);
         dispatch.wallet.setPublicAddress(data.publicAddress);
         dispatch.auth.getUserData();
