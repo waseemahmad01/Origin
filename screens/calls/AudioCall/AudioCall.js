@@ -104,7 +104,7 @@ const AudioCall = ({route, navigation}) => {
     let call;
     let endpoint;
     async function makeCall() {
-      call = await voximplant.call('+14159007571', callSettings);
+      call = await voximplant.call(callee, callSettings);
       callRef.current = call;
       subscribeToCallEvents();
       // callId.current = call.callId;
