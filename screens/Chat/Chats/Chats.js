@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   View,
@@ -11,6 +11,7 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 
 import IconButton from '../../../components/IconButton/IconButton';
 
@@ -18,11 +19,37 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import theme from '../../../theme';
 import assets from '../../../assets';
-
+import {Voximplant} from 'react-native-voximplant';
 const isIos = Platform.OS === 'ios';
+const client = Voximplant.getInstance();
 
 const Chat = ({navigation}) => {
+  const dispatch = useDispatch();
+  const {vox_app_name, vox_user_name, vox_user_password, vox_phone_number} =
+    useSelector(state => state.auth.user);
+  const users = useSelector(state => state.users.users);
+  // console.log(users);
   const [tab, setTab] = useState(0);
+
+  const handleVoxImplantLogin = async () => {
+    let state = await client.getClientState();
+    console.log('State ===== >', state);
+    if (state === Voximplant.ClientState.DISCONNECTED) {
+      await client.connect();
+    }
+    if (state !== 'logged_in') {
+      const res = await client.login(
+        `${vox_user_name}@${vox_app_name}`,
+        vox_user_password,
+      );
+      console.log(res);
+    }
+  };
+
+  useEffect(() => {
+    dispatch.users.getAllUsers();
+    handleVoxImplantLogin();
+  }, []);
   return (
     <LinearGradient
       style={{
@@ -100,11 +127,11 @@ const Chat = ({navigation}) => {
             </View>
             <View style={{flexGrow: 1, marginBottom: 20}}>
               <ScrollView showsVerticalScrollIndicator={false}>
-                {Array.from({length: 15}, (_, i) => i).map(i => (
+                {users.map(user => (
                   <Pressable
                     style={styles.userBlock}
-                    key={i}
-                    onPress={() => navigation.navigate('Chat')}>
+                    key={user?.id}
+                    onPress={() => navigation.navigate('Chat', {user})}>
                     <View style={styles.transactionDetails}>
                       <View
                         style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -121,14 +148,14 @@ const Chat = ({navigation}) => {
                         </View>
                         <View style={{marginLeft: 16}}>
                           <Text style={styles.transactionType}>
-                            Jenny Wilson
+                            {user?.username}
                           </Text>
                           <View style={{flexDirection: 'row'}}>
                             <Text
                               style={{
                                 ...styles.transactionInfo,
                               }}>
-                              Hope you are doing well...
+                              {user?.phone_number}
                             </Text>
                           </View>
                         </View>

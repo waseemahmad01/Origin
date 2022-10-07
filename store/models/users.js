@@ -26,6 +26,7 @@ export const users = createModel()({
         dispatch.users.setLoading(true);
         const {data} = await allUsers();
         dispatch.users.setUsers(data);
+        console.log(data);
       } catch (err) {
         console.log(err.message);
       } finally {

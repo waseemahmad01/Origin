@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Image,
   Pressable,
+  PermissionsAndroid,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,7 +21,34 @@ import assets from '../../../assets';
 
 const isIos = Platform.OS === 'ios';
 
-const Chat = ({navigation}) => {
+const Chat = ({route, navigation}) => {
+  const user = route.params.user;
+
+  const makeCall = async () => {
+    try {
+      if (Platform.OS === 'android') {
+        let permissions = [PermissionsAndroid.PERMISSIONS.RECORD_AUDIO];
+
+        const granted = await PermissionsAndroid.requestMultiple(permissions);
+        const recordAudioGranted =
+          granted[PermissionsAndroid.PERMISSIONS.RECORD_AUDIO] === 'granted';
+        if (recordAudioGranted) {
+          // do if permission granted
+        } else {
+          console.warn(
+            'MainScreen: makeCall: record audio permission is not granted',
+          );
+          return;
+        }
+      }
+      navigation.navigate('AudioCall', {
+        callee: user.phone_number,
+      });
+    } catch (e) {
+      console.warn(`MainScreen: makeCall failed: ${e}`);
+    }
+  };
+
   return (
     <LinearGradient
       style={{
@@ -34,23 +62,25 @@ const Chat = ({navigation}) => {
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.header}>
           <View style={styles.userInfo}>
-            <Image
-              source={assets.user}
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: 40 / 2,
-                marginTop: -5,
-              }}
-              resizeMode="cover"
-            />
+            <Pressable onPress={() => navigation.goBack()}>
+              <Image
+                source={assets.user}
+                style={{
+                  height: 40,
+                  width: 40,
+                  borderRadius: 40 / 2,
+                  marginTop: -5,
+                }}
+                resizeMode="cover"
+              />
+            </Pressable>
             <View style={{marginLeft: 12}}>
-              <Text style={styles.title}>Kristin Watson</Text>
+              <Text style={styles.title}>{user?.username}</Text>
               <Text style={styles.subtitle}>@kwatson - 32.5345 GCoins</Text>
               <Text style={styles.subtitle}>Active 3m ago</Text>
             </View>
             <View style={styles.callIcons}>
-              <Pressable onPress={() => navigation.navigate('AudioCall')}>
+              <Pressable onPress={makeCall}>
                 <Image
                   source={assets.audioCall}
                   style={{

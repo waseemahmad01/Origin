@@ -109,6 +109,7 @@ export const auth = createModel()({
         const {accessToken, ...user} = data;
         dispatch.auth.setUser(user);
         await AsyncStorage.setItem('token', accessToken);
+        dispatch.wallet.setPublicAddress(user.origen_public_wallet_address);
         dispatch.auth.setLoggedIn(true);
         navigation.reset({
           index: 0,
@@ -124,8 +125,10 @@ export const auth = createModel()({
       try {
         dispatch.auth.setLoading(true);
         const {data} = await userData();
-        console.log(data);
+        console.log('userData ===>', data);
+        dispatch.auth.setUser(data);
         dispatch.wallet.setPublicAddress(data?.origen_public_wallet_address);
+        console.log('wallet ===>', data?.origen_public_wallet_address);
       } catch (err) {
         console.log(err.message);
       } finally {
