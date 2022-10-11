@@ -30,6 +30,7 @@ const AudioCall = ({route, navigation}) => {
   const {vox_phone_number} = useSelector(state => state.auth.user);
   const callRef = useRef(null);
   const [callStatus, setCallStatus] = useState('Initializing...');
+  console.log('callee', callee);
 
   // const handleLogin = async () => {
   //   let state = await client.getClientState();
@@ -132,6 +133,8 @@ const AudioCall = ({route, navigation}) => {
       });
       call.on(Voximplant.CallEvents.Failed, callEvent => {
         console.log('call failed');
+        console.log('Call failed event ===> ', callEvent);
+        navigation.goBack();
       });
       call.on(Voximplant.CallEvents.ProgressToneStart, callEvent => {
         setCallStatus('Ringing');

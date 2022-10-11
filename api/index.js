@@ -3,12 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {navigate} from '../utils/RootNavigation';
 
 const api = axios.create({
-  baseURL: 'https://1285-182-179-148-147.in.ngrok.io',
+  baseURL: 'http://3.83.29.205:5001/',
   headers: {
     'Content-type': 'application/json',
   },
 });
-
 api.interceptors.request.use(
   async config => {
     const token = await AsyncStorage.getItem('token');

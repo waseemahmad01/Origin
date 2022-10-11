@@ -9,7 +9,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import theme from '../../theme';
 
-const GButton = ({label = 'label', style, loading, ...rest}) => {
+const GButton = ({label = 'label', style, loading, textStyle, ...rest}) => {
   return (
     <LinearGradient
       style={[styles.container, style]}
@@ -20,7 +20,7 @@ const GButton = ({label = 'label', style, loading, ...rest}) => {
         {loading ? (
           <ActivityIndicator color={theme.COLORS.white} />
         ) : (
-          <Text style={styles.text}>{label}</Text>
+          <Text style={{...styles.text, ...textStyle}}>{label}</Text>
         )}
       </TouchableOpacity>
     </LinearGradient>

@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {NavigationContainer} from '@react-navigation/native';
-
+import {useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
@@ -22,14 +21,18 @@ import TransactionSuccess from '../screens/Wallet/TransactionSuccess/Transaction
 import Login from '../screens/Login/Login';
 import RequireAuthentication from '../screens/RequireAuth/RequireAuth';
 import ChatSearch from '../screens/Chat/ChatSearch/ChatSearch';
-import {navigationRef} from '../utils/RootNavigation';
+
 import Chat from '../screens/Chat/Chat/Chat';
 import AudioCall from '../screens/calls/AudioCall/AudioCall';
+import {Voximplant} from 'react-native-voximplant';
+import EditProfile from '../screens/Profile/EditProfile/EditProfile';
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const voximplant = Voximplant.getInstance();
 
   const loggedIn = useSelector(state => state.auth.loggedIn);
   const [loading, setLoading] = useState(true);
@@ -53,12 +56,26 @@ const StackNavigator = () => {
     checkIfVisited();
   }, []);
 
+  useEffect(() => {
+    voximplant.on(Voximplant.ClientEvents.IncomingCall, incomingCallEvent => {
+      console.log('Hello from call');
+      calls.set(incomingCallEvent.call.callId, incomingCallEvent.call);
+      navigation.navigate('AudioCall', {
+        callId: incomingCallEvent.call.callId,
+        inComing: true,
+      });
+    });
+    return function cleanup() {
+      voximplant.off(Voximplant.ClientEvents.IncomingCall);
+    };
+  });
+
   return (
     <>
       {loading ? (
         <SplashScreen />
       ) : (
-        <NavigationContainer ref={navigationRef}>
+        <>
           <Stack.Navigator
             initialRouteName={loggedIn && 'Wallet'}
             screenOptions={{
@@ -110,8 +127,12 @@ const StackNavigator = () => {
               name="AudioCall"
               component={RequireAuthentication(AudioCall, loggedIn)}
             />
+            <Stack.Screen
+              name="EditProfile"
+              component={RequireAuthentication(EditProfile, loggedIn)}
+            />
           </Stack.Navigator>
-        </NavigationContainer>
+        </>
       )}
     </>
   );

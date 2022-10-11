@@ -7,12 +7,16 @@ import {
   FlatList,
   StyleSheet,
   Pressable,
+  StatusBar,
+  Platform,
 } from 'react-native';
 
 import NftMintPackage from '../../../components/Wallet/NftMintPackage/NftMintPackage';
 import Button from '../../../components/GButton/GButton';
 import theme from '../../../theme';
 import assets from '../../../assets';
+
+const isIos = Platform.OS === 'ios';
 
 const packages = [
   {
@@ -38,6 +42,10 @@ const packages = [
 const MintPackages = ({navigation}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
+      <StatusBar translucent={true} backgroundColor="transparent" />
+      {!isIos && (
+        <View style={{width: '100%', height: StatusBar.currentHeight}}></View>
+      )}
       <View style={styles.container}>
         <Text style={styles.title}>Select Minting SFT's Packages</Text>
         <Pressable>

@@ -3,11 +3,13 @@ import React, {useState} from 'react';
 import {Text, StyleSheet, TextInput, KeyboardAvoidingView} from 'react-native';
 import theme from '../../theme';
 
-const Input = ({title = 'Label', error, ...rest}) => {
+const Input = ({title = 'Label', error, style, ...rest}) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="position">
+    <KeyboardAvoidingView
+      style={{...styles.container, ...style}}
+      behavior="position">
       <TextInput
         style={{
           ...styles.input,
