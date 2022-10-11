@@ -43,7 +43,9 @@ const Chat = ({route, navigation}) => {
       }
       navigation.navigate('AudioCall', {
         callee: user.phone_number,
+        //
       });
+      //
     } catch (e) {
       console.warn(`MainScreen: makeCall failed: ${e}`);
     }

@@ -66,7 +66,6 @@ const Login = ({navigation}) => {
         <View style={{width: '100%', marginBottom: 24}}>
           <Input
             title="Phone"
-            keyboardType="phone-pad"
             value={formData.phone_number}
             onChangeText={text => handleChange(text, 'phone_number')}
             error={errors?.phone_number}

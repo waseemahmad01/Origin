@@ -7,6 +7,12 @@ import WalletGeneration from '../screens/Wallet/WalletGeneration/WalletGeneratio
 import Wallet from '../screens/Wallet/Wallet/Wallet';
 import Chats from '../screens/Chat/Chats/Chats';
 import {useSelector} from 'react-redux';
+import Profile from '../screens/Profile/Profile/Profile';
+import Settings from '../screens/Profile/Settings/Settings';
+import Privacy from '../screens/Profile/Privacy/Privacy';
+import Blocked from '../screens/Profile/Blocked/Blocked';
+import Help from '../screens/Profile/Help/Help';
+import AboutUs from '../screens/Profile/AboutUs/AboutUs';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -26,6 +32,22 @@ const StackNavigator = () => {
       <Stack.Screen name="WalletGeneration" component={WalletGeneration} />
 
       <Stack.Screen name="My-Wallet" component={Wallet} />
+    </Stack.Navigator>
+  );
+};
+
+const ProfileNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="Profile1" component={Profile} />
+      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="Privacy" component={Privacy} />
+      <Stack.Screen name="Blocked" component={Blocked} />
+      <Stack.Screen name="Help" component={Help} />
+      <Stack.Screen name="About" component={AboutUs} />
     </Stack.Navigator>
   );
 };
@@ -69,7 +91,7 @@ const TabNavigator = () => {
         options={{
           tabBarIcon: ({focused}) => (
             <Image
-              source={assets.msg}
+              source={focused ? assets.chatActive : assets.msg}
               style={{
                 height: 19.25,
                 width: 22,
@@ -111,7 +133,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={Wallet}
+        component={ProfileNavigator}
         options={{
           tabBarIcon: ({focused}) => (
             <Image

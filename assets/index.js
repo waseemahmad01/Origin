@@ -46,6 +46,16 @@ const assets = {
   camera: require('./icons/camera.png'),
   callBg: require('./images/callBg.png'),
   chevronLeft: require('./icons/chevronLeft.png'),
+  chatActive: require('./images/chatActive.png'),
+  settings: require('./icons/settingsIcon.png'),
+  arrowRight: require('./icons/arrowRight.png'),
+  privacy: require('./icons/privacy.png'),
+  help: require('./icons/help.png'),
+  lockGreen: require('./icons/lockGreen.png'),
+  aboutImage: require('./images/aboutImage.png'),
+  mode: require('./icons/mode.png'),
+  ms: require('./icons/ms.png'),
+  bulb: require('./icons/bulb.png'),
 };
 
 export default assets;

@@ -250,6 +250,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontWeight: '400',
     lineHeight: 18,
+    color: '#4A4A5D',
   },
   btn: {
     paddingHorizontal: 16,
