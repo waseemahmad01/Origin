@@ -28,7 +28,7 @@ const Chat = ({navigation}) => {
   const {vox_app_name, vox_user_name, vox_user_password, vox_phone_number} =
     useSelector(state => state.auth.user);
   const users = useSelector(state => state.users.users);
-  // console.log(users);
+  console.log(users);
   const [tab, setTab] = useState(0);
 
   const handleVoxImplantLogin = async () => {
@@ -127,6 +127,39 @@ const Chat = ({navigation}) => {
             </View>
             <View style={{flexGrow: 1, marginBottom: 20}}>
               <ScrollView showsVerticalScrollIndicator={false}>
+                <Pressable
+                  style={styles.userBlock}
+                  onPress={() => navigation.navigate('Chat', {})}>
+                  <View style={styles.transactionDetails}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <View
+                        style={{
+                          position: 'relative',
+                        }}>
+                        <Image
+                          source={assets.user}
+                          style={{height: 56, width: 56}}
+                          resizeMode="cover"
+                        />
+                        <View style={styles.onlineIndicator}></View>
+                      </View>
+                      <View style={{marginLeft: 16}}>
+                        <Text style={styles.transactionType}>test</Text>
+                        <View style={{flexDirection: 'row'}}>
+                          <Text
+                            style={{
+                              ...styles.transactionInfo,
+                            }}>
+                            phone
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                    <View>
+                      <Text style={styles.amount}>3m ago</Text>
+                    </View>
+                  </View>
+                </Pressable>
                 {users.map(user => (
                   <Pressable
                     style={styles.userBlock}
