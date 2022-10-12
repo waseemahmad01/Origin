@@ -87,3 +87,5 @@ export const getNumber = () => api.get('/v1/voxim/phone-number');
 export const getAllChats = () => api.get('/v1/twilio/chats');
 
 export const getAllSMS = (chatId) => api.get(`/v1/twilio/messages/${chatId}`);
+
+export const sendMessage = (data) => api.post('/v1/twilio/send-sms', data);

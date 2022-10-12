@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,24 @@ import {
   Pressable,
   Image,
 } from 'react-native';
+import { sendMessage } from '../../api';
 import assets from '../../assets';
 import theme from '../../theme';
 
-const ChatInput = () => {
+const ChatInput = ({ sendTo, refreshChat }) => {
+  const [message, setMessage] = useState("");
+
+
+  const onSendMessage = async () => {
+    try {
+      await sendMessage({ sendTo, messageBody: message })
+      setMessage("")
+      refreshChat()
+    } catch (err) {
+      console.log('err - ', err)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.recordAudioContainer}>
@@ -38,6 +52,8 @@ const ChatInput = () => {
 
         <TextInput
           style={styles.input}
+          value={message}
+          onChangeText={(val) => setMessage(val)}
           placeholderTextColor="#6E6E7E"
           placeholder="Type message"
           multiline
@@ -53,7 +69,7 @@ const ChatInput = () => {
               resizeMode="cover"
             />
           </Pressable>
-          <Pressable style={{marginLeft: 12}}>
+          <Pressable style={{ marginLeft: 12 }} onPress={onSendMessage}>
             <Image
               source={assets.camera}
               style={{

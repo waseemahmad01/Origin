@@ -25,73 +25,6 @@ import { getAllSMS } from '../../../api';
 
 const isIos = Platform.OS === 'ios';
 
-const chatMessages = [
-  {
-    text: 'Hello',
-    my: false,
-  },
-  {
-    text: 'Hi',
-    my: true,
-  },
-  {
-    text: 'How are you?',
-    my: false,
-  },
-  {
-    text: 'I am fine what about you?',
-    my: true,
-  },
-  {
-    text: 'Hello',
-    my: false,
-  },
-  {
-    text: 'Hi',
-    my: true,
-  },
-  {
-    text: 'How are you?',
-    my: false,
-  },
-  {
-    text: 'I am fine what about you?',
-    my: true,
-  },
-  {
-    text: 'Hello',
-    my: false,
-  },
-  {
-    text: 'Hi',
-    my: true,
-  },
-  {
-    text: 'How are you?',
-    my: false,
-  },
-  {
-    text: 'I am fine what about you?',
-    my: true,
-  },
-  {
-    text: 'Hello',
-    my: false,
-  },
-  {
-    text: 'Hi',
-    my: true,
-  },
-  {
-    text: 'How are you?',
-    my: false,
-  },
-  {
-    text: 'I am fine what about you?',
-    my: true,
-  },
-];
-
 const Chat = ({ route, navigation }) => {
   const [allSMS, setSMS] = useState([]);
 
@@ -102,15 +35,18 @@ const Chat = ({ route, navigation }) => {
   const _getAllSMS = async () => {
     try {
       const { data } = await getAllSMS(route?.params?.chat?.chat_id);
+      console.log('get messages - ', data)
       setSMS(data)
-      console.log("chat response - ", data)
     } catch (err) {
       console.log("error - ", err)
     }
   }
 
-  const my = route?.params?.chat?.sender_number || ""
 
+  console.log('all sms - ', allSMS)
+
+  const my = route?.params?.chat?.sender_number || ""
+  const receiver = route?.params?.chat?.receiver_number
 
   // const makeCall = async () => {
   //   try {
@@ -207,7 +143,7 @@ const Chat = ({ route, navigation }) => {
             ))}
           </ScrollView>
           <View style={styles.inputContainer}>
-            <ChatInput />
+            <ChatInput refreshChat={_getAllSMS} sendTo={receiver} />
           </View>
         </View>
         <View style={styles.hider}></View>
