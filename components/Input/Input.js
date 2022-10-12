@@ -11,6 +11,8 @@ const Input = ({title = 'Label', error, style, ...rest}) => {
       style={{...styles.container, ...style}}
       behavior="position">
       <TextInput
+        autoCapitalize={false}
+        autoCorrect={false}
         style={{
           ...styles.input,
           borderColor: error

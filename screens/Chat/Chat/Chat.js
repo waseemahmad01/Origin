@@ -18,8 +18,76 @@ import ChatInput from '../../../components/ChatInput/ChatInput';
 import theme from '../../../theme';
 
 import assets from '../../../assets';
+import ChatMessage from '../../../components/ChatMessage/ChatMessage';
 
 const isIos = Platform.OS === 'ios';
+
+const chatMessages = [
+  {
+    text: 'Hello',
+    my: false,
+  },
+  {
+    text: 'Hi',
+    my: true,
+  },
+  {
+    text: 'How are you?',
+    my: false,
+  },
+  {
+    text: 'I am fine what about you?',
+    my: true,
+  },
+  {
+    text: 'Hello',
+    my: false,
+  },
+  {
+    text: 'Hi',
+    my: true,
+  },
+  {
+    text: 'How are you?',
+    my: false,
+  },
+  {
+    text: 'I am fine what about you?',
+    my: true,
+  },
+  {
+    text: 'Hello',
+    my: false,
+  },
+  {
+    text: 'Hi',
+    my: true,
+  },
+  {
+    text: 'How are you?',
+    my: false,
+  },
+  {
+    text: 'I am fine what about you?',
+    my: true,
+  },
+  {
+    text: 'Hello',
+    my: false,
+  },
+  {
+    text: 'Hi',
+    my: true,
+  },
+  {
+    text: 'How are you?',
+    my: false,
+  },
+  {
+    text: 'I am fine what about you?',
+    my: true,
+  },
+];
 
 const Chat = ({route, navigation}) => {
   const user = route.params.user;
@@ -89,7 +157,7 @@ const Chat = ({route, navigation}) => {
                     height: 16,
                     width: 16,
                   }}
-                  resizeMode="cover"
+                  resizeMode="contain"
                 />
               </Pressable>
               <Pressable style={{marginLeft: 20}}>
@@ -99,7 +167,7 @@ const Chat = ({route, navigation}) => {
                     height: 16,
                     width: 18,
                   }}
-                  resizeMode="cover"
+                  resizeMode="contain"
                 />
               </Pressable>
             </View>
@@ -108,7 +176,11 @@ const Chat = ({route, navigation}) => {
         <View style={styles.body}>
           <ScrollView
             style={styles.schrollView}
-            showsVerticalScrollIndicator={false}></ScrollView>
+            showsVerticalScrollIndicator={false}>
+            {chatMessages.map((msg, index) => (
+              <ChatMessage key={index} msg={msg} />
+            ))}
+          </ScrollView>
           <View style={styles.inputContainer}>
             <ChatInput />
           </View>
@@ -132,7 +204,7 @@ const styles = StyleSheet.create({
   },
   body: {
     flexGrow: 1,
-    backgroundColor: theme.COLORS.background,
+    backgroundColor: theme.COLORS.white,
     zIndex: 2,
     elevation: 2,
   },
@@ -167,7 +239,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   schrollView: {
-    flexGrow: 1,
+    flex: 1,
     paddingHorizontal: 24,
   },
   inputContainer: {

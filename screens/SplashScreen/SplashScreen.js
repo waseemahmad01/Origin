@@ -1,16 +1,20 @@
 import React from 'react';
 
-import {View, Image, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet, StatusBar} from 'react-native';
 
 import assets from '../../assets';
+import theme from '../../theme';
 
 const SplashScreen = () => {
   return (
-    <View style={styles.container}>
-      <View>
-        <Image source={assets.logo} style={styles.logo} />
+    <>
+      <StatusBar translucent={true} backgroundColor="transparent" />
+      <View style={styles.container}>
+        <View>
+          <Image source={assets.logo} style={styles.logo} />
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
@@ -21,5 +25,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: theme.COLORS.white,
   },
 });
