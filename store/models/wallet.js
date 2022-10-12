@@ -1,4 +1,4 @@
-import {createModel} from '@rematch/core';
+import { createModel } from '@rematch/core';
 import {
   addGcoins,
   generateWallet,
@@ -27,10 +27,10 @@ export const wallet = createModel()({
     },
   },
   effects: dispatch => ({
-    async createWallet({setShowModal}) {
+    async createWallet({ setShowModal }) {
       try {
         dispatch.wallet.setLoading(true);
-        const {data} = await generateWallet();
+        const { data } = await generateWallet();
         await getNumber();
         console.log(data.publicAddress);
         dispatch.wallet.setPublicAddress(data.publicAddress);
@@ -42,10 +42,10 @@ export const wallet = createModel()({
         dispatch.wallet.setLoading(false);
       }
     },
-    async getRewardTokens({navigation, setShowModal}) {
+    async getRewardTokens({ navigation, setShowModal }) {
       try {
         dispatch.wallet.setLoading(true);
-        const {data} = await rewardTokens();
+        const { data } = await rewardTokens();
         console.log(data);
         setShowModal(false);
         navigation.navigate('Face-Id-verify');
@@ -58,7 +58,7 @@ export const wallet = createModel()({
     async getBalance() {
       try {
         dispatch.wallet.setLoading(true);
-        const {data} = await walletBalance();
+        const { data } = await walletBalance();
         dispatch.wallet.setBalance(data.balance);
       } catch (err) {
         console.log(err.message);
@@ -66,10 +66,10 @@ export const wallet = createModel()({
         dispatch.wallet.setLoading(false);
       }
     },
-    async transferToken({formData, navigation}) {
+    async transferToken({ formData, navigation }) {
       try {
         dispatch.wallet.setLoading(true);
-        const {data} = await sendToken(formData);
+        const { data } = await sendToken(formData);
         console.log(data);
         dispatch.wallet.getBalance();
         navigation.navigate('Transaction-success');
@@ -79,10 +79,10 @@ export const wallet = createModel()({
         dispatch.wallet.setLoading(false);
       }
     },
-    async addTokens({formData, setAdd}) {
+    async addTokens({ formData, setAdd }) {
       try {
         dispatch.wallet.setLoading(true);
-        const {data} = await addGcoins(formData);
+        const { data } = await addGcoins(formData);
         console.log(data);
         setAdd(true);
         dispatch.wallet.getBalance();
