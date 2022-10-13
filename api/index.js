@@ -94,3 +94,9 @@ export const buySftsPackage = data => api.post('/v1/sft/package', data);
 // Get active SFTs package
 
 export const getActiveSftPackage = () => api.get('/v1/user/sft/package');
+
+export const getAllChats = () => api.get('/v1/twilio/chats');
+
+export const getAllSMS = chatId => api.get(`/v1/twilio/messages/${chatId}`);
+
+export const sendMessage = data => api.post('/v1/twilio/send-sms', data);

@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { Voximplant } from 'react-native-voximplant';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   View,
   Text,
@@ -11,25 +12,23 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
 
 import IconButton from '../../../components/IconButton/IconButton';
-
 import LinearGradient from 'react-native-linear-gradient';
-
 import theme from '../../../theme';
 import assets from '../../../assets';
-import {Voximplant} from 'react-native-voximplant';
+import { getAllChats } from '../../../api';
 const isIos = Platform.OS === 'ios';
 const client = Voximplant.getInstance();
 
-const Chat = ({navigation}) => {
+const Chat = ({ navigation }) => {
   const dispatch = useDispatch();
-  const {vox_app_name, vox_user_name, vox_user_password, vox_phone_number} =
+  const { vox_app_name, vox_user_name, vox_user_password, vox_phone_number } =
     useSelector(state => state.auth.user);
   const users = useSelector(state => state.users.users);
   console.log(users);
   const [tab, setTab] = useState(0);
+  const [chats, setChats] = useState([])
 
   const handleVoxImplantLogin = async () => {
     let state = await client.getClientState();
@@ -48,8 +47,22 @@ const Chat = ({navigation}) => {
 
   useEffect(() => {
     dispatch.users.getAllUsers();
+    getChats();
     handleVoxImplantLogin();
   }, []);
+
+
+  const getChats = async () => {
+    try {
+      const { data } = await getAllChats();
+      setChats(data)
+      console.log("response - ", data)
+    } catch (err) {
+      console.log("error - ", err)
+    }
+  }
+
+  // 
   return (
     <LinearGradient
       style={{
@@ -57,10 +70,10 @@ const Chat = ({navigation}) => {
         paddingTop: isIos ? 0 : StatusBar.currentHeight,
       }}
       colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text
@@ -125,70 +138,40 @@ const Chat = ({navigation}) => {
                 </Text>
               </Pressable>
             </View>
-            <View style={{flexGrow: 1, marginBottom: 20}}>
+            <View style={{ flexGrow: 1, marginBottom: 20 }}>
               <ScrollView showsVerticalScrollIndicator={false}>
-                <Pressable
-                  style={styles.userBlock}
-                  onPress={() => navigation.navigate('Chat', {})}>
-                  <View style={styles.transactionDetails}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <View
-                        style={{
-                          position: 'relative',
-                        }}>
-                        <Image
-                          source={assets.user}
-                          style={{height: 56, width: 56}}
-                          resizeMode="cover"
-                        />
-                        <View style={styles.onlineIndicator}></View>
-                      </View>
-                      <View style={{marginLeft: 16}}>
-                        <Text style={styles.transactionType}>test</Text>
-                        <View style={{flexDirection: 'row'}}>
-                          <Text
-                            style={{
-                              ...styles.transactionInfo,
-                            }}>
-                            phone
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                    <View>
-                      <Text style={styles.amount}>3m ago</Text>
-                    </View>
-                  </View>
-                </Pressable>
-                {users.map(user => (
+                {chats.map(chat => (
                   <Pressable
                     style={styles.userBlock}
-                    key={user?.id}
-                    onPress={() => navigation.navigate('Chat', {user})}>
+                    key={chat?.id}
+                    onPress={() => {
+                      console.log("chat data - ", chat)
+                      navigation.navigate('Chat', { chat })
+                    }}>
                     <View style={styles.transactionDetails}>
                       <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <View
                           style={{
                             position: 'relative',
                           }}>
                           <Image
                             source={assets.user}
-                            style={{height: 56, width: 56}}
+                            style={{ height: 56, width: 56 }}
                             resizeMode="cover"
                           />
                           <View style={styles.onlineIndicator}></View>
                         </View>
-                        <View style={{marginLeft: 16}}>
+                        <View style={{ marginLeft: 16 }}>
                           <Text style={styles.transactionType}>
-                            {user?.username}
+                            {chat?.username}
                           </Text>
-                          <View style={{flexDirection: 'row'}}>
+                          <View style={{ flexDirection: 'row' }}>
                             <Text
                               style={{
                                 ...styles.transactionInfo,
                               }}>
-                              {user?.phone_number}
+                              {chat?.phone_number}
                             </Text>
                           </View>
                         </View>
@@ -199,7 +182,7 @@ const Chat = ({navigation}) => {
                     </View>
                   </Pressable>
                 ))}
-                <View style={{height: 220}}></View>
+                <View style={{ height: 220 }}></View>
               </ScrollView>
             </View>
           </View>
