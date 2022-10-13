@@ -2,6 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Image} from 'react-native';
 import assets from '../assets';
+import {useNavigation} from '@react-navigation/native';
 
 import WalletGeneration from '../screens/Wallet/WalletGeneration/WalletGeneration';
 import Wallet from '../screens/Wallet/Wallet/Wallet';
@@ -20,7 +21,6 @@ const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
   const wallet = useSelector(state => state.wallet.publicAddress);
   // .origen_public_wallet_address,
-  console.log('wallet address =====>', wallet);
   return (
     <Stack.Navigator
       initialRouteName={

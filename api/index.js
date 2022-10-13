@@ -82,3 +82,15 @@ export const addGcoins = data => api.post('/v1/account/add-gcoins', data);
 // Buy voximplant number
 
 export const getNumber = () => api.get('/v1/voxim/phone-number');
+
+// Get SFTs packages
+
+export const getSfts = () => api.get('/v1/sft/packages');
+
+// Buy SFTs package
+
+export const buySftsPackage = data => api.post('/v1/sft/package', data);
+
+// Get active SFTs package
+
+export const getActiveSftPackage = () => api.get('/v1/user/sft/package');

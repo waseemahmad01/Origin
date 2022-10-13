@@ -45,6 +45,8 @@ const Wallet = ({navigation}) => {
   const wallet = useSelector(state => state.wallet.publicAddress);
   const balance = useSelector(state => state.wallet.balance);
   const loading = useSelector(state => state.wallet.loading);
+  const user = useSelector(state => state.auth.user);
+  console.log('user ====> ', user);
   const [tab, setTab] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [add, setAdd] = useState(false);

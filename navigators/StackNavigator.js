@@ -26,6 +26,7 @@ import Chat from '../screens/Chat/Chat/Chat';
 import AudioCall from '../screens/calls/AudioCall/AudioCall';
 import {Voximplant} from 'react-native-voximplant';
 import EditProfile from '../screens/Profile/EditProfile/EditProfile';
+import {getActiveSftPackage, userData} from '../api';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +36,7 @@ const StackNavigator = () => {
   const voximplant = Voximplant.getInstance();
 
   const loggedIn = useSelector(state => state.auth.loggedIn);
+  const activePackage = useSelector(state => state.sfts.active);
   const [loading, setLoading] = useState(true);
   const [visited, setVisited] = useState(false);
 
@@ -43,7 +45,12 @@ const StackNavigator = () => {
     const token = await AsyncStorage.getItem('token');
     if (token) {
       console.log(token);
-      dispatch.auth.getUserData();
+      const {data: user} = await userData();
+      dispatch.auth.setUser(user);
+      dispatch.wallet.setPublicAddress(user?.origen_public_wallet_address);
+      const {data} = await getActiveSftPackage();
+      dispatch.sfts.setActive(data);
+      dispatch.sfts.getCurrentPackage();
       dispatch.auth.setLoggedIn(true);
     }
     if (visit === 'true') {
@@ -77,7 +84,9 @@ const StackNavigator = () => {
       ) : (
         <>
           <Stack.Navigator
-            initialRouteName={loggedIn && 'Wallet'}
+            initialRouteName={
+              loggedIn && activePackage ? 'Wallet' : 'Mint-Packages'
+            }
             screenOptions={{
               headerShown: false,
             }}>

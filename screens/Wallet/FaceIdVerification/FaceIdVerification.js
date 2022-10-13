@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
   title: {
     ...theme.TYPOGRAPHY.h3,
     marginTop: 48,
+    color: '#1D1D35',
   },
   subtitle: {
     ...theme.TYPOGRAPHY.subtitle1,

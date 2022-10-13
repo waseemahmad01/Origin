@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
+import {useSelector} from 'react-redux';
 
 import theme from '../../../theme';
 import assets from '../../../assets';
@@ -21,6 +22,10 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 const isIos = Platform.OS === 'ios';
 
 const Profile = ({navigation}) => {
+  const user = useSelector(state => state.auth.user);
+
+  console.log('My data ===>', user);
+
   return (
     <LinearGradient
       style={{
@@ -54,7 +59,7 @@ const Profile = ({navigation}) => {
         <View style={styles.bottom}>
           <View style={styles.profileContainer}>
             <Image source={assets.user} />
-            <Text style={styles.userName}>Annette Black</Text>
+            <Text style={styles.userName}>{user?.username}</Text>
           </View>
           <View style={styles.divider}></View>
           <View style={{flexGrow: 1}}>
@@ -74,13 +79,13 @@ const Profile = ({navigation}) => {
               <View style={styles.userInfoBlock}>
                 <View style={{...styles.row, justifyContent: 'space-between'}}>
                   <Text style={styles.key}>Phone</Text>
-                  <Text style={styles.value}>(239) 555-0108</Text>
+                  <Text style={styles.value}>{user?.phone_number}</Text>
                 </View>
               </View>
               <View style={styles.userInfoBlock}>
                 <View style={{...styles.row, justifyContent: 'space-between'}}>
                   <Text style={styles.key}>Email Address</Text>
-                  <Text style={styles.value}>annette@gmail.com</Text>
+                  <Text style={styles.value}>{user?.email}</Text>
                 </View>
               </View>
               <View style={styles.userInfoBlock}>

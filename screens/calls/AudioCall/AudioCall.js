@@ -20,6 +20,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useSelector} from 'react-redux';
 
 import {Voximplant} from 'react-native-voximplant';
+import useTimer from '../../../hooks/useTimer';
+import {getFormatedTime} from '../../../utils';
 
 const isIos = Platform.OS === 'ios';
 const height = Dimensions.get('window').height;
@@ -31,6 +33,8 @@ const AudioCall = ({route, navigation}) => {
   const callRef = useRef(null);
   const [callStatus, setCallStatus] = useState('Initializing...');
   console.log('callee', callee);
+
+  const {time, startTimer, stopTimer, start} = useTimer();
 
   // const handleLogin = async () => {
   //   let state = await client.getClientState();
@@ -124,6 +128,7 @@ const AudioCall = ({route, navigation}) => {
       call.on(Voximplant.CallEvents.Connected, callEvent => {
         setCallStatus('Connected');
         console.log('call connected');
+        startTimer();
       });
       call.on(Voximplant.CallEvents.Disconnected, callEvent => {
         // calls.delete(callEvent.call.callId);
@@ -213,7 +218,9 @@ const AudioCall = ({route, navigation}) => {
             <View style={styles.userInfo}>
               <Image source={assets.user} />
               <Text style={styles.name}>Ralph Edwards</Text>
-              <Text style={styles.status}>{callStatus}</Text>
+              <Text style={styles.status}>
+                {start ? getFormatedTime(time) : callStatus}
+              </Text>
             </View>
           </View>
           <View style={styles.bottom}>

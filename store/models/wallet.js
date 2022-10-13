@@ -31,7 +31,7 @@ export const wallet = createModel()({
       try {
         dispatch.wallet.setLoading(true);
         const {data} = await generateWallet();
-        await getNumber();
+        // await getNumber();
         console.log(data.publicAddress);
         dispatch.wallet.setPublicAddress(data.publicAddress);
         dispatch.auth.getUserData();

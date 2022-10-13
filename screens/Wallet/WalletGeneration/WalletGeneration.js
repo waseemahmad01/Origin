@@ -10,19 +10,30 @@ import {
   Pressable,
   StatusBar,
   Platform,
+  Alert,
 } from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import {useDispatch, useSelector} from 'react-redux';
 import {LinearTextGradient} from 'react-native-text-gradient';
 import GButton from '../../../components/GButton/GButton';
 import assets from '../../../assets';
 import theme from '../../../theme';
+import {truncateString} from '../../../utils';
 
 const isIos = Platform.OS === 'ios';
 
 const WalletGeneration = ({navigation}) => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.wallet.loading);
+  const walletAddress = useSelector(state => state.wallet.publicAddress);
   const [showModal, setShowModal] = useState(false);
+
+  const handleCopyAddress = val => {
+    Alert.alert('Success', 'Wallet address copied to clipboard');
+
+    Clipboard.setString(val);
+  };
+
   const handleGenerateWallet = () => {
     dispatch.wallet.createWallet({setShowModal});
   };
@@ -57,6 +68,7 @@ const WalletGeneration = ({navigation}) => {
               Generate your wallet so that you can trade or send the token and
               received 10,000 Gcoins for your very first wallet.
             </Text>
+
             <View style={styles.buttonContainer}>
               <GButton
                 label="Generate Origen Wallet"
@@ -84,6 +96,24 @@ const WalletGeneration = ({navigation}) => {
               Press confirm to received 10,000 Gcoins for your very first
               wallet.
             </Text>
+            <Pressable
+              onPress={() => handleCopyAddress(walletAddress)}
+              style={styles.address}>
+              {walletAddress && (
+                <Text style={{...theme.TYPOGRAPHY.body2}}>
+                  {truncateString(walletAddress)}
+                </Text>
+              )}
+              <Image
+                source={assets.copyIcon}
+                style={{
+                  height: 16,
+                  width: 16,
+                  marginLeft: 10,
+                }}
+                resizeMode="contain"
+              />
+            </Pressable>
             <View style={{width: '100%', marginTop: 32}}>
               <GButton
                 label="Confirm 10,000 Gcoins"
@@ -151,6 +181,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCF9',
     borderRadius: 16,
     width: '100%',
+    alignItems: 'center',
+  },
+  address: {
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    borderRadius: 24,
+    marginTop: 10,
+    backgroundColor: '#d3ddd9',
+    flexDirection: 'row',
     alignItems: 'center',
   },
 });
