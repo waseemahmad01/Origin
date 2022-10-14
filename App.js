@@ -4,13 +4,15 @@ import store from './store';
 import {Provider} from 'react-redux';
 import StackNavigator from './navigators/StackNavigator';
 import {navigationRef} from './utils/RootNavigation';
+import SplashScreen from './screens/SplashScreen/SplashScreen';
 
 const App = () => {
   return (
     <Provider store={store}>
-      <NavigationContainer ref={navigationRef}>
+      {/* <NavigationContainer ref={navigationRef}>
         <StackNavigator />
-      </NavigationContainer>
+      </NavigationContainer> */}
+      <SplashScreen />
     </Provider>
   );
 };
