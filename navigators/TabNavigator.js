@@ -14,6 +14,7 @@ import Privacy from '../screens/Profile/Privacy/Privacy';
 import Blocked from '../screens/Profile/Blocked/Blocked';
 import Help from '../screens/Profile/Help/Help';
 import AboutUs from '../screens/Profile/AboutUs/AboutUs';
+import People from '../screens/People/People';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -118,7 +119,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="People"
-        component={Wallet}
+        component={People}
         options={{
           tabBarIcon: ({focused}) => (
             <Image

@@ -27,6 +27,7 @@ import AudioCall from '../screens/calls/AudioCall/AudioCall';
 import {Voximplant} from 'react-native-voximplant';
 import EditProfile from '../screens/Profile/EditProfile/EditProfile';
 import {getActiveSftPackage, userData} from '../api';
+import BuyNumber from '../screens/BuyNumber/BuyNumber';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,22 +42,26 @@ const StackNavigator = () => {
   const [visited, setVisited] = useState(false);
 
   const checkIfVisited = async () => {
-    const visit = await AsyncStorage.getItem('visited');
-    const token = await AsyncStorage.getItem('token');
-    if (token) {
-      console.log(token);
-      const {data: user} = await userData();
-      dispatch.auth.setUser(user);
-      dispatch.wallet.setPublicAddress(user?.origen_public_wallet_address);
-      const {data} = await getActiveSftPackage();
-      dispatch.sfts.setActive(data);
-      dispatch.sfts.getCurrentPackage();
-      dispatch.auth.setLoggedIn(true);
+    try {
+      const visit = await AsyncStorage.getItem('visited');
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        console.log(token);
+        const {data: user} = await userData();
+        dispatch.auth.setUser(user);
+        dispatch.wallet.setPublicAddress(user?.origen_public_wallet_address);
+        const {data} = await getActiveSftPackage();
+        dispatch.sfts.setActive(data);
+        dispatch.sfts.getCurrentPackage();
+        dispatch.auth.setLoggedIn(true);
+      }
+      if (visit === 'true') {
+        setVisited(true);
+      }
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
     }
-    if (visit === 'true') {
-      setVisited(true);
-    }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -77,6 +82,8 @@ const StackNavigator = () => {
     };
   });
 
+  console.log('active package', activePackage);
+
   return (
     <>
       {loading ? (
@@ -85,7 +92,9 @@ const StackNavigator = () => {
         <>
           <Stack.Navigator
             initialRouteName={
-              loggedIn && activePackage ? 'Wallet' : 'Mint-Packages'
+              loggedIn && Object.keys(activePackage).length > 0
+                ? 'Wallet'
+                : 'Mint-Packages'
             }
             screenOptions={{
               headerShown: false,
@@ -99,6 +108,10 @@ const StackNavigator = () => {
             <Stack.Screen
               name="Wallet"
               component={RequireAuthentication(TabNavigator, loggedIn)}
+            />
+            <Stack.Screen
+              name="Get-Number"
+              component={RequireAuthentication(BuyNumber, loggedIn)}
             />
             <Stack.Screen
               name="Face-Id-verify"

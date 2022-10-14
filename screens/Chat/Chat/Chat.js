@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 import {
   View,
@@ -20,60 +20,60 @@ import theme from '../../../theme';
 
 import assets from '../../../assets';
 import ChatMessage from '../../../components/ChatMessage/ChatMessage';
-import IconButton from '../../../components/IconButton/IconButton';
-import { getAllSMS } from '../../../api';
+// import IconButton from '../../../components/IconButton/IconButton';
+import {getAllSMS} from '../../../api';
 
 const isIos = Platform.OS === 'ios';
 
-const Chat = ({ route, navigation }) => {
+const Chat = ({route, navigation}) => {
   const [allSMS, setSMS] = useState([]);
-
+  const {user} = route.params;
+  console.log(route.params);
   useEffect(() => {
-    _getAllSMS()
-  }, [])
+    _getAllSMS();
+  }, []);
 
   const _getAllSMS = async () => {
     try {
-      const { data } = await getAllSMS(route?.params?.chat?.chat_id);
-      console.log('get messages - ', data)
-      setSMS(data)
+      const {data} = await getAllSMS(route?.params?.chat?.chat_id);
+      console.log('get messages - ', data);
+      setSMS(data);
     } catch (err) {
-      console.log("error - ", err)
+      console.log('error - ', err);
     }
-  }
+  };
 
+  console.log('all sms - ', allSMS);
 
-  console.log('all sms - ', allSMS)
+  const my = route?.params?.chat?.sender_number || '';
+  const receiver = route?.params?.chat?.receiver_number;
 
-  const my = route?.params?.chat?.sender_number || ""
-  const receiver = route?.params?.chat?.receiver_number
+  const makeCall = async () => {
+    try {
+      if (Platform.OS === 'android') {
+        let permissions = [PermissionsAndroid.PERMISSIONS.RECORD_AUDIO];
 
-  // const makeCall = async () => {
-  //   try {
-  //     if (Platform.OS === 'android') {
-  //       let permissions = [PermissionsAndroid.PERMISSIONS.RECORD_AUDIO];
-
-  //       const granted = await PermissionsAndroid.requestMultiple(permissions);
-  //       const recordAudioGranted =
-  //         granted[PermissionsAndroid.PERMISSIONS.RECORD_AUDIO] === 'granted';
-  //       if (recordAudioGranted) {
-  //         // do if permission granted
-  //       } else {
-  //         console.warn(
-  //           'MainScreen: makeCall: record audio permission is not granted',
-  //         );
-  //         return;
-  //       }
-  //     }
-  //     navigation.navigate('AudioCall', {
-  //       callee: user.phone_number,
-  //       //
-  //     });
-  //     //
-  //   } catch (e) {
-  //     console.warn(`MainScreen: makeCall failed: ${e}`);
-  //   }
-  // };
+        const granted = await PermissionsAndroid.requestMultiple(permissions);
+        const recordAudioGranted =
+          granted[PermissionsAndroid.PERMISSIONS.RECORD_AUDIO] === 'granted';
+        if (recordAudioGranted) {
+          // do if permission granted
+        } else {
+          console.warn(
+            'MainScreen: makeCall: record audio permission is not granted',
+          );
+          return;
+        }
+      }
+      navigation.navigate('AudioCall', {
+        callee: user.phone_number,
+        //
+      });
+      //
+    } catch (e) {
+      console.warn(`MainScreen: makeCall failed: ${e}`);
+    }
+  };
 
   return (
     <LinearGradient
@@ -82,10 +82,10 @@ const Chat = ({ route, navigation }) => {
         paddingTop: isIos ? 0 : StatusBar.currentHeight,
       }}
       colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}>
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{flex: 1}}>
         <View style={styles.header}>
           <Pressable onPress={() => navigation.goBack()}>
             <View>
@@ -105,13 +105,16 @@ const Chat = ({ route, navigation }) => {
                 resizeMode="cover"
               />
             </Pressable>
-            <View style={{ marginLeft: 12 }}>
+            <View style={{marginLeft: 12}}>
               {/* <Text style={styles.title}>{user?.username}</Text> */}
               <Text style={styles.subtitle}>@kwatson - 32.5345 GCoins</Text>
               <Text style={styles.subtitle}>Active 3m ago</Text>
             </View>
             <View style={styles.callIcons}>
-              <Pressable onPress={() => { }}>
+              <Pressable
+                onPress={() => {
+                  makeCall();
+                }}>
                 <Image
                   source={assets.audioCall}
                   style={{
@@ -121,7 +124,7 @@ const Chat = ({ route, navigation }) => {
                   resizeMode="contain"
                 />
               </Pressable>
-              <Pressable style={{ marginLeft: 20 }}>
+              <Pressable style={{marginLeft: 20}}>
                 <Image
                   source={assets.videoCall}
                   style={{
@@ -139,7 +142,11 @@ const Chat = ({ route, navigation }) => {
             style={styles.schrollView}
             showsVerticalScrollIndicator={false}>
             {allSMS.map((sms, index) => (
-              <ChatMessage key={index} my={my === sms.sender_number} msg={sms} />
+              <ChatMessage
+                key={index}
+                my={my === sms.sender_number}
+                msg={sms}
+              />
             ))}
           </ScrollView>
           <View style={styles.inputContainer}>

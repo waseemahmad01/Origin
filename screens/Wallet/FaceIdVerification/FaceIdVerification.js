@@ -28,7 +28,7 @@ const FaceIdVerification = ({navigation}) => {
         <View style={styles.buttonContainer}>
           <GButton
             label="Allow Face ID"
-            onPress={() => navigation.navigate('Mint-Packages')}
+            onPress={() => navigation.navigate('Get-Number')}
           />
           <View style={styles.denyButton}>
             <Pressable>

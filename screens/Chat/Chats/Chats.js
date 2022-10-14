@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Voximplant } from 'react-native-voximplant';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {Voximplant} from 'react-native-voximplant';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   View,
   Text,
@@ -17,18 +17,19 @@ import IconButton from '../../../components/IconButton/IconButton';
 import LinearGradient from 'react-native-linear-gradient';
 import theme from '../../../theme';
 import assets from '../../../assets';
-import { getAllChats } from '../../../api';
+import {getAllChats} from '../../../api';
+import {truncateString} from '../../../utils';
 const isIos = Platform.OS === 'ios';
 const client = Voximplant.getInstance();
 
-const Chat = ({ navigation }) => {
+const Chat = ({navigation}) => {
   const dispatch = useDispatch();
-  const { vox_app_name, vox_user_name, vox_user_password, vox_phone_number } =
-    useSelector(state => state.auth.user);
+  const user = useSelector(state => state.auth.user);
   const users = useSelector(state => state.users.users);
+  const balance = useSelector(state => state.wallet.balance);
   console.log(users);
   const [tab, setTab] = useState(0);
-  const [chats, setChats] = useState([])
+  const [chats, setChats] = useState([]);
 
   const handleVoxImplantLogin = async () => {
     let state = await client.getClientState();
@@ -38,8 +39,8 @@ const Chat = ({ navigation }) => {
     }
     if (state !== 'logged_in') {
       const res = await client.login(
-        `${vox_user_name}@${vox_app_name}`,
-        vox_user_password,
+        `${user?.vox_user_name}@${user?.vox_app_name}`,
+        user?.vox_user_password,
       );
       console.log(res);
     }
@@ -51,18 +52,17 @@ const Chat = ({ navigation }) => {
     handleVoxImplantLogin();
   }, []);
 
-
   const getChats = async () => {
     try {
-      const { data } = await getAllChats();
-      setChats(data)
-      console.log("response - ", data)
+      const {data} = await getAllChats();
+      setChats(data);
+      console.log('response - ', data);
     } catch (err) {
-      console.log("error - ", err)
+      console.log('error - ', err);
     }
-  }
+  };
 
-  // 
+  //
   return (
     <LinearGradient
       style={{
@@ -70,10 +70,10 @@ const Chat = ({ navigation }) => {
         paddingTop: isIos ? 0 : StatusBar.currentHeight,
       }}
       colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}>
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{flex: 1}}>
         <View style={styles.container}>
           <View style={styles.header}>
             <Text
@@ -96,10 +96,12 @@ const Chat = ({ navigation }) => {
                 />
               </View>
               <View style={styles.userDetails}>
-                <Text style={styles.userName}>Robert Smith</Text>
-                <Text style={styles.userMetrics}>@rsmith99</Text>
-                <Text style={styles.userMetrics}>0x4845c...e2d1949dfbe</Text>
-                <Text style={styles.userMetrics}>32.6345 GCoins</Text>
+                <Text style={styles.userName}>{user?.name}</Text>
+                <Text style={styles.userMetrics}>@{user?.username}</Text>
+                <Text style={styles.userMetrics}>
+                  {truncateString(user?.origen_public_wallet_address)}
+                </Text>
+                <Text style={styles.userMetrics}>{balance} GCoins</Text>
               </View>
             </View>
           </View>
@@ -138,35 +140,35 @@ const Chat = ({ navigation }) => {
                 </Text>
               </Pressable>
             </View>
-            <View style={{ flexGrow: 1, marginBottom: 20 }}>
+            <View style={{flexGrow: 1, marginBottom: 20}}>
               <ScrollView showsVerticalScrollIndicator={false}>
                 {chats.map(chat => (
                   <Pressable
                     style={styles.userBlock}
                     key={chat?.id}
                     onPress={() => {
-                      console.log("chat data - ", chat)
-                      navigation.navigate('Chat', { chat })
+                      console.log('chat data - ', chat);
+                      navigation.navigate('Chat', {chat});
                     }}>
                     <View style={styles.transactionDetails}>
                       <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
                         <View
                           style={{
                             position: 'relative',
                           }}>
                           <Image
                             source={assets.user}
-                            style={{ height: 56, width: 56 }}
+                            style={{height: 56, width: 56}}
                             resizeMode="cover"
                           />
                           <View style={styles.onlineIndicator}></View>
                         </View>
-                        <View style={{ marginLeft: 16 }}>
+                        <View style={{marginLeft: 16}}>
                           <Text style={styles.transactionType}>
                             {chat?.username}
                           </Text>
-                          <View style={{ flexDirection: 'row' }}>
+                          <View style={{flexDirection: 'row'}}>
                             <Text
                               style={{
                                 ...styles.transactionInfo,
@@ -182,7 +184,7 @@ const Chat = ({ navigation }) => {
                     </View>
                   </Pressable>
                 ))}
-                <View style={{ height: 220 }}></View>
+                <View style={{height: 220}}></View>
               </ScrollView>
             </View>
           </View>

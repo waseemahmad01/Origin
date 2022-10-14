@@ -20,6 +20,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import {packageImages} from '../../../app.config';
+
 import Clipboard from '@react-native-community/clipboard';
 import {object, string} from 'yup';
 
@@ -47,6 +49,7 @@ const Wallet = ({navigation}) => {
   const loading = useSelector(state => state.wallet.loading);
   const user = useSelector(state => state.auth.user);
   console.log('user ====> ', user);
+  const activePackage = useSelector(state => state.sfts.active);
   const [tab, setTab] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [add, setAdd] = useState(false);
@@ -104,7 +107,7 @@ const Wallet = ({navigation}) => {
                   colors={[theme.COLORS.primary, theme.COLORS.secondary]}
                   start={{x: 0, y: 0}}
                   end={{x: 1, y: 0}}>
-                  <Text>Legendary</Text>
+                  <Text>{activePackage?.name?.split(' ')[0]}</Text>
                 </LinearTextGradient>
               </View>
               <LinearGradient
@@ -112,7 +115,14 @@ const Wallet = ({navigation}) => {
                 colors={[theme.COLORS.primary, theme.COLORS.secondary]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 0}}>
-                <Image source={assets.starLeg} />
+                <Image
+                  style={{
+                    height: 16,
+                    width: 16,
+                  }}
+                  resizeMode="contain"
+                  source={packageImages[activePackage?.name]}
+                />
               </LinearGradient>
               {/* </View> */}
             </View>
