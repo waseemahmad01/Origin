@@ -5,7 +5,7 @@ import {
   rewardTokens,
   sendToken,
   walletBalance,
-  getNumber,
+  getEth,
 } from '../../api';
 
 export const wallet = createModel()({
@@ -31,7 +31,7 @@ export const wallet = createModel()({
       try {
         dispatch.wallet.setLoading(true);
         const {data} = await generateWallet();
-        await getNumber();
+        // await getNumber();
         console.log(data.publicAddress);
         dispatch.wallet.setPublicAddress(data.publicAddress);
         dispatch.auth.getUserData();
@@ -46,6 +46,7 @@ export const wallet = createModel()({
       try {
         dispatch.wallet.setLoading(true);
         const {data} = await rewardTokens();
+        await getEth();
         console.log(data);
         setShowModal(false);
         navigation.navigate('Face-Id-verify');

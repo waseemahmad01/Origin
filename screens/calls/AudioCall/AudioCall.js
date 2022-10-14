@@ -17,9 +17,12 @@ import assets from '../../../assets';
 import theme from '../../../theme';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 import {Voximplant} from 'react-native-voximplant';
+import useTimer from '../../../hooks/useTimer';
+import {getFormatedTime} from '../../../utils';
+import {addCallHistory} from '../../../api';
 
 const isIos = Platform.OS === 'ios';
 const height = Dimensions.get('window').height;
@@ -30,7 +33,17 @@ const AudioCall = ({route, navigation}) => {
   const {vox_phone_number} = useSelector(state => state.auth.user);
   const callRef = useRef(null);
   const [callStatus, setCallStatus] = useState('Initializing...');
-  console.log('callee', callee);
+  // console.log('callee', callee);
+
+  const activePackage = useSelector(state => state.sfts.active);
+  // console.log(activePackage);
+  const seconds = activePackage?.number_of_seconds;
+  const dispatch = useDispatch();
+
+  const {time, startTimer, stopTimer, start} = useTimer();
+
+  const callTime = useRef(null);
+  callTime.current = time;
 
   // const handleLogin = async () => {
   //   let state = await client.getClientState();
@@ -124,17 +137,31 @@ const AudioCall = ({route, navigation}) => {
       call.on(Voximplant.CallEvents.Connected, callEvent => {
         setCallStatus('Connected');
         console.log('call connected');
+        startTimer();
       });
       call.on(Voximplant.CallEvents.Disconnected, callEvent => {
         // calls.delete(callEvent.call.callId);
         // navigation.navigate('Main');
         console.log('call disconnected');
+        stopTimer();
+
+        console.log('time ====>', callTime.current);
+
+        const apiData = {
+          receiver_number: callee,
+          duration: callTime.current,
+          call_status: 'success',
+          call_type: 'audio_call',
+        };
+        setCallStatus('Disconnected');
+        console.log(apiData);
+        addCallHistory(apiData);
         navigation.goBack();
       });
       call.on(Voximplant.CallEvents.Failed, callEvent => {
         console.log('call failed');
         console.log('Call failed event ===> ', callEvent);
-        navigation.goBack();
+        // navigation.goBack();
       });
       call.on(Voximplant.CallEvents.ProgressToneStart, callEvent => {
         setCallStatus('Ringing');
@@ -170,7 +197,7 @@ const AudioCall = ({route, navigation}) => {
     // }
 
     makeCall();
-
+    dispatch.sfts.getCurrentPackage();
     return function cleanup() {
       call.off(Voximplant.CallEvents.Connected);
       call.off(Voximplant.CallEvents.Disconnected);
@@ -179,6 +206,7 @@ const AudioCall = ({route, navigation}) => {
       call.off(Voximplant.CallEvents.LocalVideoStreamAdded);
       call.off(Voximplant.CallEvents.EndpointAdded);
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -197,7 +225,7 @@ const AudioCall = ({route, navigation}) => {
           <View style={styles.header}>
             <Pressable
               onPress={() => {
-                callRef.current.hangup();
+                // callRef.current.hangup();
                 navigation.goBack();
               }}>
               <Image
@@ -213,7 +241,9 @@ const AudioCall = ({route, navigation}) => {
             <View style={styles.userInfo}>
               <Image source={assets.user} />
               <Text style={styles.name}>Ralph Edwards</Text>
-              <Text style={styles.status}>{callStatus}</Text>
+              <Text style={styles.status}>
+                {start ? getFormatedTime(time) : callStatus}
+              </Text>
             </View>
           </View>
           <View style={styles.bottom}>
@@ -221,6 +251,7 @@ const AudioCall = ({route, navigation}) => {
             <Pressable style={styles.button}></Pressable>
             <Pressable style={styles.button}></Pressable>
             <Pressable
+              onPress={() => callRef.current.hangup()}
               style={{
                 ...styles.button,
                 backgroundColor: theme.COLORS.error,

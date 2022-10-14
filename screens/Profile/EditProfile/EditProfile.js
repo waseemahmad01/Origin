@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {
   View,
@@ -9,10 +9,10 @@ import {
   StyleSheet,
   Platform,
   ScrollView,
-  KeyboardAvoidingView,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
+import {useSelector} from 'react-redux';
 
 import theme from '../../../theme';
 import assets from '../../../assets';
@@ -23,6 +23,21 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 const isIos = Platform.OS === 'ios';
 
 const EditProfile = ({navigation}) => {
+  const user = useSelector(state => state.auth.user);
+
+  const [formData, setFormData] = useState({
+    name: user?.username || '',
+    email: user?.email || '',
+    phone: user?.phone_number || '',
+    address: '',
+    old_password: '',
+    new_password: '',
+  });
+
+  const handleChange = (text, name) => {
+    setFormData(prev => ({...prev, [name]: text}));
+  };
+
   return (
     <LinearGradient
       style={{
@@ -59,7 +74,7 @@ const EditProfile = ({navigation}) => {
         <View style={styles.bottom}>
           <View style={styles.profileContainer}>
             <Image source={assets.user} />
-            <Text style={styles.userName}>Annette Black</Text>
+            <Text style={styles.userName}>{user?.username}</Text>
           </View>
           <View style={styles.divider}></View>
           <View style={{flexGrow: 1}}>
@@ -73,6 +88,8 @@ const EditProfile = ({navigation}) => {
                       width: 200,
                       height: 40,
                     }}
+                    value={formData.name}
+                    onChangeText={text => handleChange(text, 'name')}
                   />
                 </View>
               </View>
@@ -85,6 +102,8 @@ const EditProfile = ({navigation}) => {
                       width: 200,
                       height: 40,
                     }}
+                    value={formData.email}
+                    onChangeText={text => handleChange(text, 'email')}
                   />
                 </View>
               </View>
@@ -97,6 +116,8 @@ const EditProfile = ({navigation}) => {
                       width: 200,
                       height: 40,
                     }}
+                    value={formData.phone}
+                    onChangeText={text => handleChange(text, 'phone')}
                   />
                 </View>
               </View>
@@ -109,6 +130,8 @@ const EditProfile = ({navigation}) => {
                       width: 200,
                       height: 40,
                     }}
+                    value={formData.address}
+                    onChangeText={text => handleChange(text, 'address')}
                   />
                 </View>
               </View>
@@ -121,6 +144,9 @@ const EditProfile = ({navigation}) => {
                       width: 200,
                       height: 40,
                     }}
+                    secureTextEntry
+                    value={formData.old_password}
+                    onChangeText={text => handleChange(text, 'old_password')}
                   />
                 </View>
               </View>
@@ -128,11 +154,14 @@ const EditProfile = ({navigation}) => {
                 <View style={{...styles.row, justifyContent: 'space-between'}}>
                   <Text style={styles.key}>New Password</Text>
                   <Input
-                    title="Old Password"
+                    title="New Password"
                     style={{
                       width: 200,
                       height: 40,
                     }}
+                    secureTextEntry
+                    value={formData.new_password}
+                    onChangeText={text => handleChange(text, 'new_password')}
                   />
                 </View>
               </View>

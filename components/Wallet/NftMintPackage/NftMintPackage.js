@@ -3,6 +3,7 @@ import React from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {LinearTextGradient} from 'react-native-text-gradient';
 import LinearGradient from 'react-native-linear-gradient';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Button from '../../Button/Button';
 
@@ -10,6 +11,9 @@ import assets from '../../../assets';
 import theme from '../../../theme';
 
 const NftMintPackage = ({data}) => {
+  const dispatch = useDispatch();
+  const selected = useSelector(state => state.sfts.selected);
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -34,16 +38,20 @@ const NftMintPackage = ({data}) => {
           colors={[theme.COLORS.primary, theme.COLORS.secondary]}
           start={{x: 0, y: 0}}
           end={{x: 0.99, y: 0}}>
-          <Text>{data.price}</Text>
+          <Text>{data.price}/mo</Text>
         </LinearTextGradient>
 
         <View style={styles.perks}>
           <Image source={assets.tickGreen} />
-          <Text style={styles.perkText}>Unlimited talk & text</Text>
+          <Text style={styles.perkText}>
+            {data.number_of_messages} messages
+          </Text>
         </View>
         <View style={{...styles.perks, marginVertical: 12}}>
           <Image source={assets.tickGreen} />
-          <Text style={styles.perkText}>Free calling to MEX & CAN</Text>
+          <Text style={styles.perkText}>
+            {data.number_of_seconds} Call seconds
+          </Text>
         </View>
         <View style={styles.perks}>
           <Image source={assets.tickGreen} />
@@ -51,9 +59,22 @@ const NftMintPackage = ({data}) => {
         </View>
 
         <Button
-          label="Select"
-          style={styles.outlinedButton}
-          labelStyle={styles.label}
+          label={data.id === selected?.id ? 'Selected' : 'Select'}
+          style={{
+            ...styles.outlinedButton,
+            backgroundColor:
+              data.id === selected?.id
+                ? theme.COLORS.primary
+                : theme.COLORS.white,
+          }}
+          labelStyle={{
+            ...styles.label,
+            color:
+              data.id === selected?.id
+                ? theme.COLORS.white
+                : theme.COLORS.primary,
+          }}
+          onPress={() => dispatch.sfts.setSelected(data)}
         />
       </View>
     </View>

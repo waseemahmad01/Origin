@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 import {
   View,
@@ -19,78 +20,33 @@ import theme from '../../../theme';
 
 import assets from '../../../assets';
 import ChatMessage from '../../../components/ChatMessage/ChatMessage';
+// import IconButton from '../../../components/IconButton/IconButton';
+import {getAllSMS} from '../../../api';
 
 const isIos = Platform.OS === 'ios';
 
-const chatMessages = [
-  {
-    text: 'Hello',
-    my: false,
-  },
-  {
-    text: 'Hi',
-    my: true,
-  },
-  {
-    text: 'How are you?',
-    my: false,
-  },
-  {
-    text: 'I am fine what about you?',
-    my: true,
-  },
-  {
-    text: 'Hello',
-    my: false,
-  },
-  {
-    text: 'Hi',
-    my: true,
-  },
-  {
-    text: 'How are you?',
-    my: false,
-  },
-  {
-    text: 'I am fine what about you?',
-    my: true,
-  },
-  {
-    text: 'Hello',
-    my: false,
-  },
-  {
-    text: 'Hi',
-    my: true,
-  },
-  {
-    text: 'How are you?',
-    my: false,
-  },
-  {
-    text: 'I am fine what about you?',
-    my: true,
-  },
-  {
-    text: 'Hello',
-    my: false,
-  },
-  {
-    text: 'Hi',
-    my: true,
-  },
-  {
-    text: 'How are you?',
-    my: false,
-  },
-  {
-    text: 'I am fine what about you?',
-    my: true,
-  },
-];
-
 const Chat = ({route, navigation}) => {
-  const user = route.params.user;
+  const [allSMS, setSMS] = useState([]);
+  const {user} = route.params;
+  console.log(route.params);
+  useEffect(() => {
+    _getAllSMS();
+  }, []);
+
+  const _getAllSMS = async () => {
+    try {
+      const {data} = await getAllSMS(route?.params?.chat?.chat_id);
+      console.log('get messages - ', data);
+      setSMS(data);
+    } catch (err) {
+      console.log('error - ', err);
+    }
+  };
+
+  console.log('all sms - ', allSMS);
+
+  const my = route?.params?.chat?.sender_number || '';
+  const receiver = route?.params?.chat?.receiver_number;
 
   const makeCall = async () => {
     try {
@@ -131,6 +87,11 @@ const Chat = ({route, navigation}) => {
       <StatusBar translucent={true} backgroundColor={'transparent'} />
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.header}>
+          <Pressable onPress={() => navigation.goBack()}>
+            <View>
+              <Text>Back button </Text>
+            </View>
+          </Pressable>
           <View style={styles.userInfo}>
             <Pressable onPress={() => navigation.goBack()}>
               <Image
@@ -145,12 +106,15 @@ const Chat = ({route, navigation}) => {
               />
             </Pressable>
             <View style={{marginLeft: 12}}>
-              <Text style={styles.title}>{user?.username}</Text>
+              {/* <Text style={styles.title}>{user?.username}</Text> */}
               <Text style={styles.subtitle}>@kwatson - 32.5345 GCoins</Text>
               <Text style={styles.subtitle}>Active 3m ago</Text>
             </View>
             <View style={styles.callIcons}>
-              <Pressable onPress={makeCall}>
+              <Pressable
+                onPress={() => {
+                  makeCall();
+                }}>
                 <Image
                   source={assets.audioCall}
                   style={{
@@ -177,12 +141,16 @@ const Chat = ({route, navigation}) => {
           <ScrollView
             style={styles.schrollView}
             showsVerticalScrollIndicator={false}>
-            {chatMessages.map((msg, index) => (
-              <ChatMessage key={index} msg={msg} />
+            {allSMS.map((sms, index) => (
+              <ChatMessage
+                key={index}
+                my={my === sms.sender_number}
+                msg={sms}
+              />
             ))}
           </ScrollView>
           <View style={styles.inputContainer}>
-            <ChatInput />
+            <ChatInput refreshChat={_getAllSMS} sendTo={receiver} />
           </View>
         </View>
         <View style={styles.hider}></View>

@@ -1,16 +1,15 @@
 import React from 'react';
 
-import {View, Text, Image, StyleSheet} from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import theme from '../../theme';
 import assets from '../../assets';
 
-const ChatMessage = ({msg}) => {
-  const {my, text} = msg;
+const ChatMessage = ({ msg, my }) => {
   return (
     <View
-      style={{...styles.container, flexDirection: my ? 'row-reverse' : 'row'}}>
+      style={{ ...styles.container, flexDirection: my ? 'row-reverse' : 'row' }}>
       <Image
         source={assets.user}
         style={{
@@ -28,14 +27,14 @@ const ChatMessage = ({msg}) => {
           my ? theme.COLORS.primary : '#EBFAF3',
           my ? theme.COLORS.secondary : '#EBFAF3',
         ]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}>
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}>
         <Text
           style={{
             ...styles.messageText,
             color: my ? theme.COLORS.white : '#1D1D35',
           }}>
-          {text}
+          {msg.message}
         </Text>
       </LinearGradient>
     </View>

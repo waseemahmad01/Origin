@@ -28,7 +28,7 @@ const FaceIdVerification = ({navigation}) => {
         <View style={styles.buttonContainer}>
           <GButton
             label="Allow Face ID"
-            onPress={() => navigation.navigate('Mint-Packages')}
+            onPress={() => navigation.navigate('Get-Number')}
           />
           <View style={styles.denyButton}>
             <Pressable>
@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
   title: {
     ...theme.TYPOGRAPHY.h3,
     marginTop: 48,
+    color: '#1D1D35',
   },
   subtitle: {
     ...theme.TYPOGRAPHY.subtitle1,

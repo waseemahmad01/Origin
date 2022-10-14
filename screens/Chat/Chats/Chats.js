@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-
+import {Voximplant} from 'react-native-voximplant';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   View,
   Text,
@@ -11,25 +12,24 @@ import {
   Pressable,
   ScrollView,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
 
 import IconButton from '../../../components/IconButton/IconButton';
-
 import LinearGradient from 'react-native-linear-gradient';
-
 import theme from '../../../theme';
 import assets from '../../../assets';
-import {Voximplant} from 'react-native-voximplant';
+import {getAllChats} from '../../../api';
+import {truncateString} from '../../../utils';
 const isIos = Platform.OS === 'ios';
 const client = Voximplant.getInstance();
 
 const Chat = ({navigation}) => {
   const dispatch = useDispatch();
-  const {vox_app_name, vox_user_name, vox_user_password, vox_phone_number} =
-    useSelector(state => state.auth.user);
+  const user = useSelector(state => state.auth.user);
   const users = useSelector(state => state.users.users);
+  const balance = useSelector(state => state.wallet.balance);
   console.log(users);
   const [tab, setTab] = useState(0);
+  const [chats, setChats] = useState([]);
 
   const handleVoxImplantLogin = async () => {
     let state = await client.getClientState();
@@ -39,8 +39,8 @@ const Chat = ({navigation}) => {
     }
     if (state !== 'logged_in') {
       const res = await client.login(
-        `${vox_user_name}@${vox_app_name}`,
-        vox_user_password,
+        `${user?.vox_user_name}@${user?.vox_app_name}`,
+        user?.vox_user_password,
       );
       console.log(res);
     }
@@ -48,8 +48,21 @@ const Chat = ({navigation}) => {
 
   useEffect(() => {
     dispatch.users.getAllUsers();
+    getChats();
     handleVoxImplantLogin();
   }, []);
+
+  const getChats = async () => {
+    try {
+      const {data} = await getAllChats();
+      setChats(data);
+      console.log('response - ', data);
+    } catch (err) {
+      console.log('error - ', err);
+    }
+  };
+
+  //
   return (
     <LinearGradient
       style={{
@@ -83,10 +96,12 @@ const Chat = ({navigation}) => {
                 />
               </View>
               <View style={styles.userDetails}>
-                <Text style={styles.userName}>Robert Smith</Text>
-                <Text style={styles.userMetrics}>@rsmith99</Text>
-                <Text style={styles.userMetrics}>0x4845c...e2d1949dfbe</Text>
-                <Text style={styles.userMetrics}>32.6345 GCoins</Text>
+                <Text style={styles.userName}>{user?.name}</Text>
+                <Text style={styles.userMetrics}>@{user?.username}</Text>
+                <Text style={styles.userMetrics}>
+                  {truncateString(user?.origen_public_wallet_address)}
+                </Text>
+                <Text style={styles.userMetrics}>{balance} GCoins</Text>
               </View>
             </View>
           </View>
@@ -127,44 +142,14 @@ const Chat = ({navigation}) => {
             </View>
             <View style={{flexGrow: 1, marginBottom: 20}}>
               <ScrollView showsVerticalScrollIndicator={false}>
-                <Pressable
-                  style={styles.userBlock}
-                  onPress={() => navigation.navigate('Chat', {})}>
-                  <View style={styles.transactionDetails}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <View
-                        style={{
-                          position: 'relative',
-                        }}>
-                        <Image
-                          source={assets.user}
-                          style={{height: 56, width: 56}}
-                          resizeMode="cover"
-                        />
-                        <View style={styles.onlineIndicator}></View>
-                      </View>
-                      <View style={{marginLeft: 16}}>
-                        <Text style={styles.transactionType}>test</Text>
-                        <View style={{flexDirection: 'row'}}>
-                          <Text
-                            style={{
-                              ...styles.transactionInfo,
-                            }}>
-                            phone
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                    <View>
-                      <Text style={styles.amount}>3m ago</Text>
-                    </View>
-                  </View>
-                </Pressable>
-                {users.map(user => (
+                {chats.map(chat => (
                   <Pressable
                     style={styles.userBlock}
-                    key={user?.id}
-                    onPress={() => navigation.navigate('Chat', {user})}>
+                    key={chat?.id}
+                    onPress={() => {
+                      console.log('chat data - ', chat);
+                      navigation.navigate('Chat', {chat});
+                    }}>
                     <View style={styles.transactionDetails}>
                       <View
                         style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -181,14 +166,14 @@ const Chat = ({navigation}) => {
                         </View>
                         <View style={{marginLeft: 16}}>
                           <Text style={styles.transactionType}>
-                            {user?.username}
+                            {chat?.username}
                           </Text>
                           <View style={{flexDirection: 'row'}}>
                             <Text
                               style={{
                                 ...styles.transactionInfo,
                               }}>
-                              {user?.phone_number}
+                              {chat?.phone_number}
                             </Text>
                           </View>
                         </View>

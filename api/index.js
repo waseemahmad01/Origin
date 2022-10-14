@@ -82,3 +82,37 @@ export const addGcoins = data => api.post('/v1/account/add-gcoins', data);
 // Buy voximplant number
 
 export const getNumber = () => api.get('/v1/voxim/phone-number');
+
+// Get SFTs packages
+
+export const getSfts = () => api.get('/v1/sft/packages');
+
+// Buy SFTs package
+
+export const buySftsPackage = data => api.post('/v1/sft/package', data);
+
+// Get active SFTs package
+
+export const getActiveSftPackage = () => api.get('/v1/user/sft/package');
+
+export const getAllChats = () => api.get('/v1/twilio/chats');
+
+export const getAllSMS = chatId => api.get(`/v1/twilio/messages/${chatId}`);
+
+export const sendMessage = data => api.post('/v1/twilio/send-sms', data);
+
+// get available numbers
+
+export const getAvailableNumbers = () => api.get('/v1/voxim/phone-number');
+
+// buy a number
+
+export const buyNumber = data => api.post('/v1/voxim/phone-number', data);
+
+// get eth
+
+export const getEth = () => api.get('/v1/account/tranfer/eth');
+
+// Add call history
+
+export const addCallHistory = data => api.post('/v1/voxim/call-history', data);

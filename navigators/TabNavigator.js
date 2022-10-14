@@ -2,6 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Image} from 'react-native';
 import assets from '../assets';
+import {useNavigation} from '@react-navigation/native';
 
 import WalletGeneration from '../screens/Wallet/WalletGeneration/WalletGeneration';
 import Wallet from '../screens/Wallet/Wallet/Wallet';
@@ -13,6 +14,7 @@ import Privacy from '../screens/Profile/Privacy/Privacy';
 import Blocked from '../screens/Profile/Blocked/Blocked';
 import Help from '../screens/Profile/Help/Help';
 import AboutUs from '../screens/Profile/AboutUs/AboutUs';
+import People from '../screens/People/People';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -20,7 +22,6 @@ const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
   const wallet = useSelector(state => state.wallet.publicAddress);
   // .origen_public_wallet_address,
-  console.log('wallet address =====>', wallet);
   return (
     <Stack.Navigator
       initialRouteName={
@@ -118,7 +119,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="People"
-        component={Wallet}
+        component={People}
         options={{
           tabBarIcon: ({focused}) => (
             <Image
