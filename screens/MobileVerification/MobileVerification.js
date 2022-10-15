@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import assets from '../../assets';
 import Button from '../../components/Button/Button';
 import InputField from '../../components/InputField/InputField';
+import CheckBoxTic from '../../components/CheckboxTic/CheckBoxTic';
 
 import theme from '../../theme';
 
@@ -37,7 +38,7 @@ const MobileVerification = ({handleContinue}) => {
 
   return (
     <View style={{flexGrow: 1}}>
-      <Text style={[theme.TYPOGRAPHY.h2, styles.title]}>
+      <Text style={[theme.TYPOGRAPHY.h3, styles.title]}>
         What’s your mobile number?
       </Text>
 
@@ -59,29 +60,35 @@ const MobileVerification = ({handleContinue}) => {
         updates related to your account via text message. Standard message rates
         may apply.
       </Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          ...styles.privacyPolicy,
-        }}>
-        <Pressable>
-          <Image source={assets.checkbox} />
-        </Pressable>
-        <View style={{paddingLeft: 15}}>
-          <Text style={[theme.TYPOGRAPHY.body2]}>
-            I agree to Origen’s Terms of Use, Privacy Policy, and Acceptable Use
-            Policy.
-          </Text>
-        </View>
-      </View>
 
-      <Button
-        label="I agree"
-        style={{marginTop: 'auto'}}
-        onPress={handleClick}
-        loading={loading}
-      />
+      <View style={{marginTop: 'auto'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            ...styles.privacyPolicy,
+          }}>
+          <CheckBoxTic />
+          <View style={{paddingLeft: 15}}>
+            <Text style={[theme.TYPOGRAPHY.body1]}>
+              I agree to Origen’s{' '}
+              <Text style={{color: theme.COLORS.blue}}>Terms of Use</Text>,{' '}
+              <Text style={{color: theme.COLORS.blue}}>Privacy Policy</Text>,
+              and{' '}
+              <Text style={{color: theme.COLORS.blue}}>
+                Acceptable Use Policy
+              </Text>
+              .
+            </Text>
+          </View>
+        </View>
+        <Button
+          label="I agree"
+          style={{marginTop: 'auto'}}
+          onPress={handleClick}
+          loading={loading}
+        />
+      </View>
     </View>
   );
 };
@@ -90,12 +97,18 @@ export default MobileVerification;
 
 const styles = StyleSheet.create({
   title: {
-    marginBottom: 50,
+    marginBottom: 24,
+    textAlign: 'center',
+    color: theme.COLORS.blue,
   },
   subtitle: {
-    marginTop: 58,
+    marginTop: 16,
+    paddingHorizontal: 16,
+    color: theme.COLORS.grey700,
   },
   privacyPolicy: {
     marginTop: 100,
+    marginVertical: 24,
+    color: theme.COLORS.grey900,
   },
 });

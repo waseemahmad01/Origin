@@ -32,8 +32,20 @@ const OtpVerification = ({handleContinue}) => {
 
   return (
     <View style={{flexGrow: 1}}>
-      <Text style={[theme.TYPOGRAPHY.h2]}>
-        Enter the 4-digit verification code sent to: (818) 515-7997
+      <Text
+        style={[
+          theme.TYPOGRAPHY.h3,
+          {color: theme.COLORS.blue, textAlign: 'center'},
+        ]}>
+        Enter the 4-digit verification code sent to:
+      </Text>
+      <Text
+        style={[
+          theme.TYPOGRAPHY.h3,
+          {color: theme.COLORS.darkBlue, textAlign: 'center'},
+        ]}>
+        {' '}
+        (818) 515-7997
       </Text>
 
       <View
@@ -41,23 +53,30 @@ const OtpVerification = ({handleContinue}) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginTop: 64,
+          marginTop: 24,
         }}>
         <OtpInputs
           numberOfInputs={4}
-          style={{flexDirection: 'row'}}
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
           handleChange={code => setOtp(code)}
           inputStyles={{
-            width: 44,
-            height: 45,
+            width: 60,
+            height: 48,
+            borderRadius: 24,
             borderWidth: 0,
-            borderBottomWidth: 1,
-            borderColor: '#C6C6C6',
+            borderWidth: 1,
+            borderColor: theme.COLORS.grey200,
             fontSize: 20,
-            color: theme.COLORS.black,
-            marginLeft: 15,
+            fontWeight: '700',
+            color: theme.COLORS.grey900,
             textAlign: 'center',
           }}
+          placeholder="-"
+          placeholderTextColor={theme.COLORS.grey200}
         />
         {/* <OTPInputView
           pinCount={4}
@@ -71,23 +90,53 @@ const OtpVerification = ({handleContinue}) => {
             setOtp(code);
           }}
         /> */}
-        {isValid && (
+        {/* {isValid && (
           <Image
             source={assets.verify}
             style={{height: 20, width: 20}}
             resizeMode="cover"
           />
-        )}
+        )} */}
       </View>
       {error && (
         <Text style={{...theme.TYPOGRAPHY.error, marginTop: 5}}>{error}</Text>
       )}
 
-      <Pressable style={{marginTop: 58}}>
-        <Text style={theme.TYPOGRAPHY.body1}>Resend code</Text>
+      <Pressable style={{...styles.links, marginTop: 25}}>
+        <Image
+          source={assets.resend}
+          style={{
+            height: 24,
+            width: 24,
+            marginRight: 16,
+          }}
+        />
+        <Text
+          style={{
+            ...theme.TYPOGRAPHY.body1,
+            fontWeight: '600',
+            color: theme.COLORS.blue,
+          }}>
+          Resend code
+        </Text>
       </Pressable>
-      <Pressable>
-        <Text style={theme.TYPOGRAPHY.body1}>Edit mobile number</Text>
+      <Pressable style={styles.links}>
+        <Image
+          style={{
+            height: 24,
+            width: 24,
+            marginRight: 16,
+          }}
+          source={assets.edit}
+        />
+        <Text
+          style={{
+            ...theme.TYPOGRAPHY.body1,
+            fontWeight: '600',
+            color: theme.COLORS.blue,
+          }}>
+          Edit mobile number
+        </Text>
       </Pressable>
 
       <Button
@@ -134,5 +183,10 @@ const styles = StyleSheet.create({
 
   underlineStyleHighLighted: {
     borderColor: '#C6C6C6',
+  },
+  links: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 18,
   },
 });

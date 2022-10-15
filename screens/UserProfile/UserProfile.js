@@ -45,16 +45,26 @@ const UserProfile = ({handleContinue}) => {
   return (
     <View style={{flexGrow: 1}}>
       <ScrollView style={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
-        <Text style={[theme.TYPOGRAPHY.h2]}>
+        <Text
+          style={[
+            theme.TYPOGRAPHY.h3,
+            {textAlign: 'center', color: theme.COLORS.blue},
+          ]}>
           What is your name and username?
         </Text>
 
-        <Text style={[theme.TYPOGRAPHY.body2, styles.subtitle]}>
-          Enter the name that appears on your driver’s license, state ID, or
-          passport.
+        <Text
+          style={[
+            theme.TYPOGRAPHY.body1,
+            styles.subtitle,
+            {fontWeight: '400', lineHeight: 24, textAlign: 'center'},
+          ]}>
+          Enter the name that appears on your{' '}
+          <Text style={{fontWeight: '600'}}>driver’s license, state ID</Text>,
+          or <Text style={{fontWeight: '600'}}>passport</Text>.
         </Text>
 
-        <View style={styles.fieldContainer}>
+        <View style={{...styles.fieldContainer, marginTop: 24}}>
           <InputField
             label="First name"
             value={userData.firstname}
@@ -92,12 +102,13 @@ export default UserProfile;
 
 const styles = StyleSheet.create({
   subtitle: {
-    marginTop: 9,
+    marginTop: 8,
+    color: theme.COLORS.grey700,
   },
   privacyPolicy: {
     marginTop: 100,
   },
   fieldContainer: {
-    marginTop: 50,
+    marginTop: 20,
   },
 });
