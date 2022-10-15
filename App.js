@@ -12,13 +12,13 @@ import Register from './screens/Register/Register';
 const App = () => {
   return (
     <Provider store={store}>
-      {/* <NavigationContainer ref={navigationRef}>
+      <NavigationContainer ref={navigationRef}>
         <StackNavigator />
-      </NavigationContainer> */}
+      </NavigationContainer>
       {/* <SplashScreen /> */}
       {/* <Onboarding /> */}
       {/* <Notification /> */}
-      <Register />
+      {/* <Register /> */}
     </Provider>
   );
 };

@@ -33,7 +33,7 @@ const numbers = [
   'ORIGEN-818-515-7995',
 ];
 
-const BuyNumber = () => {
+const BuyNumber = ({navigation}) => {
   const [selected, setSelected] = useState(null);
   const [availableNumbers, setAvailableNumbers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -50,9 +50,10 @@ const BuyNumber = () => {
   const handleBuyNumber = async () => {
     try {
       setLoading(true);
-      const numberData = availableNumbers.find(n => n.phoneNumber === selected);
-      const {data} = await buyNumber({phone_number: numberData});
+      const {data} = await buyNumber({phone_number: selected});
       console.log(data);
+
+      navigation.navigate('Mint-Packages');
     } catch (err) {
       console.log(err.message);
     } finally {
@@ -80,14 +81,16 @@ const BuyNumber = () => {
       </Text>
       <View style={styles.numberContainer}>
         <ScrollView style={{flex: 1}}>
-          {numbers.map((num, i) => (
+          {availableNumbers.map((num, i) => (
             <Pressable
               style={styles.number}
               key={i}
               onPress={() => setSelected(num)}>
               <Image
                 source={
-                  selected === num ? assets.radioCheck : assets.radioUncheck
+                  selected?.phoneNumber === num.phoneNumber
+                    ? assets.radioCheck
+                    : assets.radioUncheck
                 }
                 style={{
                   height: 24,
@@ -99,18 +102,19 @@ const BuyNumber = () => {
                 style={{
                   ...theme.TYPOGRAPHY.body1,
                   color:
-                    selected === num
+                    selected?.phoneNumber === num.phoneNumber
                       ? theme.COLORS.grey900
                       : theme.COLORS.grey700,
-                  fontWeight: selected === num ? '600' : '400',
+                  fontWeight:
+                    selected?.phoneNumber === num.phoneNumber ? '600' : '400',
                 }}>
-                ORIGEN-818-515-7997
+                ORIGEN-{num.phoneNumber}
               </Text>
             </Pressable>
           ))}
         </ScrollView>
       </View>
-      <Button label="Continue" />
+      <Button label="Continue" onPress={handleBuyNumber} />
     </View>
     // <LinearGradient
     //   style={{

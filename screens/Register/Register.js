@@ -34,7 +34,7 @@ const screens = {
 const isIos = Platform.OS === 'ios';
 
 const Register = ({navigation}) => {
-  const [active, setActive] = useState(5);
+  const [active, setActive] = useState(0);
 
   const handleBackClick = () => {
     if (active === 0) {
