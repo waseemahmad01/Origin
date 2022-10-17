@@ -28,8 +28,8 @@ export default Button;
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    backgroundColor: theme.COLORS.primary,
-    height: 44,
+    backgroundColor: theme.COLORS.green,
+    height: 48,
     borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',

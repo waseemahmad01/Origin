@@ -94,7 +94,7 @@ const StackNavigator = () => {
             initialRouteName={
               loggedIn && Object.keys(activePackage).length > 0
                 ? 'Wallet'
-                : 'Mint-Packages'
+                : 'Get-Number'
             }
             screenOptions={{
               headerShown: false,
@@ -109,10 +109,7 @@ const StackNavigator = () => {
               name="Wallet"
               component={RequireAuthentication(TabNavigator, loggedIn)}
             />
-            <Stack.Screen
-              name="Get-Number"
-              component={RequireAuthentication(BuyNumber, loggedIn)}
-            />
+            <Stack.Screen name="Get-Number" component={BuyNumber} />
             <Stack.Screen
               name="Face-Id-verify"
               component={FaceIdVerification}

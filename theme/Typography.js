@@ -9,7 +9,7 @@ export default {
     fontWeight: 'bold',
   },
   h2: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: '700',
     lineHeight: 35.8,
     color: colors.black,
@@ -17,6 +17,12 @@ export default {
     fontFamily: 'Inter',
   },
   h3: {
+    fontSize: 24,
+    lineHeight: 32,
+    fontWeight: '700',
+    fontFamily: 'Inter',
+  },
+  h4: {
     fontSize: 20,
     lineHeight: 30,
     fontWeight: '700',

@@ -26,18 +26,21 @@ const isIos = Platform.OS === 'ios' ? true : false;
 const data = [
   {
     id: 0,
-    title: 'Connect with your friends on a secure network',
+    title: 'Connect with your friends',
+    text: 'on a secure network',
     img: assets.onBoarding1,
   },
   {
     id: 1,
-    title: 'Communicate with your family',
-    img: assets.onBoarding1,
+    title: 'Communicate with',
+    text: 'your family',
+    img: assets.onBoarding2,
   },
   {
     id: 2,
-    title: 'Never miss a moment',
-    img: assets.onBoarding2,
+    title: 'Never miss a',
+    text: 'moment',
+    img: assets.onBoarding3,
   },
 ];
 
@@ -64,27 +67,8 @@ const Onboarding = ({navigation}) => {
 
   return (
     <View style={{height}}>
-      <View style={styles.paginationContainer}>
-        <View
-          style={{
-            ...styles.indicator,
-            backgroundColor:
-              activeSlide === 0 ? theme.COLORS.primary : theme.COLORS.white,
-          }}></View>
-        <View
-          style={{
-            ...styles.indicator,
-            marginHorizontal: 21,
-            backgroundColor:
-              activeSlide === 1 ? theme.COLORS.primary : theme.COLORS.white,
-          }}></View>
-        <View
-          style={{
-            ...styles.indicator,
-            backgroundColor:
-              activeSlide === 2 ? theme.COLORS.primary : theme.COLORS.white,
-          }}></View>
-      </View>
+      <StatusBar translucent={true} backgroundColor="transparent" />
+      <View style={styles.paginationContainer}></View>
       <FlatList
         ref={slider}
         style={{flex: 1, zIndex: 1}}
@@ -98,7 +82,7 @@ const Onboarding = ({navigation}) => {
         showsHorizontalScrollIndicator={false}
         renderItem={({item}) => (
           <ImageBackground source={item.img} style={{height, width}}>
-            <View style={styles.layer}>
+            {/* <View style={styles.layer}>
               <SafeAreaView style={{flex: 1}}>
                 <View style={styles.main}>
                   <Text
@@ -124,10 +108,65 @@ const Onboarding = ({navigation}) => {
                   />
                 </View>
               </SafeAreaView>
-            </View>
+            </View> */}
           </ImageBackground>
         )}
       />
+      <View style={styles.content}>
+        <SafeAreaView style={{flex: 1}}>
+          <View
+            style={{
+              ...styles.contentView,
+              paddingTop: isIos ? 0 : StatusBar.currentHeight,
+            }}>
+            <Text style={styles.skipBtn}>Skip</Text>
+            <View style={styles.whiteBox}>
+              <Text style={styles.text}>
+                {data[activeSlide].title}{' '}
+                <Text style={{color: theme.COLORS.blue}}>
+                  {data[activeSlide].text}
+                </Text>
+              </Text>
+              <Button
+                label={activeSlide === 2 ? 'Get Started' : 'Next'}
+                onPress={goToNextSlide}
+              />
+              <View
+                style={{
+                  justifyContent: 'center',
+                  marginTop: 16,
+                  flexDirection: 'row',
+                }}>
+                <View
+                  style={{
+                    ...styles.indicator,
+                    backgroundColor:
+                      activeSlide === 0
+                        ? theme.COLORS.green
+                        : theme.COLORS.grey500,
+                  }}></View>
+                <View
+                  style={{
+                    ...styles.indicator,
+                    marginHorizontal: 12,
+                    backgroundColor:
+                      activeSlide === 1
+                        ? theme.COLORS.green
+                        : theme.COLORS.grey500,
+                  }}></View>
+                <View
+                  style={{
+                    ...styles.indicator,
+                    backgroundColor:
+                      activeSlide === 2
+                        ? theme.COLORS.green
+                        : theme.COLORS.grey500,
+                  }}></View>
+              </View>
+            </View>
+          </View>
+        </SafeAreaView>
+      </View>
     </View>
   );
 };
@@ -163,9 +202,43 @@ const styles = StyleSheet.create({
     elevation: 100,
   },
   indicator: {
-    height: 20,
-    width: 20,
-    borderRadius: 20 / 2,
+    height: 8,
+    width: 8,
+    borderRadius: 8 / 2,
+    backgroundColor: theme.COLORS.grey500,
+  },
+  content: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height,
+    width,
+    zIndex: 1,
+    paddingBottom: isIos ? 0 : 24,
+  },
+  contentView: {
+    flex: 1,
+    paddingHorizontal: 24,
+  },
+  skipBtn: {
+    ...theme.TYPOGRAPHY.body1,
+    marginTop: 23,
+    color: theme.COLORS.white,
+    fontWeight: '600',
+  },
+  whiteBox: {
+    width: '100%',
     backgroundColor: theme.COLORS.white,
+    marginTop: 'auto',
+    borderRadius: 24,
+    paddingVertical: 32,
+    paddingHorizontal: 24,
+  },
+  text: {
+    ...theme.TYPOGRAPHY.h2,
+    textAlign: 'center',
+    marginBottom: 32,
+    lineHeight: 44,
+    color: theme.COLORS.grey900,
   },
 });

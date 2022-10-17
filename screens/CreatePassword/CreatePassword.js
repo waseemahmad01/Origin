@@ -45,9 +45,15 @@ const CreatePassword = ({navigation}) => {
   };
   return (
     <View style={{flexGrow: 1}}>
-      <Text style={[theme.TYPOGRAPHY.h2]}>Create a password</Text>
+      <Text
+        style={[
+          theme.TYPOGRAPHY.h3,
+          {color: theme.COLORS.blue, textAlign: 'center'},
+        ]}>
+        Create a password
+      </Text>
 
-      <Text style={[theme.TYPOGRAPHY.body2, styles.subtitle]}>
+      <Text style={[theme.TYPOGRAPHY.body1, styles.subtitle]}>
         Please create a password using the security guidelines below.
       </Text>
 
@@ -90,7 +96,9 @@ export default CreatePassword;
 
 const styles = StyleSheet.create({
   subtitle: {
-    marginTop: 9,
+    marginTop: 8,
+    textAlign: 'center',
+    color: theme.COLORS.grey700,
   },
   privacyPolicy: {
     marginTop: 100,

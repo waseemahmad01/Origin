@@ -30,9 +30,15 @@ const UserEmail = ({handleContinue}) => {
   };
   return (
     <View style={{flexGrow: 1}}>
-      <Text style={[theme.TYPOGRAPHY.h2]}>What’s your email?</Text>
+      <Text
+        style={[
+          theme.TYPOGRAPHY.h3,
+          {color: theme.COLORS.blue, textAlign: 'center'},
+        ]}>
+        What’s your email?
+      </Text>
 
-      <Text style={[theme.TYPOGRAPHY.body2, styles.subtitle]}>
+      <Text style={[theme.TYPOGRAPHY.body1, styles.subtitle]}>
         Enter an email address to receive updates and notifications.
       </Text>
 
@@ -58,7 +64,9 @@ export default UserEmail;
 
 const styles = StyleSheet.create({
   subtitle: {
-    marginTop: 9,
+    marginTop: 8,
+    textAlign: 'center',
+    color: theme.COLORS.grey700,
   },
   privacyPolicy: {
     marginTop: 100,

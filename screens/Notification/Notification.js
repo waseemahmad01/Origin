@@ -7,6 +7,9 @@ import {
   StyleSheet,
   Pressable,
   Image,
+  ImageBackground,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import assets from '../../assets';
 
@@ -15,6 +18,8 @@ import assets from '../../assets';
 import Button from '../../components/Button/Button';
 import theme from '../../theme';
 
+const isIos = Platform.OS === 'ios';
+
 const Notification = ({navigation}) => {
   // useEffect(() => {
   //   console.log('running');
@@ -22,45 +27,62 @@ const Notification = ({navigation}) => {
   // }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <ImageBackground
+      style={{flex: 1}}
+      resizeMode="cover"
+      source={assets.background}>
       <SafeAreaView style={{flex: 1}}>
+        <StatusBar translucent={true} backgroundColor="transparent" />
         <View style={styles.container}>
-          <View style={styles.imageContainer}>
-            <View style={{alignItems: 'center'}}>
-              <Image source={assets.bell} resizeMode="cover" />
-              <Text style={[theme.TYPOGRAPHY.h2, {marginTop: 46.75}]}>
-                Notifications
-              </Text>
-              <Text
-                style={[
-                  theme.TYPOGRAPHY.body1,
-                  {textAlign: 'center', marginTop: 9},
-                ]}>
-                We share new jobs via notifications, so please ensure that you
-                Allow notifications.
-              </Text>
+          <ImageBackground
+            // style={styles.container}
+            source={assets.containerBox}
+            resizeMode="cover"
+            style={styles.backgroundImage}>
+            <View style={styles.container}>
+              <View style={styles.imageContainer}>
+                <View style={{alignItems: 'center'}}>
+                  <Image source={assets.notification} resizeMode="cover" />
+                  <Text
+                    style={[
+                      theme.TYPOGRAPHY.h3,
+                      {marginTop: 32, color: theme.COLORS.blue},
+                    ]}>
+                    Notifications
+                  </Text>
+                  <Text
+                    style={[
+                      theme.TYPOGRAPHY.body1,
+                      {textAlign: 'center', marginTop: 9, fontWeight: '400'},
+                    ]}>
+                    We share new jobs via notifications, so please ensure that
+                    you <Text style={{fontWeight: '600'}}>Allow</Text>{' '}
+                    notifications.
+                  </Text>
+                </View>
+              </View>
+              <View>
+                <Button
+                  label="Allow notifcations"
+                  style={{alignSelf: 'flex-end'}}
+                  onPress={() =>
+                    navigation.reset({
+                      index: 0,
+                      routes: [{name: 'Login'}],
+                    })
+                  }
+                />
+                <View style={styles.denyButton}>
+                  <Pressable>
+                    <Text style={[theme.TYPOGRAPHY.body1]}>Deny</Text>
+                  </Pressable>
+                </View>
+              </View>
             </View>
-          </View>
-          <View>
-            <Button
-              label="Allow notifcations"
-              style={{alignSelf: 'flex-end'}}
-              onPress={() =>
-                navigation.reset({
-                  index: 0,
-                  routes: [{name: 'Login'}],
-                })
-              }
-            />
-            <View style={styles.denyButton}>
-              <Pressable>
-                <Text style={[theme.TYPOGRAPHY.body1]}>Deny</Text>
-              </Pressable>
-            </View>
-          </View>
+          </ImageBackground>
         </View>
       </SafeAreaView>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -68,19 +90,25 @@ export default Notification;
 
 const styles = StyleSheet.create({
   container: {
+    paddingHorizontal: 24,
+    paddingVertical: 24,
     flex: 1,
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    backgroundColor: 'white',
+    paddingTop: isIos ? 39 : 39 + StatusBar.currentHeight,
+  },
+  backgroundImage: {
+    flex: 1,
+    borderRadius: 24,
+    overflow: 'hidden',
   },
   denyButton: {
-    height: 44,
+    height: 48,
+    marginTop: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   imageContainer: {
     flexGrow: 1,
     alignItems: 'center',
-    paddingTop: 100,
+    paddingTop: 80,
   },
 });

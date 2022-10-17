@@ -71,27 +71,14 @@ const InputField = ({
             ...styles.container,
             borderColor: error ? 'red' : theme.COLORS.grey,
           }}>
-          <Animated.Text
-            style={{
-              ...styles.label,
-              //   top: isFocused
-              //     ? -18
-              //     : //    value.length ? -18 :
-              //       6,
-              top: anim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [12, -18],
-              }),
-              fontSize: anim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [20, 16],
-              }),
-            }}>
-            {label}
-          </Animated.Text>
           <TextInput
             ref={input}
-            style={styles.input}
+            style={{
+              ...styles.input,
+              borderColor: error ? theme.COLORS.danger : theme.COLORS.grey200,
+            }}
+            placeholder={label}
+            placeholderTextColor={theme.COLORS.grey500}
             onFocus={handleFocus}
             onBlur={handleBlur}
             value={value}
@@ -105,15 +92,22 @@ const InputField = ({
             <Pressable
               style={{...styles.icon, zIndex: 1}}
               onPress={() => setPassword(!password)}>
-              <Image source={assets.eyeSlash} />
+              <Image
+                source={password ? assets.hidden : assets.visible}
+                style={{
+                  height: 24,
+                  width: 24,
+                  marginTop: -7,
+                }}
+              />
             </Pressable>
           )}
           {isValid && (
             <View style={styles.icon}>
               <Image
                 source={assets.verify}
-                style={{height: 20, width: 20}}
-                resizeMode="cover"
+                style={{height: 12, width: 15}}
+                resizeMode="contain"
               />
             </View>
           )}
@@ -128,17 +122,19 @@ export default InputField;
 
 const styles = StyleSheet.create({
   container: {
-    borderBottomWidth: 1,
-
     position: 'relative',
   },
   input: {
-    height: 44,
-    fontSize: 20,
+    height: 48,
+    fontSize: 16,
     fontWeight: '400',
-    color: theme.COLORS.black,
+    color: theme.COLORS.grey900,
     fontFamily: 'SF Pro Display',
     textTransform: 'none',
+    borderWidth: 1,
+    borderRadius: 24,
+    paddingHorizontal: 20,
+    paddingRight: 40,
   },
   label: {
     position: 'absolute',
@@ -156,7 +152,7 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     top: '50%',
-    marginTop: -10,
-    right: 0,
+    marginTop: -5,
+    right: 20,
   },
 });
