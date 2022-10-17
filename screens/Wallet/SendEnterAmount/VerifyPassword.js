@@ -5,61 +5,39 @@ import {
   Text,
   StyleSheet,
   Image,
-  SafeAreaView,
   Platform,
-  StatusBar,
   Pressable,
+  Modal,
 } from 'react-native';
 import assets from '../../../assets';
-import Button from '../../../components/GButton/GButton';
-import IconButton from '../../../components/IconButton/IconButton';
+import Button from '../../../components/Button/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-import LinearGradient from 'react-native-linear-gradient';
-
-import Input from '../../../components/Input/Input';
+import InputField from '../../../components/InputField/InputField';
 
 import theme from '../../../theme';
 
 const isIos = Platform.OS === 'ios';
 
-const VerifyPassword = ({navigation}) => {
+const VerifyPassword = ({navigation, verify}) => {
   return (
-    <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{flex: 1}}>
-        <View style={styles.top}>
-          <View
-            style={{
-              ...styles.row,
-              justifyContent: 'space-between',
-              ...styles.header,
-            }}>
-            <Text style={styles.headerTitle}>Send</Text>
-            <Pressable onPress={() => navigation.goBack()}>
-              <Image
-                source={assets.closeIcon}
-                style={{
-                  height: 24,
-                  width: 24,
-                }}
-                resizeMode="cover"
-              />
-            </Pressable>
-          </View>
-        </View>
-        <View style={styles.container}>
+    <Modal visible={verify} animationType="fade" transparent={true}>
+      <View style={styles.container}>
+        <View style={styles.innerContainer}>
           <Text style={styles.title}> Verify your password</Text>
-          <View style={{width: '100%'}}>
-            <Input title="Enter Password" />
+          <Text
+            style={{
+              ...theme.TYPOGRAPHY.body1,
+              color: theme.COLORS.grey700,
+              textAlign: 'center',
+              marginBottom: 32,
+              fontWeight: '400',
+            }}>
+            Press enter your password below
+          </Text>
+          <View>
+            <InputField label="Enter Password" value="" />
           </View>
+
           <View style={styles.btnContainer}>
             <View style={{flexGrow: 1, marginRight: 16}}>
               <Button
@@ -71,10 +49,14 @@ const VerifyPassword = ({navigation}) => {
               />
             </View>
             <View>
-              <IconButton
+              <Pressable
                 style={{
-                  height: 52,
-                  width: 52,
+                  height: 48,
+                  width: 48,
+                  borderRadius: 52 / 2,
+                  backgroundColor: theme.COLORS.green,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
                 <Image
                   source={assets.faceIdWhite}
@@ -84,13 +66,12 @@ const VerifyPassword = ({navigation}) => {
                   }}
                   resizeMode="cover"
                 />
-              </IconButton>
+              </Pressable>
             </View>
           </View>
         </View>
-        <View style={styles.hider}></View>
-      </SafeAreaView>
-    </LinearGradient>
+      </View>
+    </Modal>
   );
 };
 
@@ -98,21 +79,18 @@ export default VerifyPassword;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    paddingHorizontal: 24,
-    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    flex: 1,
     justifyContent: 'center',
-    flexGrow: 1,
-    backgroundColor: theme.COLORS.white,
-    zIndex: 2,
+    alignItems: 'center',
+    paddingHorizontal: 24,
   },
   title: {
-    ...theme.TYPOGRAPHY.h2,
-    fontSize: 24,
+    ...theme.TYPOGRAPHY.h3,
     fontWeight: '700',
-    fontFamily: 'Inter',
-    color: '#1D1D35',
-    marginBottom: 32,
+    color: theme.COLORS.blue,
+    marginBottom: 8,
+    textAlign: 'center',
   },
   btnContainer: {
     marginTop: 24,
@@ -121,6 +99,8 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
+    // flex: 1,
+    // backgroundColor: 'rgba(0,0,0,0.5)',
   },
   hider: {
     position: 'absolute',
@@ -178,5 +158,11 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     marginTop: 8,
     marginLeft: 24,
+  },
+  innerContainer: {
+    backgroundColor: theme.COLORS.white,
+    paddingVertical: 32,
+    paddingHorizontal: 24,
+    borderRadius: 24,
   },
 });

@@ -2,22 +2,21 @@ import React from 'react';
 
 import LinearGradient from 'react-native-linear-gradient';
 
-import {Pressable, StyleSheet} from 'react-native';
+import {ImageBackground, Pressable, StyleSheet} from 'react-native';
 import theme from '../../theme';
+import assets from '../../assets';
 
 const IconButton = ({children, onPress, style, containerStyle}) => {
   return (
     <Pressable onPress={onPress} style={containerStyle}>
-      <LinearGradient
+      <ImageBackground
+        source={assets.iconBtnBg}
         style={{
           ...styles.gradient,
           ...style,
-        }}
-        colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}>
+        }}>
         {children}
-      </LinearGradient>
+      </ImageBackground>
     </Pressable>
   );
 };

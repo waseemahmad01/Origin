@@ -1,6 +1,13 @@
 import React from 'react';
 
-import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import assets from '../../../assets';
 import theme from '../../../theme';
@@ -12,13 +19,15 @@ const AssetsTab = () => {
         <ScrollView>
           <View style={styles.assetContainer}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View style={styles.iconContainer}>
+              <ImageBackground
+                source={assets.iconBtnBg}
+                style={styles.iconContainer}>
                 <Image
-                  source={assets.gCoin}
-                  style={{height: 20, width: 20}}
+                  source={assets.coin}
+                  style={{height: 24, width: 24}}
                   resizeMode="cover"
                 />
-              </View>
+              </ImageBackground>
               <Text style={styles.title}>10,000 Gcoins</Text>
             </View>
             <Pressable style={styles.btn}>
@@ -27,14 +36,16 @@ const AssetsTab = () => {
           </View>
           <View style={styles.assetContainer}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View style={styles.iconContainer}>
+              <ImageBackground
+                source={assets.iconBtnBg}
+                style={styles.iconContainer}>
                 <Image
-                  source={assets.simpleStar}
-                  style={{height: 20, width: 20}}
+                  source={assets.creds}
+                  style={{height: 24, width: 24}}
                   resizeMode="cover"
                 />
-              </View>
-              <Text style={styles.title}>Legendary Badge</Text>
+              </ImageBackground>
+              <Text style={styles.title}>2,000 Gcreds</Text>
             </View>
             <Pressable style={styles.btn}>
               <Text style={styles.transferText}>Transfer</Text>
@@ -42,14 +53,33 @@ const AssetsTab = () => {
           </View>
           <View style={styles.assetContainer}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View style={styles.iconContainer}>
+              <ImageBackground
+                source={assets.iconBtnBg}
+                style={styles.iconContainer}>
                 <Image
-                  source={assets.file}
-                  style={{height: 20, width: 20}}
+                  source={assets.badge}
+                  style={{height: 24, width: 24}}
                   resizeMode="cover"
                 />
-              </View>
-              <Text style={styles.title}>2,000 Gcreds</Text>
+              </ImageBackground>
+              <Text style={styles.title}>Epic Bundles</Text>
+            </View>
+            <Pressable style={styles.btn}>
+              <Text style={styles.transferText}>Transfer</Text>
+            </Pressable>
+          </View>
+          <View style={styles.assetContainer}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <ImageBackground
+                source={assets.iconBtnBg}
+                style={styles.iconContainer}>
+                <Image
+                  source={assets.badge}
+                  style={{height: 24, width: 24}}
+                  resizeMode="cover"
+                />
+              </ImageBackground>
+              <Text style={styles.title}>100 SFTs</Text>
             </View>
             <Pressable style={styles.btn}>
               <Text style={styles.transferText}>Transfer</Text>
@@ -76,29 +106,30 @@ const styles = StyleSheet.create({
   iconContainer: {
     height: 48,
     width: 48,
-    backgroundColor: '#F5FCF9',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 48 / 2,
   },
   title: {
     ...theme.TYPOGRAPHY.body1,
-    lineHeight: 26,
-    fontWeight: '500',
+    fontSize: 18,
+    lineHeight: 24,
+    fontWeight: '600',
     fontFamily: 'Inter',
     marginLeft: 16,
   },
   transferText: {
-    fontSize: 12,
+    ...theme.TYPOGRAPHY.body2,
+    fontSize: 13,
     fontFamily: 'Inter',
-    fontWeight: '400',
-    lineHeight: 18,
-    color: '#4A4A5D',
+    fontWeight: '600',
+    lineHeight: 16,
+    color: theme.COLORS.white,
   },
   btn: {
     paddingHorizontal: 16,
     paddingVertical: 7,
-    backgroundColor: '#F5FCF9',
+    backgroundColor: theme.COLORS.green,
     borderRadius: 16,
   },
 });

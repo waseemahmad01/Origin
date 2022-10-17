@@ -7,63 +7,81 @@ import {
   StatusBar,
   Platform,
   StyleSheet,
-  Dimensions,
   Image,
+  ImageBackground,
 } from 'react-native';
 
-import LinearGradient from 'react-native-linear-gradient';
-import {LinearTextGradient} from 'react-native-text-gradient';
 import assets from '../../../assets';
-import Button from '../../../components/GButton/GButton';
+import Button from '../../../components/Button/Button';
 import theme from '../../../theme';
 
 const isIos = Platform.OS === 'ios';
-const height = Dimensions.get('window').height;
 
 const TransactionSuccess = ({navigation}) => {
   return (
-    <LinearGradient
+    <ImageBackground
+      source={assets.background}
       style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <StatusBar translucent={true} backgroundColor={'transparent'} />
+        flex: 1,
+      }}>
       <SafeAreaView style={{flex: 1}}>
-        <View style={styles.top}></View>
-        <View style={styles.logo}>
-          <Image source={assets.success} />
-        </View>
-        <View style={styles.bottom}>
-          <View style={styles.content}>
-            <LinearTextGradient
-              style={styles.title}
-              locations={[0, 1]}
-              colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}>
-              <Text>Transaction Successful</Text>
-            </LinearTextGradient>
-            <Text style={styles.subtitle}>
-              You just sent <Text style={{fontWeight: '500'}}>0.45 Gcoins</Text>{' '}
-              to
-            </Text>
-            <Text style={{...styles.subtitle, fontWeight: '500'}}>
-              0x4845c...e2d1949dfbe
-            </Text>
-            <View style={{width: '100%', marginTop: 48}}>
+        <View
+          style={{
+            paddingHorizontal: 24,
+
+            flex: 1,
+          }}>
+          <ImageBackground
+            source={assets.containerBox}
+            style={{
+              flex: 1,
+              marginBottom: 24,
+              marginTop: isIos ? 40 : 40 + StatusBar.currentHeight,
+              borderRadius: 24,
+              overflow: 'hidden',
+              alignItems: 'center',
+              padding: 24,
+            }}>
+            <View style={{alignItems: 'center'}}>
+              <Image
+                source={assets.success2}
+                style={{marginTop: 44, marginBottom: 51}}
+              />
+
+              <Text style={styles.transactTitle}>Transaction Successful</Text>
+
+              <Text style={styles.subtitle}>
+                You just added
+                <Text
+                  style={{
+                    fontWeight: '600',
+                    color: theme.COLORS.grey900,
+                  }}>
+                  5.00 Gcoins
+                </Text>{' '}
+                to your wallet from this wallet{' '}
+                <Text
+                  style={{
+                    fontWeight: '600',
+                    color: theme.COLORS.grey900,
+                  }}>
+                  @johnsmith 0x...4A1F
+                </Text>
+              </Text>
+            </View>
+            <View style={{width: '100%', marginTop: 'auto'}}>
               <Button
                 label="Done"
-                onPress={() => navigation.navigate('My-Wallet')}
+                onPress={() => {
+                  setAdd(false);
+                  setModalVisible(false);
+                }}
               />
             </View>
-          </View>
+          </ImageBackground>
         </View>
-        <View style={styles.hider}></View>
       </SafeAreaView>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
@@ -73,11 +91,7 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
   },
-  top: {
-    height: height * 0.22,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
+
   bottom: {
     flexGrow: 1,
     backgroundColor: theme.COLORS.white,
@@ -104,16 +118,19 @@ const styles = StyleSheet.create({
     marginTop: 84,
     alignItems: 'center',
   },
-  title: {
-    ...theme.TYPOGRAPHY.h2,
-    fontSize: 24,
+  transactTitle: {
+    ...theme.TYPOGRAPHY.h3,
+
     fontWeight: '700',
     fontFamily: 'Inter',
-    marginBottom: 16,
+    marginBottom: 8,
+    color: theme.COLORS.green,
   },
   subtitle: {
-    ...theme.TYPOGRAPHY.subtitle1,
+    ...theme.TYPOGRAPHY.body1,
     fontWeight: '400',
-    color: '#6E6E7E',
+    color: theme.COLORS.grey700,
+    lineHeight: 24,
+    textAlign: 'center',
   },
 });

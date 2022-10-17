@@ -10,6 +10,7 @@ import {
   Image,
   TextInput,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -35,25 +36,37 @@ const SendSearch = ({navigation}) => {
   };
 
   return (
-    <LinearGradient
+    <ImageBackground
+      source={assets.background}
+      resizeMode="cover"
       style={{
         ...styles.gradient,
         paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
+      }}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.topBar}>
-          <Text style={styles.topBarTitle}>Send</Text>
+          <View style={styles.header}>
+            <Pressable onPress={() => navigation.goBack()}>
+              <Image
+                source={assets.chevronLeft}
+                style={{
+                  height: 32,
+                  width: 32,
+                }}
+              />
+            </Pressable>
+            <Text style={styles.topBarTitle}>Send</Text>
+            <View style={{width: 32}} />
+          </View>
+
           <View style={styles.searchBar}>
             <View style={styles.searchBarInner}>
               <Image
                 source={assets.search}
                 style={{
-                  height: 20,
-                  width: 20,
+                  height: 24,
+                  width: 24,
                 }}
                 resizeMode="cover"
               />
@@ -65,17 +78,17 @@ const SendSearch = ({navigation}) => {
                 onChangeText={setSearch}
               />
               <Image
-                source={assets.qrCode}
+                source={search.length > 0 ? assets.close : assets.scan}
                 style={{
-                  height: 20,
-                  width: 20,
+                  height: 24,
+                  width: 24,
                 }}
                 resizeMode="cover"
               />
             </View>
           </View>
         </View>
-        <View style={styles.bottom}>
+        <ImageBackground source={assets.containerBox} style={styles.bottom}>
           <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
             {search.length > 0 ? (
               <>
@@ -171,11 +184,11 @@ const SendSearch = ({navigation}) => {
               </>
             )}
           </ScrollView>
-        </View>
+        </ImageBackground>
 
         <View style={styles.hider}></View>
       </SafeAreaView>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
@@ -191,13 +204,13 @@ const styles = StyleSheet.create({
   topBarTitle: {
     ...theme.TYPOGRAPHY.h3,
     fontWeight: '700',
-    fontFamily: 'Inter',
-    color: theme.COLORS.white,
-    marginTop: 27.5,
-    marginBottom: 16,
+    lineHeight: 32,
+    color: theme.COLORS.darkBlue,
   },
   searchBar: {
-    backgroundColor: theme.COLORS.white,
+    backgroundColor: '#ffffff66',
+    borderWidth: 1,
+    borderColor: theme.COLORS.white,
     height: 44,
     justifyContent: 'center',
     borderRadius: 32,
@@ -212,66 +225,75 @@ const styles = StyleSheet.create({
   },
   serachInput: {
     flexGrow: 1,
-    ...theme.TYPOGRAPHY.subtitle1,
-    fontWeight: '400',
-    fontFamily: 'Inter',
+    ...theme.TYPOGRAPHY.body1,
+    fontWeight: '500',
     height: '100%',
-    color: '#1D1D35',
+    color: theme.COLORS.grey900,
     marginHorizontal: 16,
     lineHeight: 20,
   },
   bottom: {
-    backgroundColor: theme.COLORS.white,
     flexGrow: 1,
     paddingHorizontal: 24,
     zIndex: 2,
     elevation: 2,
+    borderTopRightRadius: 24,
+    borderTopLeftRadius: 24,
+    overflow: 'hidden',
   },
   hider: {
     position: 'absolute',
     backgroundColor: theme.COLORS.white,
     bottom: 0,
     width: '100%',
-    height: 60,
+    height: 35,
+    opacity: 0.25,
     zIndex: 0,
   },
   title: {
     ...theme.TYPOGRAPHY.subtitle1,
-    color: '#B7B7BE',
-    fontWeight: '500',
-    fontFamily: 'Inter',
+    color: theme.COLORS.grey500,
+    fontWeight: '600',
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   transferText: {
-    fontSize: 12,
-    fontFamily: 'Inter',
-    fontWeight: '400',
-    lineHeight: 18,
-    color: '#4A4A5D',
+    ...theme.TYPOGRAPHY.body2,
+    fontSize: 13,
+    fontWeight: '600',
+    lineHeight: 16,
+    color: theme.COLORS.white,
   },
   btn: {
-    paddingHorizontal: 16,
-    paddingVertical: 7,
-    backgroundColor: '#F5FCF9',
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+    backgroundColor: theme.COLORS.green,
     borderRadius: 16,
   },
   userName: {
-    ...theme.TYPOGRAPHY.subtitle1,
-    color: '#1D1D35',
-    fontWeight: '500',
+    ...theme.TYPOGRAPHY.body1,
+    color: theme.COLORS.grey900,
+    lineHeight: 22,
+    fontWeight: '600',
   },
   onlineIndicator: {
     height: 16,
     width: 16,
-    backgroundColor: theme.COLORS.primary,
+    backgroundColor: theme.COLORS.green,
     borderRadius: 16 / 2,
     borderWidth: 3,
     borderColor: theme.COLORS.white,
     position: 'absolute',
     right: 14,
     bottom: 0,
+  },
+  header: {
+    marginTop: 27.5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
   },
 });

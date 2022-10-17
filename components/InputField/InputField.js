@@ -23,7 +23,7 @@ const InputField = ({
   isValid,
   ...rest
 }) => {
-  const [, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const [floatLabel, setFloatLabel] = useState(false);
   const [password, setPassword] = useState(secureTextEntry || false);
 
@@ -75,7 +75,11 @@ const InputField = ({
             ref={input}
             style={{
               ...styles.input,
-              borderColor: error ? theme.COLORS.danger : theme.COLORS.grey200,
+              borderColor: error
+                ? theme.COLORS.danger
+                : isFocused
+                ? theme.COLORS.blue
+                : theme.COLORS.grey200,
             }}
             placeholder={label}
             placeholderTextColor={theme.COLORS.grey500}

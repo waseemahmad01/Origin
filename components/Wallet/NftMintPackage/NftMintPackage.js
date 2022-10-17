@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, ImageBackground} from 'react-native';
 import {LinearTextGradient} from 'react-native-text-gradient';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,78 +15,92 @@ const NftMintPackage = ({data}) => {
   const selected = useSelector(state => state.sfts.selected);
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        style={[styles.top]}
-        colors={[data.bg[0], data.bg[1]]}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}>
-        <View style={styles.topInner}>
-          <View style={styles.circle}>
-            <Image source={data.logo} />
+    <ImageBackground source={assets.sftBg}>
+      <View style={styles.container}>
+        {/* <LinearGradient
+          style={[styles.top]}
+          colors={[data.bg[0], data.bg[1]]}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}>
+          <View style={styles.topInner}>
+            <View style={styles.circle}>
+              <Image source={data.logo} />
+            </View>
+            <Text style={styles.title}>{data.title}</Text>
           </View>
-          <Text style={styles.title}>{data.title}</Text>
-        </View>
-      </LinearGradient>
-      {/* <View style={{...styles.top, backgroundColor: data.bg}}>
+        </LinearGradient> */}
+        {/* <View style={{...styles.top, backgroundColor: data.bg}}>
+        
        
       </View> */}
-      <View style={styles.bottom}>
-        <LinearTextGradient
-          style={styles.gradientText}
-          locations={[0, 1]}
-          colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-          start={{x: 0, y: 0}}
-          end={{x: 0.99, y: 0}}>
-          <Text>{data.price}/mo</Text>
-        </LinearTextGradient>
-
-        <View style={styles.perks}>
-          <Image source={assets.tickGreen} />
-          <Text style={styles.perkText}>
-            {data.number_of_messages} messages
-          </Text>
+        <View style={{alignItems: 'center', marginTop: '-18%'}}>
+          <Image source={data.logo} resizeMode="contain" style={styles.icon} />
         </View>
-        <View style={{...styles.perks, marginVertical: 12}}>
-          <Image source={assets.tickGreen} />
-          <Text style={styles.perkText}>
-            {data.number_of_seconds} Call seconds
-          </Text>
+        <Text style={styles.title}>{data.title}</Text>
+        <View style={styles.bottom}>
+          <Text style={styles.gradientText}>${data.price}/month</Text>
+          <View>
+            <View style={{...styles.perks}}>
+              <Image
+                source={assets.checkBlue}
+                style={{
+                  height: 24,
+                  width: 24,
+                }}
+              />
+              <Text style={styles.perkText}>
+                {data.number_of_messages} messages
+              </Text>
+            </View>
+            <View style={{...styles.perks, marginVertical: 12}}>
+              <Image
+                source={assets.checkBlue}
+                style={{
+                  height: 24,
+                  width: 24,
+                }}
+              />
+              <Text style={styles.perkText}>
+                {data.number_of_seconds} Call seconds
+              </Text>
+            </View>
+            <View style={styles.perks}>
+              <Image
+                source={assets.checkBlue}
+                style={{
+                  height: 24,
+                  width: 24,
+                }}
+              />
+              <Text style={styles.perkText}>High speed data</Text>
+            </View>
+          </View>
+          <Button
+            label={data.id === selected?.id ? 'Selected' : 'Select'}
+            style={{
+              ...styles.outlinedButton,
+              backgroundColor:
+                data.id === selected?.id
+                  ? theme.COLORS.darkGreen
+                  : theme.COLORS.green,
+            }}
+            labelStyle={{
+              ...styles.label,
+              color: theme.COLORS.white,
+            }}
+            onPress={() => dispatch.sfts.setSelected(data)}
+          />
         </View>
-        <View style={styles.perks}>
-          <Image source={assets.tickGreen} />
-          <Text style={styles.perkText}>High speed data</Text>
-        </View>
-
-        <Button
-          label={data.id === selected?.id ? 'Selected' : 'Select'}
-          style={{
-            ...styles.outlinedButton,
-            backgroundColor:
-              data.id === selected?.id
-                ? theme.COLORS.primary
-                : theme.COLORS.white,
-          }}
-          labelStyle={{
-            ...styles.label,
-            color:
-              data.id === selected?.id
-                ? theme.COLORS.white
-                : theme.COLORS.primary,
-          }}
-          onPress={() => dispatch.sfts.setSelected(data)}
-        />
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
 export default NftMintPackage;
 
 const styles = StyleSheet.create({
-  container: {},
   top: {
-    backgroundColor: '#4A4A5D',
+    // backgroundColor: '#4A4A5D',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     alignItems: 'center',
@@ -107,25 +121,29 @@ const styles = StyleSheet.create({
     borderColor: theme.COLORS.white,
   },
   title: {
-    ...theme.TYPOGRAPHY.h3,
-    color: theme.COLORS.white,
-    marginLeft: 12,
+    ...theme.TYPOGRAPHY.h2,
+    color: theme.COLORS.darkBlue,
+    textAlign: 'center',
+    marginTop: 3,
+    marginBottom: 8,
+    lineHeight: 44,
   },
   bottom: {
-    borderWidth: 1,
-    borderColor: '#BFEFDA',
-    backgroundColor: '#BFEFDA40',
+    // borderWidth: 1,
+    // borderColor: '#BFEFDA',
+    // backgroundColor: '#BFEFDA40',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 24,
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
+    paddingHorizontal: 24,
+    paddingBottom: 24,
   },
   outlinedButton: {
     backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: theme.COLORS.primary,
-    marginTop: 16,
+    marginTop: 24,
   },
   label: {
     color: theme.COLORS.primary,
@@ -135,8 +153,9 @@ const styles = StyleSheet.create({
   },
   gradientText: {
     ...theme.TYPOGRAPHY.h3,
-    fontSize: 24,
+    lineHeight: 32,
     marginBottom: 16,
+    color: theme.COLORS.blue,
   },
   perks: {
     flexDirection: 'row',
@@ -147,5 +166,8 @@ const styles = StyleSheet.create({
     ...theme.TYPOGRAPHY.body2,
     fontFamily: 'Inter',
     fontWeight: '400',
+  },
+  icon: {
+    width: 48,
   },
 });

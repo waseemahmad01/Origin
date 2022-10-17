@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
 
-import LinearGradient from 'react-native-linear-gradient';
-
 import {
   View,
   Text,
@@ -11,6 +9,7 @@ import {
   Image,
   StatusBar,
   Pressable,
+  ImageBackground,
 } from 'react-native';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -19,10 +18,10 @@ import {object, string} from 'yup';
 
 import theme from '../../../theme';
 import assets from '../../../assets';
-import Button from '../../../components/GButton/GButton';
-import Input from '../../../components/Input/Input';
+import Button from '../../../components/Button/Button';
+import InputField from '../../../components/InputField/InputField';
+import VerifyPassword from './VerifyPassword';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {validate} from '../../../utils/validations';
 
 const isIos = Platform.OS === 'ios';
@@ -37,6 +36,7 @@ const SendEnterAmount = ({navigation}) => {
   const user = useSelector(state => state.users.selectedUser);
   const loading = useSelector(state => state.wallet.loading);
   const balance = useSelector(state => state.wallet.balance);
+  const [verify, setVerify] = useState(true);
   const [formData, setFormData] = useState({
     target_wallet_address: user?.origen_public_wallet_address || '',
     amount_of_tokens: '',
@@ -63,100 +63,112 @@ const SendEnterAmount = ({navigation}) => {
     dispatch.wallet.transferToken({formData, navigation});
   };
   return (
-    <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{flex: 1}}>
-        <View style={styles.top}>
-          <View
-            style={{
-              ...styles.row,
-              justifyContent: 'space-between',
-              ...styles.header,
-            }}>
-            <Text style={styles.headerTitle}>Send</Text>
-            <Pressable onPress={() => navigation.goBack()}>
+    <>
+      <ImageBackground
+        source={assets.background}
+        resizeMode="cover"
+        style={{
+          ...styles.gradient,
+          paddingTop: isIos ? 0 : StatusBar.currentHeight,
+        }}>
+        <StatusBar translucent={true} backgroundColor={'transparent'} />
+        <SafeAreaView style={{flex: 1}}>
+          <View style={styles.top}>
+            <View
+              style={{
+                ...styles.row,
+                justifyContent: 'space-between',
+                ...styles.header,
+              }}>
+              <Pressable onPress={() => navigation.goBack()}>
+                <Image
+                  source={assets.chevronLeft}
+                  style={{
+                    height: 32,
+                    width: 32,
+                  }}
+                  resizeMode="cover"
+                />
+              </Pressable>
+              <Text style={styles.headerTitle}>Send</Text>
+              <View style={{width: 32}} />
+            </View>
+          </View>
+
+          <ImageBackground source={assets.containerBox} style={styles.bottom}>
+            <View style={styles.middle}>
               <Image
-                source={assets.closeIcon}
+                source={assets.info}
                 style={{
                   height: 24,
                   width: 24,
+                  marginRight: 12,
                 }}
-                resizeMode="cover"
               />
-            </Pressable>
-          </View>
-        </View>
-        <View style={styles.middle}>
-          <Text style={styles.textContainer}>
-            <Text style={styles.newAddressText}>
-              New address detected. Click{' '}
-            </Text>
-            <Text
-              style={{
-                ...styles.newAddressText,
-                color: theme.COLORS.primary,
-              }}>
-              here
-            </Text>
-            <Text style={styles.newAddressText}>
-              {' '}
-              to add to your address book.
-            </Text>
-          </Text>
-        </View>
-        <View style={styles.bottom}>
-          <View>
-            <View>
-              <Input
-                title="Wallet address"
-                value={formData.target_wallet_address}
-                disabled
-                error={errors?.target_wallet_address}
-              />
-            </View>
-            <View style={{marginTop: 20}}>
-              <Input
-                title="Amount"
-                value={formData.amount_of_tokens}
-                onChangeText={text => handleChange(text, 'amount_of_tokens')}
-                keyboardType="number-pad"
-                error={errors?.amount_of_tokens}
-              />
-            </View>
-            <Text style={styles.balance}>
-              Balance:{' '}
-              <Text style={{color: theme.COLORS.primary}}>
-                {balance} GCoins
+              <Text style={styles.textContainer}>
+                <Text style={styles.newAddressText}>
+                  New address detected. Click{' '}
+                </Text>
+                <Text
+                  style={{
+                    ...styles.newAddressText,
+                    color: theme.COLORS.primary,
+                  }}>
+                  here
+                </Text>
+                <Text style={styles.newAddressText}>
+                  {' '}
+                  to add to your address book.
+                </Text>
               </Text>
-            </Text>
-          </View>
+            </View>
+            <View>
+              <View>
+                <InputField
+                  label="Wallet address"
+                  value={formData.target_wallet_address}
+                  disabled
+                  error={errors?.target_wallet_address}
+                />
+              </View>
+              <View style={{marginTop: 20}}>
+                <InputField
+                  label="Amount"
+                  value={formData.amount_of_tokens}
+                  onChangeText={text => handleChange(text, 'amount_of_tokens')}
+                  keyboardType="number-pad"
+                  error={errors?.amount_of_tokens}
+                />
+              </View>
+              <Text style={styles.balance}>
+                Balance:{' '}
+                <Text style={{color: theme.COLORS.blue, fontWeight: '600'}}>
+                  {balance} GCoins
+                </Text>
+              </Text>
+            </View>
 
-          <Button
-            label="Send"
-            style={{marginTop: 'auto'}}
-            onPress={handleTransferToken}
-            loading={loading}
-            // onPress={() => {
-            //   handleTransferToken();
-            //   // const verified = await AsyncStorage.getItem('verify');
-            //   // if (verified !== 'true') {
-            //   //   return navigation.navigate('Send-Verify');
-            //   // }
-            //   // navigation.navigate('Transaction-success');
-            // }}
-          />
-        </View>
+            <Button
+              label="Send"
+              style={{marginTop: 'auto'}}
+              onPress={handleTransferToken}
+              loading={loading}
+              // onPress={() => {
+              //   handleTransferToken();
+              //   // const verified = await AsyncStorage.getItem('verify');
+              //   // if (verified !== 'true') {
+              //   //   return navigation.navigate('Send-Verify');
+              //   // }
+              //   // navigation.navigate('Transaction-success');
+              // }}
+            />
+          </ImageBackground>
 
-        <View style={styles.hider}></View>
-      </SafeAreaView>
-    </LinearGradient>
+          <View style={styles.hider}></View>
+        </SafeAreaView>
+      </ImageBackground>
+      <VerifyPassword verify={verify} />
+    </>
   );
 };
 
@@ -171,19 +183,22 @@ const styles = StyleSheet.create({
     backgroundColor: theme.COLORS.white,
     bottom: 0,
     width: '100%',
-    height: 60,
+    height: 35,
     zIndex: 0,
+    opacity: 0.25,
   },
   top: {
     paddingHorizontal: 24,
   },
   bottom: {
     flexGrow: 1,
-    backgroundColor: theme.COLORS.white,
     zIndex: 2,
     elevation: 2,
     paddingHorizontal: 24,
     paddingVertical: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    overflow: 'hidden',
   },
   header: {
     marginTop: 27.5,
@@ -192,17 +207,23 @@ const styles = StyleSheet.create({
   headerTitle: {
     ...theme.TYPOGRAPHY.h3,
     fontWeight: '700',
-    fontFamily: 'Inter',
-    color: theme.COLORS.white,
+    color: theme.COLORS.darkBlue,
+    lineHeight: 32,
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   middle: {
-    backgroundColor: '#F5FCF9',
-    paddingHorizontal: 24,
+    paddingRight: 40,
+    paddingLeft: 15,
     paddingVertical: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: theme.COLORS.blue,
+    borderRadius: 16,
+    marginBottom: 24,
   },
   textContainer: {
     flexDirection: 'row',
@@ -215,12 +236,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontWeight: '400',
     color: '#6E6E7E',
+    flex: 1,
   },
   balance: {
-    ...theme.TYPOGRAPHY.body2,
-    fontFamily: 'Inter',
+    ...theme.TYPOGRAPHY.body1,
     fontWeight: '400',
     marginTop: 8,
     marginLeft: 24,
+    color: theme.COLORS.grey700,
   },
 });

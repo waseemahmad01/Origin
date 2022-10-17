@@ -12,7 +12,15 @@ const Button = ({label = 'label', style, labelStyle, loading, ...rest}) => {
   return (
     <TouchableOpacity
       {...rest}
-      style={[styles.container, style]}
+      style={[
+        styles.container,
+        style,
+        {
+          backgroundColor: loading
+            ? theme.COLORS.darkGreen
+            : theme.COLORS.green,
+        },
+      ]}
       disabled={loading}>
       {loading ? (
         <ActivityIndicator color={theme.COLORS.white} />

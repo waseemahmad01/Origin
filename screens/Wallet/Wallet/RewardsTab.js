@@ -1,6 +1,13 @@
 import React from 'react';
 
-import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  ImageBackground,
+} from 'react-native';
 import assets from '../../../assets';
 import theme from '../../../theme';
 
@@ -15,25 +22,27 @@ const RewardsTab = () => {
         <Text style={styles.title}>
           {data.length === 0
             ? "You don't have any transactions here"
-            : '  Yesterday '}
+            : 'Yesterday '}
         </Text>
         {data.map(i => (
           <View style={styles.transactionDetails} key={i}>
             <View style={{flexDirection: 'row'}}>
-              <View style={styles.iconContainer}>
+              <ImageBackground
+                source={assets.iconBtnBg}
+                style={styles.iconContainer}>
                 <Image
                   source={assets.giftSm}
-                  style={{height: 16, width: 18}}
+                  style={{height: 24, width: 24}}
                   resizeMode="cover"
                 />
-              </View>
+              </ImageBackground>
               <View style={{marginLeft: 16}}>
-                <Text style={styles.transactionType}>1st Generate Reward</Text>
+                <Text style={styles.transactionType}>Generate Reward</Text>
                 <View style={{flexDirection: 'row'}}>
                   <Text
                     style={{
                       ...styles.transactionInfo,
-                      color: theme.COLORS.primary,
+                      color: theme.COLORS.blue,
                     }}>
                     Sep 20
                   </Text>
@@ -41,7 +50,7 @@ const RewardsTab = () => {
               </View>
             </View>
             <View>
-              <Text style={styles.amount}>10.000 GC...</Text>
+              <Text style={styles.amount}>+10.000</Text>
             </View>
           </View>
         ))}
@@ -58,15 +67,13 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.TYPOGRAPHY.subtitle1,
-    color: '#B7B7BE',
-    fontFamily: 'Inter',
+    color: theme.COLORS.grey700,
     fontWeight: '500',
   },
   iconContainer: {
     height: 48,
     width: 48,
     borderRadius: 48 / 2,
-    backgroundColor: '#F5FCF9',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -78,22 +85,25 @@ const styles = StyleSheet.create({
   },
   transactionType: {
     ...theme.TYPOGRAPHY.body1,
-    fontWeight: '500',
+    fontWeight: '600',
+    fontSize: 18,
+    lineHeight: 24,
     fontFamily: 'Inter',
-    color: '#1D1D35',
+    color: theme.COLORS.grey900,
   },
   transactionInfo: {
-    fontSize: 12,
-    fontWeight: '400',
+    fontSize: 14,
+    fontWeight: '500',
     fontFamily: 'Inter',
     lineHeight: 18,
     marginTop: 4,
-    color: '#6E6E7E',
+    color: theme.COLORS.grey900,
   },
   amount: {
-    ...theme.TYPOGRAPHY.body2,
-    color: '#1D1D35',
-    fontWeight: '400',
-    fontFamily: 'Inter',
+    ...theme.TYPOGRAPHY.body1,
+    fontSize: 18,
+    lineHeight: 24,
+    color: theme.COLORS.grey900,
+    fontWeight: '600',
   },
 });

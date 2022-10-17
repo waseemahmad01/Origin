@@ -11,11 +11,12 @@ import {
   StatusBar,
   Platform,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import Clipboard from '@react-native-community/clipboard';
 import {useDispatch, useSelector} from 'react-redux';
 import {LinearTextGradient} from 'react-native-text-gradient';
-import GButton from '../../../components/GButton/GButton';
+import Button from '../../../components/Button/Button';
 import assets from '../../../assets';
 import theme from '../../../theme';
 import {truncateString} from '../../../utils';
@@ -43,98 +44,136 @@ const WalletGeneration = ({navigation}) => {
 
   return (
     <>
-      <View style={{flex: 1, backgroundColor: theme.COLORS.white}}>
-        <SafeAreaView style={{flex: 1}}>
-          <StatusBar translucent={true} backgroundColor="transparent" />
-          <View
+      {!showModal && (
+        <ImageBackground
+          source={assets.background}
+          resizeMode="cover"
+          style={styles.imageBackground}>
+          <SafeAreaView
             style={{
-              ...styles.main,
-              marginTop: isIos ? 0 : StatusBar.currentHeight,
+              flex: 1,
+              justifyContent: 'center',
+              paddingTop: isIos ? 0 : StatusBar.currentHeight,
             }}>
-            <Text style={styles.title}>Wallet</Text>
-          </View>
-          <View style={styles.infoContainer}>
-            <Image source={assets.walletGenerate} />
-
-            <LinearTextGradient
-              style={styles.gradientText}
-              locations={[0, 1]}
-              colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}>
-              <Text>10,000 Gcoins Rewards!</Text>
-            </LinearTextGradient>
-            <Text style={styles.subtitle}>
-              Generate your wallet so that you can trade or send the token and
-              received 10,000 Gcoins for your very first wallet.
-            </Text>
-
-            <View style={styles.buttonContainer}>
-              <GButton
-                label="Generate Origen Wallet"
-                onPress={handleGenerateWallet}
-                loading={loading}
-                // onPress={() => setShowModal(true)}
-              />
-            </View>
-          </View>
-        </SafeAreaView>
-      </View>
-      <Modal visible={showModal} transparent={true} animationType="fade">
-        <Pressable style={styles.modal}>
-          <View style={styles.modalView}>
-            <Image source={assets.gift} />
-            <LinearTextGradient
-              style={[styles.gradientText]}
-              locations={[0, 1]}
-              colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}>
-              <Text>Get Your Rewards!</Text>
-            </LinearTextGradient>
-            <Text style={styles.subtitle}>
-              Press confirm to received 10,000 Gcoins for your very first
-              wallet.
-            </Text>
-            <Pressable
-              onPress={() => handleCopyAddress(walletAddress)}
-              style={styles.address}>
-              {walletAddress && (
-                <Text style={{...theme.TYPOGRAPHY.body2}}>
-                  {truncateString(walletAddress)}
-                </Text>
-              )}
+            <StatusBar translucent={true} backgroundColor="transparent" />
+            <ImageBackground
+              style={styles.gradientContainer}
+              source={assets.genWalletBg}>
               <Image
-                source={assets.copyIcon}
-                style={{
-                  height: 16,
-                  width: 16,
-                  marginLeft: 10,
-                }}
+                style={{marginTop: '-35%'}}
                 resizeMode="contain"
+                source={assets.walletGenerate}
               />
-            </Pressable>
-            <View style={{width: '100%', marginTop: 32}}>
-              <GButton
-                label="Confirm 10,000 Gcoins"
-                onPress={handleGetRewards}
-                loading={loading}
-                // onPress={() => {
-                //   setShowModal(false);
-                //   navigation.navigate('Face-Id-verify');
-                // }}
-              />
+              <Text style={styles.title}>Generate Wallet</Text>
+              <Text style={styles.subtitle}>
+                Generate your wallet and get{' '}
+                <Text style={{fontWeight: '600'}}>10,000 Gcoins</Text> for your
+                very first wallet.
+              </Text>
+              <View style={styles.buttonContainer}>
+                <Button
+                  label="Generate Origen Wallet"
+                  onPress={handleGenerateWallet}
+                />
+              </View>
+            </ImageBackground>
+          </SafeAreaView>
+        </ImageBackground>
+      )}
+
+      <Modal visible={showModal} transparent={true} animationType="fade">
+        <ImageBackground
+          source={assets.background}
+          resizeMode="cover"
+          style={{flex: 1}}>
+          <Pressable style={styles.modal}>
+            <View style={styles.modalView}>
+              <Image source={assets.reward} />
+              <Text
+                style={{
+                  ...theme.TYPOGRAPHY.h3,
+                  color: theme.COLORS.blue,
+                  marginTop: 32,
+                }}>
+                Get Your Rewards!
+              </Text>
+              <Text style={{...styles.subtitle}}>
+                Press confirm to received{' '}
+                <Text style={{fontWeight: '600'}}>10,000 Gcoins</Text> for your
+                very first wallet.
+              </Text>
+
+              <View style={{width: '100%', marginTop: 32}}>
+                <Button
+                  label="Confirm 10,000 Gcoins"
+                  onPress={handleGetRewards}
+                  loading={loading}
+                />
+              </View>
             </View>
-          </View>
-        </Pressable>
+          </Pressable>
+        </ImageBackground>
       </Modal>
     </>
+
+    // <>
+    //   <View style={{flex: 1, backgroundColor: theme.COLORS.white}}>
+    //     <SafeAreaView style={{flex: 1}}>
+    //       <StatusBar translucent={true} backgroundColor="transparent" />
+    //       <View
+    //         style={{
+    //           ...styles.main,
+    //           marginTop: isIos ? 0 : StatusBar.currentHeight,
+    //         }}>
+    //         <Text style={styles.title}>Wallet</Text>
+    //       </View>
+    //       <View style={styles.infoContainer}>
+    //         <Image source={assets.walletGenerate} />
+
+    //         <LinearTextGradient
+    //           style={styles.gradientText}
+    //           locations={[0, 1]}
+    //           colors={[theme.COLORS.primary, theme.COLORS.secondary]}
+    //           start={{x: 0, y: 0}}
+    //           end={{x: 1, y: 0}}>
+    //           <Text>10,000 Gcoins Rewards!</Text>
+    //         </LinearTextGradient>
+    //         <Text style={styles.subtitle}>
+    //           Generate your wallet so that you can trade or send the token and
+    //           received 10,000 Gcoins for your very first wallet.
+    //         </Text>
+
+    //         <View style={styles.buttonContainer}>
+    //           <GButton
+    //             label="Generate Origen Wallet"
+    //             onPress={handleGenerateWallet}
+    //             loading={loading}
+    //             // onPress={() => setShowModal(true)}
+    //           />
+    //         </View>
+    //       </View>
+    //     </SafeAreaView>
+    //   </View>
+
+    // </>
   );
 };
 
 export default WalletGeneration;
 
 const styles = StyleSheet.create({
+  imageBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  gradientContainer: {
+    borderRadius: 24,
+    paddingHorizontal: 24,
+    paddingBottom: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: theme.COLORS.primary,
@@ -143,8 +182,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   title: {
-    ...theme.TYPOGRAPHY.h2,
-    marginVertical: 20,
+    ...theme.TYPOGRAPHY.h3,
+    marginTop: 27,
+    color: theme.COLORS.blue,
   },
   infoContainer: {
     flexGrow: 1,
@@ -157,16 +197,16 @@ const styles = StyleSheet.create({
     marginTop: -25,
   },
   subtitle: {
-    ...theme.TYPOGRAPHY.subtitle1,
+    ...theme.TYPOGRAPHY.body1,
     textAlign: 'center',
-    paddingHorizontal: 24,
+    lineHeight: 24,
     marginTop: 8,
-    color: theme.COLORS.textSecondary,
+    color: theme.COLORS.grey700,
   },
   buttonContainer: {
     width: '100%',
     paddingHorizontal: 20,
-    marginTop: 80,
+    marginTop: 32,
   },
   modal: {
     flex: 1,
@@ -179,17 +219,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 32,
     backgroundColor: '#F5FCF9',
-    borderRadius: 16,
-    width: '100%',
-    alignItems: 'center',
-  },
-  address: {
-    paddingHorizontal: 16,
-    paddingVertical: 7,
     borderRadius: 24,
-    marginTop: 10,
-    backgroundColor: '#d3ddd9',
-    flexDirection: 'row',
+    width: '100%',
     alignItems: 'center',
   },
 });

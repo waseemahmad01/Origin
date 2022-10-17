@@ -9,12 +9,14 @@ import {
   Pressable,
   StatusBar,
   Platform,
+  ImageBackground,
+  Image,
 } from 'react-native';
 
 import {useSelector, useDispatch} from 'react-redux';
 
 import NftMintPackage from '../../../components/Wallet/NftMintPackage/NftMintPackage';
-import Button from '../../../components/GButton/GButton';
+import Button from '../../../components/Button/Button';
 import theme from '../../../theme';
 import assets from '../../../assets';
 
@@ -28,12 +30,12 @@ const packages = [
   },
   {
     bg: ['#FE9901', '#FE9901'],
-    logo: assets.star,
+    logo: assets.epic,
     title: 'Epic Bundles',
   },
   {
     bg: [theme.COLORS.primary, theme.COLORS.secondary],
-    logo: assets.starLeg,
+    logo: assets.legend,
     title: 'Legendary Bundles',
   },
 ];
@@ -54,29 +56,54 @@ const MintPackages = ({navigation}) => {
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <StatusBar translucent={true} backgroundColor="transparent" />
-      {!isIos && (
-        <View style={{width: '100%', height: StatusBar.currentHeight}}></View>
-      )}
-      <View style={styles.container}>
-        <Text style={styles.title}>Select Minting SFT's Packages</Text>
-        <Pressable>
-          <Text style={styles.question}>What is the semi-fungible token?</Text>
-        </Pressable>
-        <FlatList
-          style={styles.list}
-          data={sfts.map((sft, i) => ({...sft, ...packages[i]}))}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item, index}) => (
-            <View style={{marginVertical: index === 0 || index === 2 ? 0 : 24}}>
-              <NftMintPackage data={item} />
-            </View>
-          )}
-        />
-        <Button label="Done" loading={loading} onPress={handleClick} />
-      </View>
-    </SafeAreaView>
+    <ImageBackground
+      source={assets.background}
+      resizeMode="cover"
+      style={{flex: 1}}>
+      <SafeAreaView style={{flex: 1}}>
+        <StatusBar translucent={true} backgroundColor="transparent" />
+        {!isIos && (
+          <View style={{width: '100%', height: StatusBar.currentHeight}}></View>
+        )}
+        <View style={styles.container}>
+          <Text style={styles.title}>Select Minting SFT's Packages</Text>
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 8,
+            }}>
+            <Image
+              source={assets.question}
+              style={{
+                height: 24,
+
+                width: 24,
+                marginRight: 8,
+              }}
+            />
+            <Text style={styles.question}>
+              What is the semi-fungible token?
+            </Text>
+          </Pressable>
+          <FlatList
+            style={styles.list}
+            data={sfts.map((sft, i) => ({...sft, ...packages[i]}))}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}) => (
+              <View
+                style={{
+                  marginVertical: index === 0 || index === 2 ? 0 : 56,
+                  paddingTop: index === 0 ? 48 : 0,
+                }}>
+                <NftMintPackage data={item} />
+              </View>
+            )}
+          />
+          <Button label="Done" loading={loading} onPress={handleClick} />
+        </View>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
@@ -92,7 +119,10 @@ const styles = StyleSheet.create({
   title: {
     ...theme.TYPOGRAPHY.h3,
     fontWeight: '700',
-    color: theme.COLORS.black,
+    color: theme.COLORS.darkBlue,
+    textAlign: 'center',
+    width: '100%',
+    lineHeight: 32,
   },
   list: {
     flexGrow: 1,
@@ -100,9 +130,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   question: {
-    marginTop: 8,
-    ...theme.TYPOGRAPHY.body2,
-    fontFamily: 'Inter',
-    color: theme.COLORS.primary,
+    ...theme.TYPOGRAPHY.body1,
+    fontWeight: '500',
+    color: theme.COLORS.blue,
   },
 });
