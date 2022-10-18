@@ -15,6 +15,9 @@ import Blocked from '../screens/Profile/Blocked/Blocked';
 import Help from '../screens/Profile/Help/Help';
 import AboutUs from '../screens/Profile/AboutUs/AboutUs';
 import People from '../screens/People/People';
+import Marketplace from '../screens/Wallet/Marketplace/Marketplace';
+import CallHistory from '../screens/calls/CallHistory/CallHistory';
+import CallSearch from '../screens/calls/CallSearch/CallSearch';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -31,8 +34,8 @@ const StackNavigator = () => {
         headerShown: false,
       }}>
       <Stack.Screen name="WalletGeneration" component={WalletGeneration} />
-
       <Stack.Screen name="My-Wallet" component={Wallet} />
+      <Stack.Screen name="Marketplace" component={Marketplace} />
     </Stack.Navigator>
   );
 };
@@ -49,6 +52,18 @@ const ProfileNavigator = () => {
       <Stack.Screen name="Blocked" component={Blocked} />
       <Stack.Screen name="Help" component={Help} />
       <Stack.Screen name="About" component={AboutUs} />
+    </Stack.Navigator>
+  );
+};
+
+const CallNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="Calls" component={CallHistory} />
+      <Stack.Screen name="Call-Search" component={CallSearch} />
     </Stack.Navigator>
   );
 };
@@ -73,7 +88,7 @@ const TabNavigator = () => {
       })}>
       <Tab.Screen
         name="Calls"
-        component={Wallet}
+        component={CallNavigator}
         options={{
           tabBarIcon: ({focused}) => (
             <Image

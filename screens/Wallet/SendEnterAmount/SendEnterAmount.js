@@ -36,7 +36,7 @@ const SendEnterAmount = ({navigation}) => {
   const user = useSelector(state => state.users.selectedUser);
   const loading = useSelector(state => state.wallet.loading);
   const balance = useSelector(state => state.wallet.balance);
-  const [verify, setVerify] = useState(true);
+  const [verify, setVerify] = useState(false);
   const [formData, setFormData] = useState({
     target_wallet_address: user?.origen_public_wallet_address || '',
     amount_of_tokens: '',

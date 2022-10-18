@@ -98,7 +98,7 @@ const Wallet = ({navigation}) => {
 
         <View style={{...styles.bundle}}>
           <Image
-            source={assets.rare}
+            source={packageImages[activePackage?.name]}
             style={{
               width: 30,
               height: 30,
@@ -114,7 +114,7 @@ const Wallet = ({navigation}) => {
               fontSize: 18,
               color: theme.COLORS.grey900,
             }}>
-            Legendary Bundles
+            {activePackage?.name}
           </Text>
         </View>
 
@@ -216,7 +216,9 @@ const Wallet = ({navigation}) => {
               <Text style={styles.actionText}>Send</Text>
             </View>
             <View style={styles.action}>
-              <IconButton style={{height: 60, width: 60}}>
+              <IconButton
+                onPress={() => navigation.navigate('Marketplace')}
+                style={{height: 60, width: 60}}>
                 <Image
                   source={assets.store}
                   resizeMode="center"

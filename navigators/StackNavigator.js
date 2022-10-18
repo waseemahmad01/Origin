@@ -28,6 +28,8 @@ import {Voximplant} from 'react-native-voximplant';
 import EditProfile from '../screens/Profile/EditProfile/EditProfile';
 import {getActiveSftPackage, userData} from '../api';
 import BuyNumber from '../screens/BuyNumber/BuyNumber';
+import PeopleSearch from '../screens/People/PeropleSearch/PeopleSearch';
+import CallDetails from '../screens/calls/CallDetails/CallDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -149,6 +151,14 @@ const StackNavigator = () => {
             <Stack.Screen
               name="EditProfile"
               component={RequireAuthentication(EditProfile, loggedIn)}
+            />
+            <Stack.Screen
+              name="People-Search"
+              component={RequireAuthentication(PeopleSearch, loggedIn)}
+            />
+            <Stack.Screen
+              name="Call-Details"
+              component={RequireAuthentication(CallDetails, loggedIn)}
             />
           </Stack.Navigator>
         </>

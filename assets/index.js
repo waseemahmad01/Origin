@@ -82,6 +82,18 @@ const assets = {
   close: require('./icons/close.png'),
   scan: require('./icons/scan.png'),
   info: require('./icons/info.png'),
+  nft1: require('./images/nft1.png'),
+  nft2: require('./images/nft2.png'),
+  nft3: require('./images/nft3.png'),
+  nft4: require('./images/nft4.png'),
+  searchBlue: require('./icons/searchBlue.png'),
+  download: require('./icons/download.png'),
+  outgoingCall: require('./icons/outgoingCall.png'),
+  calls: require('./icons/calls.png'),
+  incomingCall: require('./icons/incomingCall.png'),
+  videoCamera: require('./icons/videoCamera.png'),
+  bgg: require('./images/bgg.png'),
+  incomingWhite: require('./icons/incomingWhite.png'),
 };
 
 export default assets;

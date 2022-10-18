@@ -8,9 +8,9 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  TextInput,
   ScrollView,
   Pressable,
+  ImageBackground,
 } from 'react-native';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -46,7 +46,6 @@ const People = ({navigation}) => {
   const dispatch = useDispatch();
   const users = useSelector(state => state.users.users);
   console.log('users =============>', users);
-  const [search, setSearch] = useState('');
 
   const handleProfileClick = user => {
     console.log(user);
@@ -59,47 +58,39 @@ const People = ({navigation}) => {
   }, []);
 
   return (
-    <LinearGradient
+    <ImageBackground
+      source={assets.background}
+      resizeMode="cover"
       style={{
         ...styles.gradient,
         paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
+      }}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.topBar}>
-          <Text style={styles.topBarTitle}>People</Text>
-          <View style={styles.searchBar}>
-            <View style={styles.searchBarInner}>
+          <View style={styles.headerRow}>
+            <Pressable onPress={() => navigation.navigate('People-Search')}>
               <Image
-                source={assets.search}
+                source={assets.searchBlue}
                 style={{
-                  height: 20,
-                  width: 20,
+                  height: 32,
+                  width: 32,
                 }}
-                resizeMode="cover"
               />
-              <TextInput
-                style={styles.serachInput}
-                placeholder="Search"
-                placeholderTextColor={'#6E6E7E'}
-                value={search}
-                onChangeText={setSearch}
-              />
-              {/* <Image
-                source={assets.qrCode}
+            </Pressable>
+            <Text style={styles.topBarTitle}>People</Text>
+            <Pressable>
+              <Image
+                source={assets.download}
                 style={{
-                  height: 20,
-                  width: 20,
+                  height: 32,
+                  width: 32,
                 }}
-                resizeMode="cover"
-              /> */}
-            </View>
+              />
+            </Pressable>
           </View>
         </View>
-        <View style={styles.bottom}>
+        <ImageBackground source={assets.containerBox} style={styles.bottom}>
           <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
             <Pressable
               onPress={() => handleProfileClick(testUser)}
@@ -121,23 +112,26 @@ const People = ({navigation}) => {
                     resizeMode="cover"
                   />
                 </View>
-                <Text style={styles.userName}>{testUser.name}</Text>
-              </View>
-              <View>
-                <Pressable
-                  style={styles.btn}
-                  // onPress={() => handleProfileClick(user)}
-                >
-                  <Text style={styles.transferText}>Send</Text>
-                </Pressable>
+                <View>
+                  <Text style={styles.userName}>{testUser.name}</Text>
+                  <Text
+                    style={{
+                      ...theme.TYPOGRAPHY.body1,
+                      color: theme.COLORS.blue,
+                      fontWeight: '600',
+                      lineHeight: 24,
+                    }}>
+                    {testUser.phone_number}
+                  </Text>
+                </View>
               </View>
             </Pressable>
           </ScrollView>
-        </View>
+        </ImageBackground>
 
         <View style={styles.hider}></View>
       </SafeAreaView>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
@@ -153,10 +147,8 @@ const styles = StyleSheet.create({
   topBarTitle: {
     ...theme.TYPOGRAPHY.h3,
     fontWeight: '700',
-    fontFamily: 'Inter',
-    color: theme.COLORS.white,
-    marginTop: 27.5,
-    marginBottom: 16,
+    lineHeight: 32,
+    color: theme.COLORS.darkBlue,
   },
   searchBar: {
     backgroundColor: theme.COLORS.white,
@@ -183,18 +175,22 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   bottom: {
-    backgroundColor: theme.COLORS.white,
     flexGrow: 1,
     paddingHorizontal: 24,
+    paddingVertical: 12,
     zIndex: 2,
     elevation: 2,
+    borderTopRightRadius: 24,
+    borderTopLeftRadius: 24,
+    overflow: 'hidden',
   },
   hider: {
     position: 'absolute',
     backgroundColor: theme.COLORS.white,
     bottom: 0,
     width: '100%',
-    height: 60,
+    height: 35,
+    opacity: 0.25,
     zIndex: 0,
   },
   title: {
@@ -221,9 +217,12 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   userName: {
-    ...theme.TYPOGRAPHY.subtitle1,
-    color: '#1D1D35',
-    fontWeight: '500',
+    ...theme.TYPOGRAPHY.body1,
+    color: theme.COLORS.grey900,
+    fontWeight: '600',
+    textTransform: 'capitalize',
+    marginBottom: 2,
+    lineHeight: 22,
   },
   onlineIndicator: {
     height: 16,
@@ -235,5 +234,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 14,
     bottom: 0,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 27.5,
+    marginBottom: 16,
   },
 });
