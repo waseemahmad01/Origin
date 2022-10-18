@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react'
+import { FlatList, ImageBackground, KeyboardAvoidingView } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import {
   View,
   Text,
-  StatusBar,
   SafeAreaView,
   ScrollView,
   Platform,
@@ -21,13 +21,19 @@ import theme from '../../../theme';
 import assets from '../../../assets';
 import ChatMessage from '../../../components/ChatMessage/ChatMessage';
 // import IconButton from '../../../components/IconButton/IconButton';
-import {getAllSMS} from '../../../api';
+import { getAllSMS } from '../../../api';
+import { truncateString } from '../../../utils';
 
 const isIos = Platform.OS === 'ios';
 
-const Chat = ({route, navigation}) => {
+const KEYBOARD_AVOID_VIEW_BEHAVIOR = Platform.select({
+  ios: 'padding',
+  default: undefined,
+})
+const Chat = ({ route, navigation }) => {
   const [allSMS, setSMS] = useState([]);
-  const {user} = route.params;
+  const { bottom } = useSafeAreaInsets()
+  const { user } = route.params;
   console.log(route.params);
   useEffect(() => {
     _getAllSMS();
@@ -35,15 +41,13 @@ const Chat = ({route, navigation}) => {
 
   const _getAllSMS = async () => {
     try {
-      const {data} = await getAllSMS(route?.params?.chat?.chat_id);
+      const { data } = await getAllSMS(route?.params?.chat?.chat_id);
       console.log('get messages - ', data);
       setSMS(data);
     } catch (err) {
       console.log('error - ', err);
     }
   };
-
-  console.log('all sms - ', allSMS);
 
   const my = route?.params?.chat?.sender_number || '';
   const receiver = route?.params?.chat?.receiver_number;
@@ -76,70 +80,50 @@ const Chat = ({route, navigation}) => {
   };
 
   return (
-    <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{flex: 1}}>
+    <ImageBackground style={[StyleSheet.absoluteFill, styles.background]} source={assets.background}>
+      <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.header}>
           <Pressable onPress={() => navigation.goBack()}>
-            <View>
-              <Text>Back button </Text>
-            </View>
+            <Image source={assets.backChat} />
           </Pressable>
-          <View style={styles.userInfo}>
-            <Pressable onPress={() => navigation.goBack()}>
+          <View style={styles.avatarContainer}>
+            <View>
               <Image
                 source={assets.user}
-                style={{
-                  height: 40,
-                  width: 40,
-                  borderRadius: 40 / 2,
-                  marginTop: -5,
-                }}
+                style={{ height: 56, width: 56 }}
                 resizeMode="cover"
               />
-            </Pressable>
-            <View style={{marginLeft: 12}}>
-              {/* <Text style={styles.title}>{user?.username}</Text> */}
-              <Text style={styles.subtitle}>@kwatson - 32.5345 GCoins</Text>
-              <Text style={styles.subtitle}>Active 3m ago</Text>
+              <View style={styles.onlineIndicator}></View>
             </View>
-            <View style={styles.callIcons}>
-              <Pressable
-                onPress={() => {
-                  makeCall();
-                }}>
-                <Image
-                  source={assets.audioCall}
-                  style={{
-                    height: 16,
-                    width: 16,
-                  }}
-                  resizeMode="contain"
-                />
-              </Pressable>
-              <Pressable style={{marginLeft: 20}}>
-                <Image
-                  source={assets.videoCall}
-                  style={{
-                    height: 16,
-                    width: 18,
-                  }}
-                  resizeMode="contain"
-                />
-              </Pressable>
+            <View style={{ marginLeft: 16 }}>
+              <Text style={[styles.userMetrics, { marginBottom: 5, fontWeight: '600', fontSize: 16 }]}>
+                @{user?.username}
+              </Text>
+              <Text style={styles.userMetrics}>
+                {truncateString(user?.origen_public_wallet_address)}
+              </Text>
             </View>
           </View>
+          <View style={{ flex: 1 }} />
+          <View style={styles.userInfo}>
+            <Pressable
+              onPress={() => {
+                makeCall();
+              }}>
+              <Image
+                source={assets.callIcon}
+              />
+            </Pressable>
+            <Pressable style={{ marginLeft: 20 }}>
+              <Image
+                source={assets.cameraIcon}
+              />
+            </Pressable>
+          </View>
         </View>
-        <View style={styles.body}>
+        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
           <ScrollView
-            style={styles.schrollView}
+            style={styles.scrollView}
             showsVerticalScrollIndicator={false}>
             {allSMS.map((sms, index) => (
               <ChatMessage
@@ -149,13 +133,14 @@ const Chat = ({route, navigation}) => {
               />
             ))}
           </ScrollView>
-          <View style={styles.inputContainer}>
-            <ChatInput refreshChat={_getAllSMS} sendTo={receiver} />
-          </View>
-        </View>
-        <View style={styles.hider}></View>
+        </LinearGradient>
       </SafeAreaView>
-    </LinearGradient>
+      <KeyboardAvoidingView behavior={KEYBOARD_AVOID_VIEW_BEHAVIOR}>
+        <View style={[styles.inputContainer, { paddingBottom: bottom - 12 }]}>
+          <ChatInput refreshChat={_getAllSMS} sendTo={receiver} />
+        </View>
+      </KeyboardAvoidingView>
+    </ImageBackground>
   );
 };
 
@@ -166,17 +151,44 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingBottom: 26,
-    paddingTop: 22,
-    paddingHorizontal: 24,
+    margin: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatarContainer: {
+    marginLeft: 10,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  userName: {
+    fontWeight: '600',
+    fontSize: 18,
+    fontFamily: 'Inter',
+    color: '#2C3482',
+  },
+  userMetrics: {
+    fontFamily: 'Inter',
+    fontSize: 14,
+    color: '#2C3482',
+    fontWeight: '400',
+  },
+  onlineIndicator: {
+    position: 'absolute',
+    height: 16,
+    width: 16,
+    backgroundColor: theme.COLORS.primary,
+    borderRadius: 16 / 2,
+    borderWidth: 3,
+    borderColor: theme.COLORS.white,
+    right: 0,
+    bottom: 0,
   },
   body: {
-    flexGrow: 1,
-    backgroundColor: theme.COLORS.white,
-    zIndex: 2,
-    elevation: 2,
+    height: '100%',
+    padding: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
   },
-
   hider: {
     position: 'absolute',
     width: '100%',
@@ -206,11 +218,12 @@ const styles = StyleSheet.create({
     color: theme.COLORS.white,
     marginTop: 1,
   },
-  schrollView: {
-    flex: 1,
+  scrollView: {
     paddingHorizontal: 24,
   },
   inputContainer: {
+    // position: 'absolute',
+    // bottom: 0,
     backgroundColor: theme.COLORS.white,
     paddingHorizontal: 12,
     paddingVertical: 15,

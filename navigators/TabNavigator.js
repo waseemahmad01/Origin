@@ -1,13 +1,13 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Image} from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Image } from 'react-native';
 import assets from '../assets';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import WalletGeneration from '../screens/Wallet/WalletGeneration/WalletGeneration';
 import Wallet from '../screens/Wallet/Wallet/Wallet';
 import Chats from '../screens/Chat/Chats/Chats';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import Profile from '../screens/Profile/Profile/Profile';
 import Settings from '../screens/Profile/Settings/Settings';
 import Privacy from '../screens/Profile/Privacy/Privacy';
@@ -56,8 +56,8 @@ const ProfileNavigator = () => {
 const TabNavigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName="wallet"
-      screenOptions={({route}) => ({
+      initialRouteName="Messages"
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarLabelStyle: {
           fontSize: 12,
@@ -75,7 +75,7 @@ const TabNavigator = () => {
         name="Calls"
         component={Wallet}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Image
               source={assets.phone}
               style={{
@@ -90,7 +90,7 @@ const TabNavigator = () => {
         name="Messages"
         component={Chats}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Image
               source={focused ? assets.chatActive : assets.msg}
               style={{
@@ -105,7 +105,7 @@ const TabNavigator = () => {
         name="wallet"
         component={StackNavigator}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Image
               source={assets.walletActive}
               style={{
@@ -121,7 +121,7 @@ const TabNavigator = () => {
         name="People"
         component={People}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Image
               source={assets.users}
               style={{
@@ -136,7 +136,7 @@ const TabNavigator = () => {
         name="Profile"
         component={ProfileNavigator}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Image
               source={assets.user}
               style={{

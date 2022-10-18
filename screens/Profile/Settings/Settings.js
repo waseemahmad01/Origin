@@ -19,79 +19,35 @@ import theme from '../../../theme';
 
 const isIos = Platform.OS === 'ios';
 
-const Settings = ({navigation}) => {
+const Settings = ({ navigation }) => {
   return (
     <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <SafeAreaView style={{flex: 1}}>
-        <StatusBar translucent={true} backgroundColor={'transparent'} />
-        <View style={styles.top}>
-          <Pressable
-            onPress={() => navigation.navigate('Profile1')}
-            style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              source={assets.chevronLeft}
-              style={{
-                height: 20,
-                width: 8,
-                marginRight: 20,
-              }}
-              resizeMode="contain"
-            />
-            <Text style={styles.headTitle}>Settings</Text>
+      colors={["#D8E3F3", '#B8F7FC',]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}>
+      <SafeAreaView styles={{ flex: 1 }} >
+        <View style={[styles.header]}>
+          <Pressable onPress={() => navigation.goBack()}>
+            <Image source={assets.backChat} />
           </Pressable>
+          <Text style={styles.messageText}>Settings</Text>
+          <View></View>
         </View>
-        <View style={styles.bottom}>
-          <ScrollView style={{flex: 1, paddingTop: 24}}>
-            <View style={{...styles.row}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
+          <ScrollView>
+            <View style={{ ...styles.row }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={styles.iconContainer}>
-                  <Image
-                    source={assets.mode}
-                    style={{
-                      height: 16,
-                      width: 16,
-                    }}
-                    resizeMode="contain"
-                  />
-                </View>
-                <Text style={styles.text}>Dark mood</Text>
-              </View>
-              <Checkbox />
-            </View>
-            <View style={{...styles.row}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <View style={styles.iconContainer}>
-                  <Image
-                    source={assets.ms}
-                    style={{
-                      height: 16,
-                      width: 16,
-                    }}
-                    resizeMode="contain"
-                  />
+                  <Image source={assets.settingShow} />
                 </View>
                 <Text style={styles.text}>Show chat head</Text>
               </View>
               <Checkbox />
             </View>
-            <View style={{...styles.row}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ ...styles.row }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={styles.iconContainer}>
-                  <Image
-                    source={assets.bulb}
-                    style={{
-                      height: 16,
-                      width: 16,
-                    }}
-                    resizeMode="contain"
-                  />
+                  <Image source={assets.settingActive} />
                 </View>
                 <Text style={styles.text}>Active status</Text>
               </View>
@@ -99,17 +55,28 @@ const Settings = ({navigation}) => {
             </View>
             <Pressable
               onPress={() => navigation.navigate('Privacy')}
-              style={{...styles.row}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              style={{ ...styles.row }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={styles.iconContainer}>
-                  <Image
-                    source={assets.privacy}
-                    style={{
-                      height: 16,
-                      width: 16,
-                    }}
-                    resizeMode="contain"
-                  />
+                  <Image source={assets.settingNotifications} />
+                </View>
+                <Text style={styles.text}>Notifications</Text>
+              </View>
+              <Image
+                source={assets.arrowRight}
+                style={{
+                  height: 16,
+                  width: 8,
+                }}
+                resizeMode="contain"
+              />
+            </Pressable>
+            <Pressable
+              onPress={() => navigation.navigate('Privacy')}
+              style={{ ...styles.row }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={styles.iconContainer}>
+                  <Image source={assets.settingPrivacy} />
                 </View>
                 <Text style={styles.text}>Privacy policy</Text>
               </View>
@@ -124,17 +91,10 @@ const Settings = ({navigation}) => {
             </Pressable>
             <Pressable
               onPress={() => navigation.navigate('Help')}
-              style={{...styles.row}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              style={{ ...styles.row }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={styles.iconContainer}>
-                  <Image
-                    source={assets.help}
-                    style={{
-                      height: 16,
-                      width: 16,
-                    }}
-                    resizeMode="contain"
-                  />
+                  <Image source={assets.settingHelp} />
                 </View>
                 <Text style={styles.text}>Help</Text>
               </View>
@@ -149,11 +109,11 @@ const Settings = ({navigation}) => {
             </Pressable>
             <Pressable
               onPress={() => navigation.navigate('About')}
-              style={{...styles.row}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              style={{ ...styles.row }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={styles.iconContainer}>
                   <Image
-                    source={assets.chatActive}
+                    source={assets.settingInfo}
                     style={{
                       height: 16,
                       width: 16,
@@ -173,18 +133,10 @@ const Settings = ({navigation}) => {
               />
             </Pressable>
             <Pressable
-              //   onPress={() => console.log('Hello')}
-              style={{...styles.row}}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <View style={styles.iconContainer}>
-                  <Image
-                    source={assets.lockGreen}
-                    style={{
-                      height: 16,
-                      width: 16,
-                    }}
-                    resizeMode="contain"
-                  />
+              style={{ ...styles.row }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={[styles.iconContainer, { backgroundColor: '#F43C3C' }]}>
+                  <Image source={assets.settingLogout} />
                 </View>
                 <Text style={styles.text}>Log out</Text>
               </View>
@@ -198,44 +150,54 @@ const Settings = ({navigation}) => {
               />
             </Pressable>
           </ScrollView>
-        </View>
+        </LinearGradient>
       </SafeAreaView>
-    </LinearGradient>
+    </LinearGradient >
   );
 };
 
 export default Settings;
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
+  header: {
+    marginHorizontal: 24,
+    marginTop: 10,
+    marginBottom: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  top: {
-    paddingBottom: 19,
-    paddingHorizontal: 24,
-    marginTop: 27.74,
+  textNormal: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0E0E2F',
+    fontFamily: 'Inter',
   },
-  headTitle: {
-    ...theme.TYPOGRAPHY.h3,
+  messageText: {
+    fontSize: 24,
     fontWeight: '700',
-    color: theme.COLORS.white,
+    color: '#2C3482',
+    fontFamily: 'Inter',
+    marginRight: 15
   },
-  bottom: {
-    flexGrow: 1,
-    backgroundColor: theme.COLORS.white,
-    paddingHorizontal: 24,
+  body: {
+    height: '100%',
+    padding: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    marginTop: -10
   },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 8,
+    marginBottom: 10,
     justifyContent: 'space-between',
   },
   text: {
     marginLeft: 16,
-    ...theme.TYPOGRAPHY.body2,
-    fontWeight: '500',
-    color: '#1D1D35',
+    fontWeight: '600',
+    color: '#0E0E2F',
     fontFamily: 'Inter',
   },
   iconContainer: {
@@ -243,7 +205,7 @@ const styles = StyleSheet.create({
     width: 48,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCF9',
+    backgroundColor: '#2697FF',
     borderRadius: 24,
   },
 });

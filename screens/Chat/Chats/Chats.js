@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {Voximplant} from 'react-native-voximplant';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { Voximplant } from 'react-native-voximplant';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   View,
   Text,
@@ -11,29 +11,28 @@ import {
   Image,
   Pressable,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
 
 import IconButton from '../../../components/IconButton/IconButton';
 import LinearGradient from 'react-native-linear-gradient';
 import theme from '../../../theme';
 import assets from '../../../assets';
-import {getAllChats} from '../../../api';
-import {truncateString} from '../../../utils';
+import { getAllChats } from '../../../api';
+import { truncateString } from '../../../utils';
 const isIos = Platform.OS === 'ios';
 const client = Voximplant.getInstance();
 
-const Chat = ({navigation}) => {
+const Chat = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
   const users = useSelector(state => state.users.users);
   const balance = useSelector(state => state.wallet.balance);
-  console.log(users);
   const [tab, setTab] = useState(0);
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState([{}, {}]);
 
   const handleVoxImplantLogin = async () => {
     let state = await client.getClientState();
-    console.log('State ===== >', state);
     if (state === Voximplant.ClientState.DISCONNECTED) {
       await client.connect();
     }
@@ -54,8 +53,8 @@ const Chat = ({navigation}) => {
 
   const getChats = async () => {
     try {
-      const {data} = await getAllChats();
-      setChats(data);
+      const { data } = await getAllChats();
+      // setChats(data);
       console.log('response - ', data);
     } catch (err) {
       console.log('error - ', err);
@@ -64,204 +63,225 @@ const Chat = ({navigation}) => {
 
   //
   return (
-    <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{flex: 1}}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <Text
-              style={styles.headerTitle}
-              onPress={() => navigation.navigate('Chat-search')}>
-              Chats
-            </Text>
-            <View style={styles.userInfo}>
-              <View>
-                <Image
-                  source={assets.user}
-                  style={{
-                    height: 40,
-                    width: 40,
-                    borderRadius: 40 / 2,
-                    marginRight: 18,
-                    marginTop: 8,
-                  }}
-                  resizeMode="cover"
-                />
-              </View>
-              <View style={styles.userDetails}>
-                <Text style={styles.userName}>{user?.name}</Text>
-                <Text style={styles.userMetrics}>@{user?.username}</Text>
+    <ImageBackground style={[StyleSheet.absoluteFill, styles.background]} source={assets.background}>
+      <SafeAreaView>
+        <View style={[styles.container, styles.search]}>
+          <Pressable onPress={() => navigation.navigate("Chat-search")}>
+            <Image source={assets.messageSearchIcon} />
+          </Pressable>
+          <Text style={styles.messageText}>Messages</Text>
+          <View />
+        </View>
+        <LinearGradient
+          style={styles.avatarContainer}
+          colors={['#E8EDF7', '#D5F9FD']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}>
+          <View style={[styles.container, styles.avatarSubContainer]}>
+            <View style={styles.avatarBorder}>
+              <Image
+                source={assets.user}
+                style={styles.avatar}
+                resizeMode="cover"
+              />
+            </View>
+            <View style={styles.userDetails}>
+              <Text style={styles.userName}>{user?.name}</Text>
+              <View style={{ flexDirection: 'row', marginVertical: 6, }}>
+                <Text style={[styles.userMetrics, { marginRight: 10, }]}>@{user?.username}</Text>
                 <Text style={styles.userMetrics}>
                   {truncateString(user?.origen_public_wallet_address)}
                 </Text>
-                <Text style={styles.userMetrics}>{balance} GCoins</Text>
+              </View>
+              <View style={styles.coinButton}>
+                <Image style={{ marginRight: 10, }} source={assets.gCoin} />
+                <Text style={[styles.userMetrics, { color: 'white', fontWeight: '500' }]}>{balance} GCoins</Text>
               </View>
             </View>
           </View>
-          <View style={styles.body}>
-            <View style={styles.tabs}>
-              <Pressable
-                onPress={() => setTab(0)}
-                style={{
-                  ...styles.tab,
-                  backgroundColor:
-                    tab === 0 ? theme.COLORS.primary : theme.COLORS.white,
-                  borderColor: tab === 0 ? theme.COLORS.primary : '#1D1D35',
-                }}>
-                <Text
-                  style={{
-                    ...styles.tabLabel,
-                    color: tab === 0 ? theme.COLORS.white : '#1D1D35',
-                  }}>
-                  Recent Message
-                </Text>
-              </Pressable>
-              <Pressable
-                onPress={() => setTab(1)}
-                style={{
-                  ...styles.tab,
-                  backgroundColor:
-                    tab === 1 ? theme.COLORS.primary : theme.COLORS.white,
-                  borderColor: tab === 1 ? theme.COLORS.primary : '#1D1D35',
-                }}>
-                <Text
-                  style={{
-                    ...styles.tabLabel,
-                    color: tab === 1 ? theme.COLORS.white : '#1D1D35',
-                  }}>
-                  Active
-                </Text>
-              </Pressable>
-            </View>
-            <View style={{flexGrow: 1, marginBottom: 20}}>
-              <ScrollView showsVerticalScrollIndicator={false}>
-                {chats.map(chat => (
-                  <Pressable
-                    style={styles.userBlock}
-                    key={chat?.id}
-                    onPress={() => {
-                      console.log('chat data - ', chat);
-                      navigation.navigate('Chat', {chat});
-                    }}>
-                    <View style={styles.transactionDetails}>
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <View
-                          style={{
-                            position: 'relative',
-                          }}>
-                          <Image
-                            source={assets.user}
-                            style={{height: 56, width: 56}}
-                            resizeMode="cover"
-                          />
-                          <View style={styles.onlineIndicator}></View>
-                        </View>
-                        <View style={{marginLeft: 16}}>
-                          <Text style={styles.transactionType}>
-                            {chat?.username}
-                          </Text>
-                          <View style={{flexDirection: 'row'}}>
-                            <Text
-                              style={{
-                                ...styles.transactionInfo,
-                              }}>
-                              {chat?.phone_number}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                      <View>
-                        <Text style={styles.amount}>3m ago</Text>
-                      </View>
-                    </View>
-                  </Pressable>
-                ))}
-                <View style={{height: 220}}></View>
-              </ScrollView>
-            </View>
+        </LinearGradient>
+        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
+          <View style={styles.tabs}>
+            <Pressable
+              onPress={() => setTab(0)}
+              style={[styles.tab, tab === 0 ? styles.tabActive : {}]}>
+              <Text
+                style={[styles.tabLabel, tab === 0 ? styles.tabLabelActive : {}]}>
+                Recent Message
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => setTab(1)}
+              style={[styles.tab, tab === 1 ? styles.tabActive : {}]}>
+              <Text
+                style={[styles.tabLabel, tab === 1 ? styles.tabLabelActive : {}]}>
+                Active
+              </Text>
+            </Pressable>
           </View>
-        </View>
-        <IconButton containerStyle={styles.floatingButton}>
-          <Image
-            source={assets.addUser}
-            style={{
-              height: 18,
-              width: 25,
-              marginRight: -5,
-            }}
-          />
-        </IconButton>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {chats.map(chat => (
+              <Pressable
+                style={styles.userBlock}
+                key={chat?.id}
+                onPress={() => {
+                  navigation.navigate('Chat', { chat });
+                }}>
+                <View style={styles.transactionDetails}>
+                  <View
+                    style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View
+                      style={{
+                        position: 'relative',
+                      }}>
+                      <Image
+                        source={assets.user}
+                        style={{ height: 56, width: 56 }}
+                        resizeMode="cover"
+                      />
+                      <View style={styles.onlineIndicator}></View>
+                    </View>
+                    <View style={{ marginLeft: 16 }}>
+                      <Text style={styles.transactionType}>
+                        {chat?.username}
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        style={styles.transactionInfo}>
+                        {chat?.phone_number}
+                      </Text>
+                    </View>
+                  </View>
+                  <View>
+                    <Text style={styles.amount}>3m ago</Text>
+                  </View>
+                </View>
+              </Pressable>
+            ))}
+            <View style={{ height: 220 }}></View>
+          </ScrollView>
+        </LinearGradient>
       </SafeAreaView>
-    </LinearGradient>
+      {/* <IconButton containerStyle={styles.floatingButton}>
+        <Image
+          source={assets.editIcon}
+          style={{
+            height: 18,
+            width: 25,
+            marginRight: -5,
+          }}
+        />
+      </IconButton> */}
+    </ImageBackground >
   );
 };
 
 export default Chat;
 
 const styles = StyleSheet.create({
-  gradient: {
+  background: {
     flex: 1,
+    width: '100%',
+    height: '100%'
   },
   container: {
-    flex: 1,
+    margin: 24,
   },
-  header: {
-    paddingHorizontal: 24,
-  },
-  headerTitle: {
-    ...theme.TYPOGRAPHY.h3,
-    fontWeight: '700',
-    color: theme.COLORS.white,
-    fontFamily: 'Inter',
-  },
-  userInfo: {
+  search: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginTop: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  messageText: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#2C3482',
+    fontFamily: 'Inter',
+    marginRight: 25
+  },
+  avatarContainer: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    paddingBottom: 10,
+    borderColor: '#fff',
+  },
+  avatarSubContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatarBorder: {
+    borderColor: '#2697FF',
+    padding: 1,
+    borderRadius: 100,
+    borderWidth: 1,
+  },
+  avatar: {
+    height: 64,
+    width: 64,
+    borderRadius: 100,
+  },
+  userDetails: {
+    marginLeft: 20,
+    background: 'red',
   },
   userName: {
-    ...theme.TYPOGRAPHY.body1,
-    fontWeight: '500',
+    fontWeight: '600',
+    fontSize: 18,
     fontFamily: 'Inter',
-    color: theme.COLORS.white,
+    color: '#2C3482',
   },
   userMetrics: {
-    fontSize: 10,
     fontFamily: 'Inter',
-    color: theme.COLORS.white,
+    fontSize: 14,
+    color: '#2C3482',
     fontWeight: '400',
+  },
+  coinButton: {
+    backgroundColor: '#2697FF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 32,
+    width: 150,
+    justifyContent: 'center',
+    borderRadius: 16,
   },
   body: {
-    flexGrow: 1,
-    backgroundColor: theme.COLORS.white,
-    paddingHorizontal: 24,
-    marginTop: 26.75,
+    height: '100%',
+    padding: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    borderColor: '#fff',
+    marginTop: -15
   },
   tabs: {
-    paddingVertical: 20,
     flexDirection: 'row',
+    height: 44,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#DEE5EB',
   },
   tab: {
-    paddingHorizontal: 16,
-    paddingVertical: 7,
-    borderWidth: 1,
-
-    marginRight: 12,
-    borderRadius: 23,
+    flex: 1,
+    margin: 2,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   tabLabel: {
-    fontSize: 12,
+    fontSize: 16,
     fontFamily: 'Inter',
-    lineHeight: 18,
-    fontWeight: '400',
+    fontWeight: '600',
+    color: '#8FA8BD',
+  },
+  tabActive: {
+    backgroundColor: '#2697FF',
+  },
+  tabLabelActive: {
+    color: '#fff'
   },
   userBlock: {
     paddingVertical: 20,
@@ -278,25 +298,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   transactionType: {
-    ...theme.TYPOGRAPHY.body1,
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '600',
     fontFamily: 'Inter',
-    color: '#1D1D35',
+    color: '#0E0E2F',
   },
   transactionInfo: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '400',
     fontFamily: 'Inter',
-    lineHeight: 18,
     marginTop: 8,
-    color: '#6E6E7E',
+    color: '#63798B'
   },
   amount: {
-    ...theme.TYPOGRAPHY.body2,
-    color: '#6E6E7E',
+    fontSize: 14,
     fontWeight: '400',
     fontFamily: 'Inter',
     marginTop: 8,
+    color: '#63798B'
   },
   onlineIndicator: {
     position: 'absolute',

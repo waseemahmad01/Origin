@@ -16,94 +16,83 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import assets from '../../../assets';
 import theme from '../../../theme';
 
-const isIos = Platform.OS === 'ios';
-
-const Help = ({navigation}) => {
+const Help = ({ navigation }) => {
   return (
     <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <SafeAreaView style={{flex: 1}}>
-        <StatusBar translucent={true} backgroundColor={'transparent'} />
-        <View style={styles.top}>
-          <View
-            style={{
-              ...styles.row,
-              justifyContent: 'space-between',
-            }}>
-            <Pressable
-              onPress={() => navigation.goBack()}
-              style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={assets.chevronLeft}
-                style={{
-                  height: 20,
-                  width: 8,
-                  marginRight: 20,
-                }}
-                resizeMode="contain"
-              />
-              <Text style={styles.headTitle}>Help</Text>
-            </Pressable>
-          </View>
+      colors={["#D8E3F3", '#B8F7FC',]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}>
+      <SafeAreaView styles={{ flex: 1 }} >
+        <View style={[styles.header]}>
+          <Pressable onPress={() => navigation.goBack()}>
+            <Image source={assets.backChat} />
+          </Pressable>
+          <Text style={styles.messageText}>Help</Text>
+          <View></View>
         </View>
-        <View style={styles.bottom}>
-          <View>
+        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} >
             <Text style={styles.title}>FAQ</Text>
-          </View>
-          <View style={{flexGrow: 1}}>
-            <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
-              <View style={styles.question}>
-                <Text style={styles.questionText}>
-                  How will I do black mood screens?
-                </Text>
-              </View>
-              <View style={styles.question}>
-                <Text style={styles.questionText}>
-                  Can I add any person from contacts?
-                </Text>
-              </View>
-              <View style={styles.question}>
-                <Text style={styles.questionText}>
-                  How to add people in freedom?
-                </Text>
-              </View>
-              <View style={styles.question}>
-                <Text style={styles.questionText}>
-                  Is it translating voice in this app?
-                </Text>
-              </View>
-              <View style={styles.question}>
-                <Text style={styles.questionText}>
-                  Auto translate is working?
-                </Text>
-              </View>
-              <View style={styles.question}>
-                <Text style={styles.questionText}>
-                  Can I log out of freedom?
-                </Text>
-              </View>
-              <View style={styles.question}>
-                <Text style={styles.questionText}>
-                  How to select voice language?
-                </Text>
-              </View>
-              <View style={styles.question}>
-                <Text style={styles.questionText}>
-                  How to change my password?
-                </Text>
-              </View>
-              <View style={styles.question}>
-                <Text style={styles.questionText}>How to use freedom app?</Text>
-              </View>
-            </ScrollView>
-          </View>
-        </View>
+
+            <Text style={styles.subtitle}>
+              If you don’t share your last seen, you won’t be able to see other people’s last seen
+            </Text>
+
+            <View style={styles.question}>
+              <Text style={styles.questionText}>
+                How will I do black mood screens?
+              </Text>
+              <Image source={assets.addBlackIcon} />
+            </View>
+            <View style={styles.question}>
+              <Text style={styles.questionText}>
+                Can I add any person from contacts?
+              </Text>
+              <Image source={assets.addBlackIcon} />
+            </View>
+            <View style={styles.question}>
+              <Text style={styles.questionText}>
+                How to add people in freedom?
+              </Text>
+              <Image source={assets.addBlackIcon} />
+            </View>
+            <View style={styles.question}>
+              <Text style={styles.questionText}>
+                Is it translating voice in this app?
+              </Text>
+              <Image source={assets.addBlackIcon} />
+            </View>
+            <View style={styles.question}>
+              <Text style={styles.questionText}>
+                Auto translate is working?
+              </Text>
+              <Image source={assets.addBlackIcon} />
+            </View>
+            <View style={styles.question}>
+              <Text style={styles.questionText}>
+                Can I log out of freedom?
+              </Text>
+              <Image source={assets.addBlackIcon} />
+            </View>
+            <View style={styles.question}>
+              <Text style={styles.questionText}>
+                How to select voice language?
+              </Text>
+              <Image source={assets.addBlackIcon} />
+            </View>
+            <View style={styles.question}>
+              <Text style={styles.questionText}>
+                How to change my password?
+              </Text>
+              <Image source={assets.addBlackIcon} />
+            </View>
+            <View style={styles.question}>
+              <Text style={styles.questionText}>How to use freedom app?</Text>
+              <Image source={assets.addBlackIcon} />
+            </View>
+            <View style={{ height: 200 }}></View>
+          </ScrollView>
+        </LinearGradient>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -112,34 +101,59 @@ const Help = ({navigation}) => {
 export default Help;
 
 const styles = StyleSheet.create({
-  gradient: {flex: 1},
-  top: {
-    paddingHorizontal: 24,
-    marginTop: 27.74,
-    paddingBottom: 19,
+  header: {
+    marginHorizontal: 24,
+    marginTop: 10,
+    marginBottom: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  headTitle: {
-    ...theme.TYPOGRAPHY.h3,
+  textNormal: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0E0E2F',
+    fontFamily: 'Inter',
+  },
+  messageText: {
+    fontSize: 24,
     fontWeight: '700',
-    color: theme.COLORS.white,
+    color: '#2C3482',
+    fontFamily: 'Inter',
+    marginRight: 15
   },
-  bottom: {
-    paddingHorizontal: 24,
-    flexGrow: 1,
-    backgroundColor: theme.COLORS.white,
-    paddingTop: 24,
+  body: {
+    height: '100%',
+    padding: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    marginTop: -10
   },
   title: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: '600',
     lineHeight: 28,
     fontFamily: 'Inter',
-    color: '#1D1D35',
-    marginBottom: 24,
+    color: '#2697FF',
+    marginBottom: 15,
+  },
+  subtitle: {
+    color: '#63798B',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 24,
+    marginBottom: 20,
   },
   question: {
     width: '100%',
-    backgroundColor: '#EBFAF3',
+    height: 48,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderColor: '#DEE5EB',
+    borderRadius: 24,
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 24,

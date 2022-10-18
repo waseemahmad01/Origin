@@ -5,8 +5,6 @@ import {
   Text,
   Image,
   StyleSheet,
-  Platform,
-  StatusBar,
   SafeAreaView,
   ScrollView,
 } from 'react-native';
@@ -16,70 +14,50 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import assets from '../../../assets';
 import theme from '../../../theme';
 
-const isIos = Platform.OS === 'ios';
-
-const AboutUs = ({navigation}) => {
+const AboutUs = ({ navigation }) => {
   return (
     <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <SafeAreaView style={{flex: 1}}>
-        <StatusBar translucent={true} backgroundColor={'transparent'} />
-        <View style={styles.top}>
-          <View
-            style={{
-              ...styles.row,
-              justifyContent: 'space-between',
-            }}>
-            <Pressable
-              onPress={() => navigation.goBack()}
-              style={{flexDirection: 'row', alignItems: 'center'}}>
+      colors={["#D8E3F3", '#B8F7FC',]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}>
+      <SafeAreaView styles={{ flex: 1 }} >
+        <View style={[styles.header]}>
+          <Pressable onPress={() => navigation.goBack()}>
+            <Image source={assets.backChat} />
+          </Pressable>
+          <Text style={styles.messageText}>About Us</Text>
+          <View></View>
+        </View>
+        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
+          <View style={{ flex: 1 }}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flex: 1, paddingBottom: 200 }}>
+              <Text style={styles.title}>Know about freedom app</Text>
               <Image
-                source={assets.chevronLeft}
+                source={assets.aboutImage}
                 style={{
-                  height: 20,
-                  width: 8,
-                  marginRight: 20,
+                  width: '100%',
+                  height: 163,
                 }}
-                resizeMode="contain"
+                resizeMode="cover"
               />
-              <Text style={styles.headTitle}>About us</Text>
-            </Pressable>
+              <Text style={{ ...styles.subtitle, marginTop: 24, marginBottom: 20 }}>
+                It is a long established fact that a reader will be distracted by
+                the readable content of a page when looking at its layout. The
+                point of using lorem ipsum is that it has a more normal
+                distribution.
+              </Text>
+              <Text style={{ ...styles.title, marginBottom: 12 }}>Chatting</Text>
+              <Text style={{ ...styles.subtitle }}>
+                It is a long established fact that a reader will be distracted by
+                the readable content of a page when looking.
+              </Text>
+              <Text style={{ ...styles.subtitle, marginTop: 20 }}>
+                The point of using lorem ipsum is that it has a more normal
+                distribution.
+              </Text>
+            </ScrollView>
           </View>
-        </View>
-        <View style={styles.bottom}>
-          <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
-            <Text style={styles.title}>Know about freedom app</Text>
-            <Image
-              source={assets.aboutImage}
-              style={{
-                width: '100%',
-                height: 163,
-              }}
-              resizeMode="cover"
-            />
-            <Text style={{...styles.subtitle, marginTop: 24, marginBottom: 20}}>
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout. The
-              point of using lorem ipsum is that it has a more normal
-              distribution.
-            </Text>
-            <Text style={{...styles.title, marginBottom: 12}}>Chatting</Text>
-            <Text style={{...styles.subtitle}}>
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking.
-            </Text>
-            <Text style={{...styles.subtitle, marginTop: 20}}>
-              The point of using lorem ipsum is that it has a more normal
-              distribution.
-            </Text>
-          </ScrollView>
-        </View>
+        </LinearGradient>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -88,11 +66,33 @@ const AboutUs = ({navigation}) => {
 export default AboutUs;
 
 const styles = StyleSheet.create({
-  gradient: {flex: 1},
-  top: {
-    paddingHorizontal: 24,
-    marginTop: 27.74,
-    paddingBottom: 19,
+  header: {
+    marginHorizontal: 24,
+    marginTop: 10,
+    marginBottom: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textNormal: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0E0E2F',
+    fontFamily: 'Inter',
+  },
+  messageText: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#2C3482',
+    fontFamily: 'Inter',
+    marginRight: 15
+  },
+  body: {
+    height: '100%',
+    padding: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    marginTop: -10
   },
   headTitle: {
     ...theme.TYPOGRAPHY.h3,
@@ -107,11 +107,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: '600',
     lineHeight: 28,
     fontFamily: 'Inter',
-    color: '#1D1D35',
-    marginBottom: 24,
+    color: '#2697FF',
+    marginBottom: 15,
   },
   question: {
     width: '100%',
@@ -126,7 +126,10 @@ const styles = StyleSheet.create({
     color: '#1D1D35',
   },
   subtitle: {
-    ...theme.TYPOGRAPHY.body2,
+    color: '#63798B',
+    fontSize: 16,
+    fontWeight: '400',
     lineHeight: 24,
   },
 });
+

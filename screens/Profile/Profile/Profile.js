@@ -7,12 +7,16 @@ import {
   StatusBar,
   Image,
   StyleSheet,
+  ImageBackground,
   Platform,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
+
+/* Rectangle 393 */
 
 import theme from '../../../theme';
 import assets from '../../../assets';
@@ -20,107 +24,130 @@ import GButton from '../../../components/GButton/GButton';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 const isIos = Platform.OS === 'ios';
+const { width, height } = Dimensions.get('window');
 
-const Profile = ({navigation}) => {
+const Profile = ({ navigation }) => {
   const user = useSelector(state => state.auth.user);
 
   console.log('My data ===>', user);
 
   return (
-    <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <SafeAreaView style={{flex: 1}}>
-        <StatusBar translucent={true} backgroundColor={'transparent'} />
-        <View style={styles.top}>
-          <View
-            style={{
-              ...styles.row,
-              justifyContent: 'space-between',
-              marginTop: 27.74,
-            }}>
-            <Text style={styles.headTitle}>Profile</Text>
-            <Pressable onPress={() => navigation.navigate('Settings')}>
+    <ImageBackground style={[StyleSheet.absoluteFill, styles.background]} source={assets.profileBG}>
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ImageBackground style={{ height: 500, width: width * 0.90 }} source={assets.profileBG2}>
+          <View>
+            <View style={styles.avatarBorder}>
               <Image
-                source={assets.settings}
-                style={{
-                  height: 16,
-                  width: 16,
-                }}
+                source={assets.user}
+                style={styles.avatar}
+                resizeMode="cover"
               />
-            </Pressable>
+            </View>
+            <View style={styles.userNameContainer}>
+              <Text style={styles.userName}>{user?.username}</Text>
+              <Pressable onPress={() => navigation.navigate('EditProfile')}>
+                <View style={styles.editButton}>
+                  <Image
+                    source={assets.edit}
+                    style={{
+                      height: 24,
+                      width: 24,
+                    }}
+                    resizeMode="cover"
+                  />
+                  <Text style={styles.editText} >Edit Profile</Text>
+                </View>
+              </Pressable>
+            </View>
           </View>
-        </View>
-        <View style={styles.bottom}>
-          <View style={styles.profileContainer}>
-            <Image source={assets.user} />
-            <Text style={styles.userName}>{user?.username}</Text>
-          </View>
-          <View style={styles.divider}></View>
-          <View style={{flexGrow: 1}}>
-            <ScrollView>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
+
+          <View style={styles.infoContainer}>
+            <View style={styles.userInfoBlock}>
+              <View style={{ ...styles.row, justifyContent: 'space-between' }}>
+                <View style={styles.row}>
+                  <Image source={assets.userId} />
                   <Text style={styles.key}>User ID</Text>
+                </View>
+                <View style={styles.valueContainer}>
                   <Text style={styles.value}>@annette.me</Text>
                 </View>
               </View>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
+            </View>
+            <View style={styles.userInfoBlock}>
+              <View style={{ ...styles.row, justifyContent: 'space-between' }}>
+                <View style={styles.row}>
+                  <Image source={assets.userLocation} />
                   <Text style={styles.key}>Location</Text>
+                </View>
+                <View style={styles.valueContainer}>
                   <Text style={styles.value}>New York, NYC</Text>
                 </View>
               </View>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
+            </View>
+            <View style={styles.userInfoBlock}>
+              <View style={{ ...styles.row, justifyContent: 'space-between' }}>
+                <View style={styles.row}>
+                  <Image source={assets.userLocation} />
                   <Text style={styles.key}>Phone</Text>
+                </View>
+                <View style={styles.valueContainer}>
                   <Text style={styles.value}>{user?.phone_number}</Text>
                 </View>
               </View>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
-                  <Text style={styles.key}>Email Address</Text>
-                  <Text style={styles.value}>{user?.email}</Text>
+            </View>
+            <View style={styles.userInfoBlock}>
+              <View style={{ ...styles.row, justifyContent: 'space-between' }}>
+                <View style={styles.row}>
+                  <Image source={assets.userLocation} />
+                  <Text style={styles.key}>Email</Text>
+                </View>
+                <View style={styles.valueContainer}>
+                  <Text numberOfLines={1} style={styles.value}>{user?.email}</Text>
                 </View>
               </View>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
+            </View>
+            <View style={styles.userInfoBlock}>
+              <View style={{ ...styles.row, justifyContent: 'space-between' }}>
+                <View style={styles.row}>
+                  <Image source={assets.userLocation} />
                   <Text style={styles.key}>ETH Address</Text>
+                </View>
+                <View style={styles.valueContainer}>
                   <Text style={styles.value}>0x71C76hjj...d8976F</Text>
                 </View>
               </View>
-            </ScrollView>
-            <View style={{marginBottom: 41, alignItems: 'flex-end'}}>
-              <GButton
-                label="Edit profile"
-                style={{
-                  width: 93,
-                  height: 32,
-                }}
-                textStyle={{
-                  fontSize: 12,
-                  lineHeight: 18,
-                }}
-                onPress={() => navigation.navigate('EditProfile')}
-              />
             </View>
           </View>
-        </View>
-      </SafeAreaView>
-    </LinearGradient>
+        </ImageBackground>
+      </SafeAreaView >
+    </ImageBackground >
   );
 };
 
 export default Profile;
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   gradient: {
     flex: 1,
+  },
+  avatarBorder: {
+    borderColor: '#2697FF',
+    padding: 3,
+    borderRadius: 100,
+    borderWidth: 1,
+    position: 'absolute',
+    left: '40%',
+    top: -55
+  },
+  avatar: {
+    height: 75,
+    width: 75,
+    borderRadius: 100,
   },
   top: {
     paddingHorizontal: 24,
@@ -146,13 +173,28 @@ const styles = StyleSheet.create({
     marginTop: 34,
     marginBottom: 26,
   },
+  userNameContainer: {
+    alignSelf: 'center',
+    marginVertical: 40
+  },
   userName: {
-    ...theme.TYPOGRAPHY.body1,
-    fontSize: 18,
-    lineHeight: 28,
-    marginTop: 20,
-    color: '#1D1D35',
-    fontWeight: '500',
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#2C3482',
+    textAlign: 'center',
+    fontFamily: 'Inter',
+  },
+  editButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  editText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2697FF',
+    fontFamily: 'Inter',
+    marginLeft: 10,
   },
   divider: {
     borderWidth: 1,
@@ -160,17 +202,28 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 16,
   },
+  infoContainer: {
+    marginHorizontal: 14,
+  },
   userInfoBlock: {
-    paddingVertical: 19,
+    marginBottom: 20
+  },
+  valueContainer: {
+    flex: 1,
+    marginLeft: 20,
+    alignItems: 'flex-end'
   },
   key: {
-    ...theme.TYPOGRAPHY.subtitle1,
-    color: '#4A4A5D',
-    fontWeight: '400',
+    color: '#63798B',
+    fontWeight: '500',
+    fontSize: 16,
+    fontFamily: 'Inter',
+    marginLeft: 5,
   },
   value: {
-    ...theme.TYPOGRAPHY.subtitle1,
-    color: '#1D1D35',
-    fontWeight: '500',
+    color: '#0E0E2F',
+    fontWeight: '600',
+    fontSize: 16,
+    fontFamily: 'Inter',
   },
 });
