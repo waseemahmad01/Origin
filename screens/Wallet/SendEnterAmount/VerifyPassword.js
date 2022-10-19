@@ -15,10 +15,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import InputField from '../../../components/InputField/InputField';
 
 import theme from '../../../theme';
+import useBiometrics from '../../../hooks/useBiometrics';
 
 const isIos = Platform.OS === 'ios';
 
-const VerifyPassword = ({navigation, verify}) => {
+const VerifyPassword = ({
+  navigation,
+  setVerify,
+  verify,
+  setVerifyTransaction,
+}) => {
+  const {handleBiometric, sensorAvailable} = useBiometrics();
   return (
     <Modal visible={verify} animationType="fade" transparent={true}>
       <View style={styles.container}>
@@ -49,24 +56,31 @@ const VerifyPassword = ({navigation, verify}) => {
               />
             </View>
             <View>
-              <Pressable
-                style={{
-                  height: 48,
-                  width: 48,
-                  borderRadius: 52 / 2,
-                  backgroundColor: theme.COLORS.green,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={assets.faceIdWhite}
-                  style={{
-                    height: 24,
-                    width: 24,
+              {sensorAvailable && (
+                <Pressable
+                  onPress={async () => {
+                    const result = await handleBiometric();
+                    setVerifyTransaction(result);
+                    setVerify(false);
                   }}
-                  resizeMode="cover"
-                />
-              </Pressable>
+                  style={{
+                    height: 48,
+                    width: 48,
+                    borderRadius: 52 / 2,
+                    backgroundColor: theme.COLORS.green,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={assets.faceIdWhite}
+                    style={{
+                      height: 24,
+                      width: 24,
+                    }}
+                    resizeMode="cover"
+                  />
+                </Pressable>
+              )}
             </View>
           </View>
         </View>

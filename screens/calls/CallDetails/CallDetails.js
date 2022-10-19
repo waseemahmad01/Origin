@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
+
+import {useFocusEffect} from '@react-navigation/native';
 
 import {
   View,
@@ -12,14 +14,32 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import assets from '../../../assets';
 import theme from '../../../theme';
+import {userCallHistory} from '../../../api';
 
 const isIos = Platform.OS === 'ios';
 
-const CallDetails = ({navigation}) => {
+const CallDetails = ({navigation, route}) => {
+  const {callee} = route.params;
+  console.log('newxkansldv ===>', callee);
+
+  const [history, setHistory] = useState([]);
+
+  const handleGetCallHistory = async () => {
+    try {
+      const {data} = await userCallHistory(callee.phone_number);
+      setHistory(data);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+  useFocusEffect(
+    useCallback(() => {
+      handleGetCallHistory();
+    }, []),
+  );
   return (
     <ImageBackground
       resizeMode="cover"
@@ -53,9 +73,11 @@ const CallDetails = ({navigation}) => {
                 />
               </View>
               <View style={{marginLeft: 16}}>
-                <Text style={styles.transactionType}>Darlene Robert</Text>
+                <Text style={styles.transactionType}>{callee?.username}</Text>
 
-                <Text style={styles.transactionInfo}> (229) 555-0109</Text>
+                <Text style={styles.transactionInfo}>
+                  {callee?.phone_number}
+                </Text>
               </View>
             </View>
             <View style={{flexDirection: 'row'}}>
@@ -91,7 +113,7 @@ const CallDetails = ({navigation}) => {
             style={styles.mainContainer}>
             <ScrollView style={{flex: 1}}>
               <Text style={styles.title}>Today</Text>
-              {Array.from({length: 5}, (_, i) => i).map(i => (
+              {history.map((call, i) => (
                 <View
                   key={i}
                   style={{...styles.transactionDetails, marginBottom: 24}}>
@@ -114,7 +136,7 @@ const CallDetails = ({navigation}) => {
                           fontSize: 16,
                           color: theme.COLORS.grey900,
                         }}>
-                        Incoming call
+                        Outgoing call
                       </Text>
 
                       <Text

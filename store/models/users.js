@@ -1,5 +1,10 @@
 import {createModel} from '@rematch/core';
-import {addPeople, allUsers, peoples as peoplesApi} from '../../api';
+import {
+  addPeople,
+  allUsers,
+  getMyContacts as getMyContactsApi,
+  allPeoples,
+} from '../../api';
 
 export const users = createModel()({
   name: 'users',
@@ -7,7 +12,8 @@ export const users = createModel()({
     loading: false,
     selectedUser: null,
     users: [],
-    peoples: [],
+    allPeoples: [],
+    myContacts: [],
   },
   reducers: {
     setLoading(state, payload) {
@@ -19,18 +25,19 @@ export const users = createModel()({
     setUsers(state, payload) {
       state.users = payload;
     },
-    setPeoples(state, payload) {
-      state.peoples = payload;
+    setAllPeoples(state, payload) {
+      state.allPeoples = payload;
+    },
+    setMyContacts(state, payload) {
+      state.myContacts = payload;
     },
   },
   effects: dispatch => ({
     async getAllUsers() {
       try {
-        console.log('Calling');
         dispatch.users.setLoading(true);
         const {data} = await allUsers();
         dispatch.users.setUsers(data);
-        console.log(data);
       } catch (err) {
         console.log(err.message);
       } finally {
@@ -48,12 +55,24 @@ export const users = createModel()({
         dispatch.users.setLoading(true);
       }
     },
-    async getPeople() {
+    async getAllPeople() {
       try {
         dispatch.users.setLoading(true);
-        const {data} = await peoplesApi();
+        const {data} = await allPeoples();
         console.log('user=====>', data);
-        dispatch.users.setPeoples(data);
+        dispatch.users.setAllPeoples(data);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.users.setLoading(false);
+      }
+    },
+    async getMyContacts() {
+      try {
+        dispatch.users.setLoading(true);
+        const {data} = await getMyContactsApi();
+        console.log('My contacts', data);
+        dispatch.users.setMyContacts(data);
       } catch (err) {
         console.log(err.message);
       } finally {

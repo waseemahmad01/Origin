@@ -121,6 +121,19 @@ export const addCallHistory = data => api.post('/v1/voxim/call-history', data);
 
 export const addPeople = data => api.post('/v1/contacts', data);
 
-// get my people
+// get all people
 
-export const peoples = data => api.get('/v1/contacts');
+export const allPeoples = data => api.get('/v1/contacts');
+
+// get my contacts
+
+export const getMyContacts = () => api.get('/v1/my-contacts');
+
+// get Calls History
+
+export const callHistory = () => api.get('/v1/voxim/call-history');
+
+// get user call history
+
+export const userCallHistory = number =>
+  api.get(`/v1/voxim/call-history?phone_number=${number}`);

@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useCallback} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 
 import {
   View,
@@ -42,9 +43,10 @@ const isIos = Platform.OS === 'ios';
 
 const People = ({navigation}) => {
   const dispatch = useDispatch();
-  const peoples = useSelector(state => state.users.peoples);
-  const loading = useSelector(state => state.users.loading);
-  console.log(peoples);
+  // const myContacts = useSelector(state => state.users.myContacts);
+  const myContacts = useSelector(state => state.users.users);
+  // const loading = useSelector(state => state.users.loading);
+  console.log(myContacts);
 
   const handleProfileClick = user => {
     console.log(user);
@@ -52,9 +54,11 @@ const People = ({navigation}) => {
     navigation.navigate('Chat', {user});
   };
 
-  useEffect(() => {
-    dispatch.users.getPeople();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      dispatch.users.getAllUsers();
+    }, []),
+  );
 
   return (
     <ImageBackground
@@ -91,7 +95,7 @@ const People = ({navigation}) => {
         </View>
         <ImageBackground source={assets.containerBox} style={styles.bottom}>
           <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
-            {peoples.map((people, i) => (
+            {myContacts.map((people, i) => (
               <Pressable
                 key={i}
                 onPress={() => handleProfileClick(people)}

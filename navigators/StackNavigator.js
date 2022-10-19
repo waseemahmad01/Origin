@@ -34,6 +34,8 @@ import AddPeople from '../screens/People/AddPeople/AddPeople';
 
 const Stack = createNativeStackNavigator();
 
+const client = Voximplant.getInstance();
+
 const StackNavigator = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -42,6 +44,7 @@ const StackNavigator = () => {
   const loggedIn = useSelector(state => state.auth.loggedIn);
   const activePackage = useSelector(state => state.sfts.active);
   const wallet = useSelector(state => state.wallet.publicAddress);
+  const user = useSelector(state => state.auth.user);
   const [loading, setLoading] = useState(true);
   const [visited, setVisited] = useState(false);
 
@@ -55,6 +58,7 @@ const StackNavigator = () => {
         dispatch.auth.setUser(user);
         dispatch.wallet.setPublicAddress(user?.origen_public_wallet_address);
         const {data} = await getActiveSftPackage();
+        // handleVoxImplantLogin();
         dispatch.sfts.setActive(data);
         dispatch.sfts.getCurrentPackage();
         dispatch.auth.setLoggedIn(true);
@@ -75,6 +79,12 @@ const StackNavigator = () => {
   }, []);
 
   useEffect(() => {
+    if (user) {
+      handleVoxImplantLogin();
+    }
+  }, [user]);
+
+  useEffect(() => {
     voximplant.on(Voximplant.ClientEvents.IncomingCall, incomingCallEvent => {
       console.log('Hello from call');
       calls.set(incomingCallEvent.call.callId, incomingCallEvent.call);
@@ -87,6 +97,21 @@ const StackNavigator = () => {
       voximplant.off(Voximplant.ClientEvents.IncomingCall);
     };
   });
+  const handleVoxImplantLogin = async () => {
+    let state = await client.getClientState();
+    console.log(`${user?.vox_user_name}@${user?.vox_app_name}`);
+    console.log('State ===== >', state);
+    if (state === Voximplant.ClientState.DISCONNECTED) {
+      await client.connect();
+    }
+    if (state !== 'logged_in') {
+      const res = await client.login(
+        `${user?.vox_user_name}@${user?.vox_app_name}`,
+        user?.vox_user_password,
+      );
+      console.log(res);
+    }
+  };
 
   const getInitialRoute = () => {
     if (loggedIn) {

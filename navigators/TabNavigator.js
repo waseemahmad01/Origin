@@ -62,7 +62,7 @@ const CallNavigator = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="Calls" component={CallHistory} />
+      <Stack.Screen name="Calls1" component={CallHistory} />
       <Stack.Screen name="Call-Search" component={CallSearch} />
     </Stack.Navigator>
   );
@@ -83,6 +83,8 @@ const TabNavigator = () => {
         tabBarActiveTintColor: '#1D1D35',
         tabBarInactiveTintColor: '#6E6E7E',
         tabBarStyle: {
+          // backgroundColor: 'red',
+          // height: 100,
           // display: getTabBarVisibility(route),
         },
       })}>

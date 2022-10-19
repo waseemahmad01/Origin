@@ -22,7 +22,7 @@ const isIos = Platform.OS === 'ios';
 
 const AddPeople = ({navigation}) => {
   const dispatch = useDispatch();
-  const users = useSelector(state => state.users.users);
+  const allPeoples = useSelector(state => state.users.allPeoples);
   const [search, setSearch] = useState('');
 
   const handleAddtoPeople = num => {
@@ -31,7 +31,7 @@ const AddPeople = ({navigation}) => {
   };
 
   useEffect(() => {
-    dispatch.users.getAllUsers();
+    dispatch.users.getAllPeople();
   }, []);
   return (
     <ImageBackground
@@ -124,7 +124,7 @@ const AddPeople = ({navigation}) => {
               </Pressable>
             ))}
             <Text style={styles.title}>Add from phone contacts</Text>
-            {users.map((user, i) => (
+            {allPeoples.map((user, i) => (
               <Pressable
                 onPress={() => handleAddtoPeople(user?.phone_number)}
                 key={i}

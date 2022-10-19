@@ -162,6 +162,16 @@ const AudioCall = ({route, navigation}) => {
         console.log('call failed');
         console.log('Call failed event ===> ', callEvent);
         // navigation.goBack();
+        const apiData = {
+          receiver_number: callee,
+          duration: callTime.current,
+          call_status: 'failed',
+          call_type: 'audio_call',
+        };
+        setCallStatus('Disconnected');
+        console.log(apiData);
+        addCallHistory(apiData);
+        navigation.goBack();
       });
       call.on(Voximplant.CallEvents.ProgressToneStart, callEvent => {
         setCallStatus('Ringing');

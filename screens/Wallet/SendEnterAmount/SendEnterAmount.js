@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {
   View,
@@ -37,6 +37,7 @@ const SendEnterAmount = ({navigation}) => {
   const loading = useSelector(state => state.wallet.loading);
   const balance = useSelector(state => state.wallet.balance);
   const [verify, setVerify] = useState(false);
+  const [verifyTransaction, setVerifyTransaction] = useState(false);
   const [formData, setFormData] = useState({
     target_wallet_address: user?.origen_public_wallet_address || '',
     amount_of_tokens: '',
@@ -62,6 +63,7 @@ const SendEnterAmount = ({navigation}) => {
     }
     dispatch.wallet.transferToken({formData, navigation});
   };
+
   return (
     <>
       <ImageBackground
@@ -151,7 +153,15 @@ const SendEnterAmount = ({navigation}) => {
             <Button
               label="Send"
               style={{marginTop: 'auto'}}
-              onPress={handleTransferToken}
+              // onPress={handleTransferToken}
+              onPress={() => {
+                console.log(verifyTransaction);
+                if (verifyTransaction === false) {
+                  setVerify(true);
+                } else {
+                  handleTransferToken();
+                }
+              }}
               loading={loading}
               // onPress={() => {
               //   handleTransferToken();
@@ -167,7 +177,11 @@ const SendEnterAmount = ({navigation}) => {
           <View style={styles.hider}></View>
         </SafeAreaView>
       </ImageBackground>
-      <VerifyPassword verify={verify} />
+      <VerifyPassword
+        verify={verify}
+        setVerify={setVerify}
+        setVerifyTransaction={setVerifyTransaction}
+      />
     </>
   );
 };

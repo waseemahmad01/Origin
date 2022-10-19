@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useCallback} from 'react';
+
+import {useFocusEffect} from '@react-navigation/native';
 
 import {
   View,
@@ -10,15 +12,25 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
+import {useSelector, useDispatch} from 'react-redux';
 import assets from '../../../assets';
 import theme from '../../../theme';
 
 const isIos = Platform.OS === 'ios';
 
 const CallHistory = ({navigation}) => {
+  const dispatch = useDispatch();
+  const callHistory = useSelector(state => state.calls.history);
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch.calls.getCallHistory();
+      console.log('hellll');
+    }, []),
+  );
   return (
     <ImageBackground
       source={assets.background}
@@ -42,100 +54,65 @@ const CallHistory = ({navigation}) => {
           </View>
         </View>
         <ImageBackground source={assets.containerBox} style={styles.body}>
-          <Pressable
-            onPress={() => navigation.navigate('Call-Details')}
-            style={styles.transactionDetails}>
-            <View style={{flexDirection: 'row'}}>
-              <View style={styles.iconContainer}>
-                <Image
-                  source={assets.user}
-                  style={{height: 48, width: 48, borderRadius: 48 / 2}}
-                  resizeMode="cover"
-                />
-              </View>
-              <View style={{marginLeft: 16}}>
-                <Text style={styles.transactionType}>Fernando Sims</Text>
+          <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+            {callHistory.map((call, i) => (
+              <Pressable
+                key={i}
+                onPress={() =>
+                  navigation.navigate('Call-Details', {callee: call})
+                }
+                style={styles.transactionDetails}>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={styles.iconContainer}>
+                    <Image
+                      source={assets.user}
+                      style={{height: 48, width: 48, borderRadius: 48 / 2}}
+                      resizeMode="cover"
+                    />
+                  </View>
+                  <View style={{marginLeft: 16}}>
+                    <Text style={styles.transactionType}>{call?.username}</Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginTop: 4,
+                      }}>
+                      <Image
+                        source={assets.outgoingCall}
+                        style={{
+                          height: 18,
+                          width: 18,
+                        }}
+                      />
+                      <Text style={styles.transactionInfo}> 8m ago</Text>
+                    </View>
+                  </View>
+                </View>
                 <View
                   style={{
-                    flexDirection: 'row',
+                    height: 48,
+                    width: 48,
+                    borderRadius: 48 / 2,
+                    backgroundColor: theme.COLORS.pastelBlue,
+                    justifyContent: 'center',
                     alignItems: 'center',
-                    marginTop: 4,
                   }}>
                   <Image
-                    source={assets.outgoingCall}
+                    source={
+                      call?.call_type === 'audio_call'
+                        ? assets.calls
+                        : assets.videoCamera
+                    }
                     style={{
-                      height: 18,
-                      width: 18,
+                      height: 24,
+                      width: 24,
                     }}
                   />
-                  <Text style={styles.transactionInfo}> 8m ago</Text>
                 </View>
-              </View>
-            </View>
-            <View
-              style={{
-                height: 48,
-                width: 48,
-                borderRadius: 48 / 2,
-                backgroundColor: theme.COLORS.pastelBlue,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={assets.calls}
-                style={{
-                  height: 24,
-                  width: 24,
-                }}
-              />
-            </View>
-          </Pressable>
-          <Pressable style={styles.transactionDetails}>
-            <View style={{flexDirection: 'row'}}>
-              <View style={styles.iconContainer}>
-                <Image
-                  source={assets.user}
-                  style={{height: 48, width: 48, borderRadius: 48 / 2}}
-                  resizeMode="cover"
-                />
-              </View>
-              <View style={{marginLeft: 16}}>
-                <Text style={styles.transactionType}>Fernando Sims</Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginTop: 4,
-                  }}>
-                  <Image
-                    source={assets.incomingCall}
-                    style={{
-                      height: 18,
-                      width: 18,
-                    }}
-                  />
-                  <Text style={styles.transactionInfo}> 2d ago</Text>
-                </View>
-              </View>
-            </View>
-            <View
-              style={{
-                height: 48,
-                width: 48,
-                borderRadius: 48 / 2,
-                backgroundColor: theme.COLORS.pastelBlue,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={assets.videoCamera}
-                style={{
-                  height: 24,
-                  width: 24,
-                }}
-              />
-            </View>
-          </Pressable>
+              </Pressable>
+            ))}
+          </ScrollView>
         </ImageBackground>
         <Pressable
           onPress={() => navigation.navigate('Add-People')}
