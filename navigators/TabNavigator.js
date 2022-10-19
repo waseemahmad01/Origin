@@ -37,21 +37,21 @@ const StackNavigator = () => {
   );
 };
 
-const ProfileNavigator = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}>
-      <Stack.Screen name="Profile1" component={Profile} />
-      <Stack.Screen name="Settings" component={Settings} />
-      <Stack.Screen name="Privacy" component={Privacy} />
-      <Stack.Screen name="Blocked" component={Blocked} />
-      <Stack.Screen name="Help" component={Help} />
-      <Stack.Screen name="About" component={AboutUs} />
-    </Stack.Navigator>
-  );
-};
+// const ProfileNavigator = () => {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerShown: false,
+//       }}>
+//       <Stack.Screen name="Profile1" component={Profile} />
+//       <Stack.Screen name="Settings" component={Settings} />
+//       <Stack.Screen name="Privacy" component={Privacy} />
+//       <Stack.Screen name="Blocked" component={Blocked} />
+//       <Stack.Screen name="Help" component={Help} />
+//       <Stack.Screen name="About" component={AboutUs} />
+//     </Stack.Navigator>
+//   );
+// };
 
 const TabNavigator = () => {
   return (
@@ -134,7 +134,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileNavigator}
+        component={Profile}
         options={{
           tabBarIcon: ({ focused }) => (
             <Image

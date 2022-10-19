@@ -24,7 +24,7 @@ const Help = ({ navigation }) => {
       end={{ x: 1, y: 0 }}>
       <SafeAreaView styles={{ flex: 1 }} >
         <View style={[styles.header]}>
-          <Pressable onPress={() => navigation.goBack()}>
+          <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
             <Image source={assets.backChat} />
           </Pressable>
           <Text style={styles.messageText}>Help</Text>

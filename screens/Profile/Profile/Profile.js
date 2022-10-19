@@ -4,23 +4,16 @@ import {
   View,
   Text,
   SafeAreaView,
-  StatusBar,
   Image,
   StyleSheet,
   ImageBackground,
   Platform,
-  ScrollView,
   Dimensions,
 } from 'react-native';
 
-import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
-
-/* Rectangle 393 */
-
 import theme from '../../../theme';
 import assets from '../../../assets';
-import GButton from '../../../components/GButton/GButton';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 
 const isIos = Platform.OS === 'ios';
@@ -87,7 +80,7 @@ const Profile = ({ navigation }) => {
             <View style={styles.userInfoBlock}>
               <View style={{ ...styles.row, justifyContent: 'space-between' }}>
                 <View style={styles.row}>
-                  <Image source={assets.userLocation} />
+                  <Image source={assets.userPhone} />
                   <Text style={styles.key}>Phone</Text>
                 </View>
                 <View style={styles.valueContainer}>
@@ -98,7 +91,7 @@ const Profile = ({ navigation }) => {
             <View style={styles.userInfoBlock}>
               <View style={{ ...styles.row, justifyContent: 'space-between' }}>
                 <View style={styles.row}>
-                  <Image source={assets.userLocation} />
+                  <Image source={assets.userEmail} />
                   <Text style={styles.key}>Email</Text>
                 </View>
                 <View style={styles.valueContainer}>
@@ -109,7 +102,7 @@ const Profile = ({ navigation }) => {
             <View style={styles.userInfoBlock}>
               <View style={{ ...styles.row, justifyContent: 'space-between' }}>
                 <View style={styles.row}>
-                  <Image source={assets.userLocation} />
+                  <Image source={assets.userWallet} />
                   <Text style={styles.key}>ETH Address</Text>
                 </View>
                 <View style={styles.valueContainer}>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {navigate} from '../utils/RootNavigation';
+import { navigate } from '../utils/RootNavigation';
 
 const api = axios.create({
   baseURL: 'http://3.83.29.205:5001/',

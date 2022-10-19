@@ -90,6 +90,16 @@ const assets = {
   editProfileImage: require('./icons/edit-profile-image.png'),
   addProfileImage: require('./icons/add-profile-image.png'),
   addBlackIcon: require('./icons/add-black.png'),
+  // Notifications
+  notificationsEmail: require('./icons/notification-email.png'),
+  notificationsSms: require('./icons/notification-sms.png'),
+  notificationsPhone: require('./icons/notification-phone.png'),
+  settingBlue: require('./icons/setting-blue.png'),
+  globe: require('./icons/globe.png'),
+  block: require('./icons/block.png'),
+  arrowDown: require('./icons/arrow-down.png'),
+  arrowRight: require('./icons/arrow-right.png'),
+  myContacts: require('./icons/my-contacts.png'),
 };
 
 export default assets;

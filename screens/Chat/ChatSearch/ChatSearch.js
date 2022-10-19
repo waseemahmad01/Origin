@@ -1,29 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   View,
   Text,
-  SafeAreaView,
-  StatusBar,
-  Platform,
   StyleSheet,
   Pressable,
   Image,
   TextInput,
   ScrollView,
-  ImageBackground,
 } from 'react-native';
 
 
 import theme from '../../../theme';
 import assets from '../../../assets';
-
-const isIos = Platform.OS === 'ios';
+import { useSelector } from 'react-redux';
+import { allUsers } from '../../../api';
 
 const ChatSearch = ({ navigation }) => {
-  const { bottom, top } = useSafeAreaInsets()
+  const { bottom, top } = useSafeAreaInsets();
+  const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    getAllUsers();
+  }, []);
+
+  const getAllUsers = async () => {
+    try {
+      const { data } = await allUsers();
+      setUsers(data);
+      console.log('response - ', data);
+    } catch (err) {
+      console.log('error - ', err);
+    }
+  };
+
+
   return (
     <View>
       <LinearGradient
@@ -32,7 +45,7 @@ const ChatSearch = ({ navigation }) => {
         end={{ x: 1, y: 0 }}>
         <View style={styles.container}>
           <View style={[styles.search, { marginTop: top }]}>
-            <Pressable onPress={() => navigation.goBack()}>
+            <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
               <Image source={assets.backChat} />
             </Pressable>
             <Text style={styles.messageText}>Messages</Text>
@@ -56,12 +69,50 @@ const ChatSearch = ({ navigation }) => {
                 value={search}
                 onChangeText={setSearch}
               />
+              <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => setSearch("")}>
+                <Image
+                  source={assets.crossIcon}
+                  style={{
+                    height: 15,
+                    width: 15,
+                  }}
+                  resizeMode="cover"
+                />
+              </Pressable>
             </View>
           </View>
         </View>
       </LinearGradient >
       <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
 
+        <ScrollView>
+          {users.map(user => (
+            <Pressable
+              style={styles.userBlock}
+              key={user?.id}
+              onPress={() => {
+                navigation.navigate('Chat', { user });
+              }}>
+              <View style={styles.transactionDetails}>
+                <View
+                  style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View>
+                    <Image
+                      source={assets.user}
+                      style={{ height: 56, width: 56 }}
+                      resizeMode="cover"
+                    />
+                  </View>
+                  <View style={{ marginLeft: 16 }}>
+                    <Text style={styles.textNormal}>
+                      {user?.username}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </Pressable>
+          ))}
+        </ScrollView>
       </LinearGradient>
     </View >
   );
@@ -74,7 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%'
-
   },
   container: {
     margin: 24,
@@ -84,6 +134,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
+  },
+  textNormal: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0E0E2F',
+    fontFamily: 'Inter',
   },
   messageText: {
     fontSize: 24,

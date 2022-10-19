@@ -33,15 +33,15 @@ const KEYBOARD_AVOID_VIEW_BEHAVIOR = Platform.select({
 const Chat = ({ route, navigation }) => {
   const [allSMS, setSMS] = useState([]);
   const { bottom } = useSafeAreaInsets()
-  const { user } = route.params;
-  console.log(route.params);
+  const chat = route?.params?.chat
+
   useEffect(() => {
     _getAllSMS();
   }, []);
 
   const _getAllSMS = async () => {
     try {
-      const { data } = await getAllSMS(route?.params?.chat?.chat_id);
+      const { data } = await getAllSMS(chat.chat_id);
       console.log('get messages - ', data);
       setSMS(data);
     } catch (err) {
@@ -49,8 +49,8 @@ const Chat = ({ route, navigation }) => {
     }
   };
 
-  const my = route?.params?.chat?.sender_number || '';
-  const receiver = route?.params?.chat?.receiver_number;
+  const my = chat.sender_number || '';
+  const receiver = chat.receiver_number;
 
   const makeCall = async () => {
     try {
@@ -79,11 +79,12 @@ const Chat = ({ route, navigation }) => {
     }
   };
 
+
   return (
     <ImageBackground style={[StyleSheet.absoluteFill, styles.background]} source={assets.background}>
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.header}>
-          <Pressable onPress={() => navigation.goBack()}>
+          <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
             <Image source={assets.backChat} />
           </Pressable>
           <View style={styles.avatarContainer}>
@@ -97,10 +98,10 @@ const Chat = ({ route, navigation }) => {
             </View>
             <View style={{ marginLeft: 16 }}>
               <Text style={[styles.userMetrics, { marginBottom: 5, fontWeight: '600', fontSize: 16 }]}>
-                @{user?.username}
+                @{chat?.username}
               </Text>
               <Text style={styles.userMetrics}>
-                {truncateString(user?.origen_public_wallet_address)}
+                {truncateString(chat?.origen_public_wallet_address)}
               </Text>
             </View>
           </View>
@@ -218,12 +219,7 @@ const styles = StyleSheet.create({
     color: theme.COLORS.white,
     marginTop: 1,
   },
-  scrollView: {
-    paddingHorizontal: 24,
-  },
   inputContainer: {
-    // position: 'absolute',
-    // bottom: 0,
     backgroundColor: theme.COLORS.white,
     paddingHorizontal: 12,
     paddingVertical: 15,

@@ -15,9 +15,6 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 
 import assets from '../../../assets';
-import theme from '../../../theme';
-
-const isIos = Platform.OS === 'ios';
 
 const Privacy = ({ navigation }) => {
   return (
@@ -30,7 +27,7 @@ const Privacy = ({ navigation }) => {
       end={{ x: 1, y: 0 }}>
       <SafeAreaView styles={{ flex: 1 }} >
         <View style={[styles.header]}>
-          <Pressable onPress={() => navigation.goBack()}>
+          <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
             <Image source={assets.backChat} />
           </Pressable>
           <Text style={styles.messageText}>Privacy Policy</Text>
@@ -46,7 +43,12 @@ const Privacy = ({ navigation }) => {
             </Text>
             <View style={styles.filter}>
               <Text style={styles.key}>Last seen</Text>
-              <Text style={styles.value}>Value</Text>
+              <View style={styles.row}>
+                <Image source={assets.globe} />
+                <Text style={styles.value}>Everyone</Text>
+                <Image source={assets.globe} />
+              </View>
+
             </View>
             <View style={styles.filter}>
               <Text style={styles.key}>Profile photo</Text>

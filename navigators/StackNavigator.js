@@ -1,15 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
-import {useNavigation} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import TabNavigator from './TabNavigator';
-
+import Settings from '../screens/Profile/Settings/Settings';
+import Privacy from '../screens/Profile/Privacy/Privacy';
+import Blocked from '../screens/Profile/Blocked/Blocked';
+import Help from '../screens/Profile/Help/Help';
+import AboutUs from '../screens/Profile/AboutUs/AboutUs';
 import SplashScreen from '../screens/SplashScreen/SplashScreen';
 import Onboarding from '../screens/Onboarding/Onboarding';
 import Notification from '../screens/Notification/Notification';
+import Notifications from '../screens/Profile/Notifications/Notifications';
 import Register from '../screens/Register/Register';
 import MintPackages from '../screens/Wallet/MintPackages/MintPackages';
 // import Wallet from './screens/Wallet/Wallet/Wallet';
@@ -24,9 +29,9 @@ import ChatSearch from '../screens/Chat/ChatSearch/ChatSearch';
 
 import Chat from '../screens/Chat/Chat/Chat';
 import AudioCall from '../screens/calls/AudioCall/AudioCall';
-import {Voximplant} from 'react-native-voximplant';
+import { Voximplant } from 'react-native-voximplant';
 import EditProfile from '../screens/Profile/EditProfile/EditProfile';
-import {getActiveSftPackage, userData} from '../api';
+import { getActiveSftPackage, userData } from '../api';
 import BuyNumber from '../screens/BuyNumber/BuyNumber';
 
 const Stack = createNativeStackNavigator();
@@ -47,10 +52,10 @@ const StackNavigator = () => {
       const token = await AsyncStorage.getItem('token');
       if (token) {
         console.log(token);
-        const {data: user} = await userData();
+        const { data: user } = await userData();
         dispatch.auth.setUser(user);
         dispatch.wallet.setPublicAddress(user?.origen_public_wallet_address);
-        const {data} = await getActiveSftPackage();
+        const { data } = await getActiveSftPackage();
         dispatch.sfts.setActive(data);
         dispatch.sfts.getCurrentPackage();
         dispatch.auth.setLoggedIn(true);
@@ -150,6 +155,12 @@ const StackNavigator = () => {
               name="EditProfile"
               component={RequireAuthentication(EditProfile, loggedIn)}
             />
+            <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen name="Notifications" component={Notifications} />
+            <Stack.Screen name="Privacy" component={Privacy} />
+            <Stack.Screen name="Blocked" component={Blocked} />
+            <Stack.Screen name="Help" component={Help} />
+            <Stack.Screen name="About" component={AboutUs} />
           </Stack.Navigator>
         </>
       )}

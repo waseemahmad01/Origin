@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TextInput,
   Pressable,
   Image,
-  Platform,
 } from 'react-native';
 import { sendMessage } from '../../api';
 import assets from '../../assets';
@@ -15,14 +13,19 @@ import theme from '../../theme';
 
 const ChatInput = ({ sendTo, refreshChat }) => {
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const onSendMessage = async () => {
+    if (!message) return
     try {
+      setLoading(true);
       await sendMessage({ sendTo, messageBody: message })
       setMessage("")
       refreshChat()
     } catch (err) {
       console.log('err - ', err)
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -37,15 +40,14 @@ const ChatInput = ({ sendTo, refreshChat }) => {
           placeholder="Type message"
           multiline
         />
-        <View style={styles.iconContainer}>
-          <Pressable style={{ marginLeft: 12 }} onPress={onSendMessage}>
-            <Image
-              style={{ width: 20, height: 20 }}
-              source={assets.camera}
-              resizeMode="cover"
-            />
-          </Pressable>
-        </View>
+        <Pressable disabled={loading} style={styles.iconContainer} onPress={onSendMessage}>
+          <Image
+            style={{ width: 20, height: 20 }}
+            source={assets.arrowRight}
+            resizeMode="cover"
+          />
+        </Pressable>
+
       </View>
     </View>
   );
@@ -76,6 +78,12 @@ const styles = StyleSheet.create({
     color: theme.COLORS.black,
   },
   iconContainer: {
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
     position: 'absolute',
     right: 20,
   },

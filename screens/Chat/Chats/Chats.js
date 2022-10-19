@@ -6,30 +6,25 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  StatusBar,
-  Platform,
   Image,
   Pressable,
   ScrollView,
   ImageBackground,
 } from 'react-native';
-
-import IconButton from '../../../components/IconButton/IconButton';
 import LinearGradient from 'react-native-linear-gradient';
 import theme from '../../../theme';
 import assets from '../../../assets';
 import { getAllChats } from '../../../api';
 import { truncateString } from '../../../utils';
-const isIos = Platform.OS === 'ios';
+
 const client = Voximplant.getInstance();
 
 const Chat = ({ navigation }) => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
-  const users = useSelector(state => state.users.users);
   const balance = useSelector(state => state.wallet.balance);
   const [tab, setTab] = useState(0);
-  const [chats, setChats] = useState([{}, {}]);
+  const [chats, setChats] = useState([]);
 
   const handleVoxImplantLogin = async () => {
     let state = await client.getClientState();
@@ -54,7 +49,7 @@ const Chat = ({ navigation }) => {
   const getChats = async () => {
     try {
       const { data } = await getAllChats();
-      // setChats(data);
+      setChats(data);
       console.log('response - ', data);
     } catch (err) {
       console.log('error - ', err);
@@ -127,32 +122,23 @@ const Chat = ({ navigation }) => {
                 onPress={() => {
                   navigation.navigate('Chat', { chat });
                 }}>
-                <View style={styles.transactionDetails}>
-                  <View
-                    style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View
-                      style={{
-                        position: 'relative',
-                      }}>
-                      <Image
-                        source={assets.user}
-                        style={{ height: 56, width: 56 }}
-                        resizeMode="cover"
-                      />
-                      <View style={styles.onlineIndicator}></View>
-                    </View>
-                    <View style={{ marginLeft: 16 }}>
-                      <Text style={styles.transactionType}>
+                <View style={styles.userContainer}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Image
+                      source={assets.user}
+                      style={{ height: 56, width: 56 }}
+                      resizeMode="cover"
+                    />
+                    <View style={{ flex: 1, marginHorizontal: 16 }}>
+                      <Text style={styles.textNormal}>
                         {chat?.username}
                       </Text>
                       <Text
                         numberOfLines={1}
                         style={styles.transactionInfo}>
-                        {chat?.phone_number}
+                        {chat?.last_message}
                       </Text>
                     </View>
-                  </View>
-                  <View>
                     <Text style={styles.amount}>3m ago</Text>
                   </View>
                 </View>
@@ -310,6 +296,12 @@ const styles = StyleSheet.create({
     marginTop: 8,
     color: '#63798B'
   },
+  textNormal: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0E0E2F',
+    fontFamily: 'Inter',
+  },
   amount: {
     fontSize: 14,
     fontWeight: '400',
@@ -317,28 +309,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
     color: '#63798B'
   },
-  onlineIndicator: {
-    position: 'absolute',
-    height: 16,
-    width: 16,
-    backgroundColor: theme.COLORS.primary,
-    borderRadius: 16 / 2,
-    borderWidth: 3,
-    borderColor: theme.COLORS.white,
-    right: 0,
-    bottom: 0,
-  },
-  floatingButton: {
-    position: 'absolute',
-    right: 24,
-    bottom: 20,
-    shadowColor: theme.COLORS.primary,
-    shadowOffset: {
-      width: 0,
-      height: 7,
-    },
-    shadowOpacity: 0.41,
-    shadowRadius: 9.11,
-    elevation: 14,
-  },
+  userContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+
+  }
 });
