@@ -1,5 +1,5 @@
 import {createModel} from '@rematch/core';
-import {allUsers} from '../../api';
+import {addPeople, allUsers, peoples as peoplesApi} from '../../api';
 
 export const users = createModel()({
   name: 'users',
@@ -7,6 +7,7 @@ export const users = createModel()({
     loading: false,
     selectedUser: null,
     users: [],
+    peoples: [],
   },
   reducers: {
     setLoading(state, payload) {
@@ -18,6 +19,9 @@ export const users = createModel()({
     setUsers(state, payload) {
       state.users = payload;
     },
+    setPeoples(state, payload) {
+      state.peoples = payload;
+    },
   },
   effects: dispatch => ({
     async getAllUsers() {
@@ -27,6 +31,29 @@ export const users = createModel()({
         const {data} = await allUsers();
         dispatch.users.setUsers(data);
         console.log(data);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.users.setLoading(false);
+      }
+    },
+    async addtoPeople({data, navigation}) {
+      try {
+        dispatch.users.setLoading(true);
+        const {data: res} = await addPeople(data);
+        navigation.goBack();
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        dispatch.users.setLoading(true);
+      }
+    },
+    async getPeople() {
+      try {
+        dispatch.users.setLoading(true);
+        const {data} = await peoplesApi();
+        console.log('user=====>', data);
+        dispatch.users.setPeoples(data);
       } catch (err) {
         console.log(err.message);
       } finally {

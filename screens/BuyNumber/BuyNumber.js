@@ -53,7 +53,7 @@ const BuyNumber = ({navigation}) => {
       const {data} = await buyNumber({phone_number: selected});
       console.log(data);
 
-      navigation.navigate('Mint-Packages');
+      navigation.navigate('Wallet');
     } catch (err) {
       console.log(err.message);
     } finally {
@@ -114,7 +114,7 @@ const BuyNumber = ({navigation}) => {
           ))}
         </ScrollView>
       </View>
-      <Button label="Continue" onPress={handleBuyNumber} />
+      <Button label="Continue" loading={loading} onPress={handleBuyNumber} />
     </View>
     // <LinearGradient
     //   style={{

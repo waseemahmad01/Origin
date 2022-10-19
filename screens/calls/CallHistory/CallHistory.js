@@ -138,6 +138,7 @@ const CallHistory = ({navigation}) => {
           </Pressable>
         </ImageBackground>
         <Pressable
+          onPress={() => navigation.navigate('Add-People')}
           style={{
             position: 'absolute',
             bottom: 15,

@@ -73,8 +73,9 @@ const TransactionSuccess = ({navigation}) => {
               <Button
                 label="Done"
                 onPress={() => {
-                  setAdd(false);
-                  setModalVisible(false);
+                  // setAdd(false);
+                  // setModalVisible(false);
+                  navigation.navigate('My-Wallet');
                 }}
               />
             </View>

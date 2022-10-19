@@ -14,38 +14,37 @@ import {
 } from 'react-native';
 
 import {useDispatch, useSelector} from 'react-redux';
-
-import LinearGradient from 'react-native-linear-gradient';
 import assets from '../../assets';
 import theme from '../../theme';
 
 const isIos = Platform.OS === 'ios';
 
-const testUser = {
-  email: 'waseemahmad.pk01@gmail.com',
-  id: 'a30831db-f53e-4c89-8e4d-2125089783c9',
-  image_url: null,
-  location: null,
-  my_twilio_number: '+12056712655',
-  name: 'waseem ahmad',
-  notification_token: null,
-  number_of_messages: 100,
-  number_of_seconds: 12000,
-  origen_public_wallet_address: '0xd002A8BF19cc15aEBa21410f602Db3b5F3556091',
-  phone_number: '+923024471460',
-  username: 'waseemahmad',
-  vox_app_id: '10508672',
-  vox_app_name: 'lqrpcxg.hammadr499.voximplant.com',
-  vox_phone_number: '17603698166',
-  vox_user_id: '4292044',
-  vox_user_name: 'lqrpcxg',
-  vox_user_password: '78816273',
-};
+// const testUser = {
+//   email: 'waseemahmad.pk01@gmail.com',
+//   id: 'a30831db-f53e-4c89-8e4d-2125089783c9',
+//   image_url: null,
+//   location: null,
+//   my_twilio_number: '+12056712655',
+//   name: 'waseem ahmad',
+//   notification_token: null,
+//   number_of_messages: 100,
+//   number_of_seconds: 12000,
+//   origen_public_wallet_address: '0xd002A8BF19cc15aEBa21410f602Db3b5F3556091',
+//   phone_number: '+923024471460',
+//   username: 'waseemahmad',
+//   vox_app_id: '10508672',
+//   vox_app_name: 'lqrpcxg.hammadr499.voximplant.com',
+//   vox_phone_number: '17603698166',
+//   vox_user_id: '4292044',
+//   vox_user_name: 'lqrpcxg',
+//   vox_user_password: '78816273',
+// };
 
 const People = ({navigation}) => {
   const dispatch = useDispatch();
-  const users = useSelector(state => state.users.users);
-  console.log('users =============>', users);
+  const peoples = useSelector(state => state.users.peoples);
+  const loading = useSelector(state => state.users.loading);
+  console.log(peoples);
 
   const handleProfileClick = user => {
     console.log(user);
@@ -54,7 +53,7 @@ const People = ({navigation}) => {
   };
 
   useEffect(() => {
-    dispatch.users.getAllUsers();
+    dispatch.users.getPeople();
   }, []);
 
   return (
@@ -92,40 +91,43 @@ const People = ({navigation}) => {
         </View>
         <ImageBackground source={assets.containerBox} style={styles.bottom}>
           <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
-            <Pressable
-              onPress={() => handleProfileClick(testUser)}
-              style={{
-                ...styles.row,
-                justifyContent: 'space-between',
-                marginVertical: 16,
-              }}>
-              <View style={{...styles.row}}>
-                <View>
-                  <Image
-                    source={assets.user}
-                    style={{
-                      height: 48,
-                      width: 48,
-                      marginRight: 16,
-                      borderRadius: 48 / 2,
-                    }}
-                    resizeMode="cover"
-                  />
+            {peoples.map((people, i) => (
+              <Pressable
+                key={i}
+                onPress={() => handleProfileClick(people)}
+                style={{
+                  ...styles.row,
+                  justifyContent: 'space-between',
+                  marginVertical: 16,
+                }}>
+                <View style={{...styles.row}}>
+                  <View>
+                    <Image
+                      source={assets.user}
+                      style={{
+                        height: 48,
+                        width: 48,
+                        marginRight: 16,
+                        borderRadius: 48 / 2,
+                      }}
+                      resizeMode="cover"
+                    />
+                  </View>
+                  <View>
+                    <Text style={styles.userName}>{people?.username}</Text>
+                    <Text
+                      style={{
+                        ...theme.TYPOGRAPHY.body1,
+                        color: theme.COLORS.blue,
+                        fontWeight: '600',
+                        lineHeight: 24,
+                      }}>
+                      {people?.phone_number}
+                    </Text>
+                  </View>
                 </View>
-                <View>
-                  <Text style={styles.userName}>{testUser.name}</Text>
-                  <Text
-                    style={{
-                      ...theme.TYPOGRAPHY.body1,
-                      color: theme.COLORS.blue,
-                      fontWeight: '600',
-                      lineHeight: 24,
-                    }}>
-                    {testUser.phone_number}
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
+              </Pressable>
+            ))}
           </ScrollView>
         </ImageBackground>
 

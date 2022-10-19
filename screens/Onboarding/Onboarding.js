@@ -57,6 +57,7 @@ const Onboarding = ({navigation}) => {
 
   const goToNextSlide = () => {
     if (activeSlide === 2) {
+      navigation.navigate('Notification');
       return;
     }
     const newActiveIndex = activeSlide + 1;

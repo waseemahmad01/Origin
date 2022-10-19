@@ -27,7 +27,7 @@ api.interceptors.response.use(
   },
   error => {
     if (error?.response?.status === 401) {
-      navigate('Login');
+      // navigate('Login');
       AsyncStorage.clear();
     }
     return Promise.reject(error);
@@ -116,3 +116,11 @@ export const getEth = () => api.get('/v1/account/tranfer/eth');
 // Add call history
 
 export const addCallHistory = data => api.post('/v1/voxim/call-history', data);
+
+// add people
+
+export const addPeople = data => api.post('/v1/contacts', data);
+
+// get my people
+
+export const peoples = data => api.get('/v1/contacts');

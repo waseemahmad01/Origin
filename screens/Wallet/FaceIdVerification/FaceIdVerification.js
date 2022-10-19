@@ -55,7 +55,7 @@ const FaceIdVerification = ({navigation}) => {
             <View style={styles.buttonContainer}>
               <Button
                 label="Allow Face ID"
-                onPress={() => navigation.navigate('Get-Number')}
+                onPress={() => navigation.navigate('Mint-Packages')}
               />
               <View style={styles.denyButton}>
                 <Pressable>

@@ -30,6 +30,7 @@ import {getActiveSftPackage, userData} from '../api';
 import BuyNumber from '../screens/BuyNumber/BuyNumber';
 import PeopleSearch from '../screens/People/PeropleSearch/PeopleSearch';
 import CallDetails from '../screens/calls/CallDetails/CallDetails';
+import AddPeople from '../screens/People/AddPeople/AddPeople';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ const StackNavigator = () => {
 
   const loggedIn = useSelector(state => state.auth.loggedIn);
   const activePackage = useSelector(state => state.sfts.active);
+  const wallet = useSelector(state => state.wallet.publicAddress);
   const [loading, setLoading] = useState(true);
   const [visited, setVisited] = useState(false);
 
@@ -60,7 +62,9 @@ const StackNavigator = () => {
       if (visit === 'true') {
         setVisited(true);
       }
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     } catch (err) {
       console.log(err);
     }
@@ -84,6 +88,21 @@ const StackNavigator = () => {
     };
   });
 
+  const getInitialRoute = () => {
+    if (loggedIn) {
+      if (wallet && Object.keys(activePackage).length > 0) {
+        console.log('package');
+        return 'Wallet';
+      } else if (wallet && !Object.keys(activePackage).length > 0) {
+        return 'Mint-Packages';
+      } else {
+        return 'Wallet';
+      }
+    } else {
+      return 'Onboarding';
+    }
+  };
+
   console.log('active package', activePackage);
 
   return (
@@ -93,11 +112,7 @@ const StackNavigator = () => {
       ) : (
         <>
           <Stack.Navigator
-            initialRouteName={
-              loggedIn && Object.keys(activePackage).length > 0
-                ? 'Wallet'
-                : 'Get-Number'
-            }
+            initialRouteName={getInitialRoute()}
             screenOptions={{
               headerShown: false,
             }}>
@@ -159,6 +174,10 @@ const StackNavigator = () => {
             <Stack.Screen
               name="Call-Details"
               component={RequireAuthentication(CallDetails, loggedIn)}
+            />
+            <Stack.Screen
+              name="Add-People"
+              component={RequireAuthentication(AddPeople, loggedIn)}
             />
           </Stack.Navigator>
         </>

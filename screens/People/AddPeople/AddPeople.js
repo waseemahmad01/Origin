@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {
   View,
@@ -13,14 +13,26 @@ import {
   StatusBar,
   TextInput,
 } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 
 import assets from '../../../assets';
 import theme from '../../../theme';
 
 const isIos = Platform.OS === 'ios';
 
-const AddPeople = () => {
+const AddPeople = ({navigation}) => {
+  const dispatch = useDispatch();
+  const users = useSelector(state => state.users.users);
   const [search, setSearch] = useState('');
+
+  const handleAddtoPeople = num => {
+    const data = {phone_number: num};
+    dispatch.users.addtoPeople({data, navigation});
+  };
+
+  useEffect(() => {
+    dispatch.users.getAllUsers();
+  }, []);
   return (
     <ImageBackground
       resizeMode="cover"
@@ -30,7 +42,7 @@ const AddPeople = () => {
         <StatusBar translucent={true} backgroundColor="transparent" />
         <View style={styles.header}>
           <View style={styles.headerRow}>
-            <Pressable>
+            <Pressable onPress={() => navigation.goBack()}>
               <Image
                 source={assets.chevronLeft}
                 style={{
@@ -75,10 +87,9 @@ const AddPeople = () => {
         <ImageBackground source={assets.containerBox} style={styles.body}>
           <ScrollView style={{flex: 1}}>
             <Text style={styles.title}>Recent added</Text>
-            {Array.from({length: 3}, (_, i) => i).map(i => (
+            {Array.from({length: 1}, (_, i) => i).map(i => (
               <Pressable
                 key={i}
-                //   onPress={() => handleProfileClick(testUser)}
                 style={{
                   ...styles.row,
                   justifyContent: 'space-between',
@@ -113,8 +124,9 @@ const AddPeople = () => {
               </Pressable>
             ))}
             <Text style={styles.title}>Add from phone contacts</Text>
-            {Array.from({length: 3}, (_, i) => i).map(i => (
+            {users.map((user, i) => (
               <Pressable
+                onPress={() => handleAddtoPeople(user?.phone_number)}
                 key={i}
                 //   onPress={() => handleProfileClick(testUser)}
                 style={{
@@ -136,7 +148,7 @@ const AddPeople = () => {
                     />
                   </View>
                   <View>
-                    <Text style={styles.userName}>waseem ahmad</Text>
+                    <Text style={styles.userName}>{user?.username}</Text>
                     <Text
                       style={{
                         ...theme.TYPOGRAPHY.body1,
@@ -144,7 +156,7 @@ const AddPeople = () => {
                         fontWeight: '600',
                         lineHeight: 24,
                       }}>
-                      +923024471460
+                      {user?.phone_number}
                     </Text>
                   </View>
                 </View>

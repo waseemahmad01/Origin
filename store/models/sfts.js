@@ -46,6 +46,7 @@ export const sfts = createModel()({
         console.log(data);
         navigation.navigate('wallet', {screen: 'My-Wallet'});
         dispatch.auth.getUserData();
+        dispatch.sfts.getCurrentPackage();
       } catch (err) {
         console.log(err.message);
       } finally {

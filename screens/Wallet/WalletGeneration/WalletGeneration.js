@@ -74,6 +74,7 @@ const WalletGeneration = ({navigation}) => {
                 <Button
                   label="Generate Origen Wallet"
                   onPress={handleGenerateWallet}
+                  loading={loading}
                 />
               </View>
             </ImageBackground>

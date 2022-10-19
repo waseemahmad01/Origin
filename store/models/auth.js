@@ -77,7 +77,7 @@ export const auth = createModel()({
         dispatch.auth.setLoading(false);
       }
     },
-    async signUp({passwords, navigation}, state) {
+    async signUp({passwords, handleContinue}, state) {
       try {
         dispatch.auth.setLoading(true);
         const {phone_number, email, username, firstname, lastname} = state.auth;
@@ -91,11 +91,11 @@ export const auth = createModel()({
         };
 
         const {data} = await userSignUp(apiData);
-        console.log(data);
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'Login'}],
-        });
+        await AsyncStorage.setItem('token', data.accessToken);
+        const {data: user} = await userData();
+        dispatch.auth.setUser(user);
+        dispatch.wallet.setPublicAddress(user?.origen_public_wallet_address);
+        handleContinue();
       } catch (err) {
         console.log(err);
       } finally {
@@ -115,6 +115,7 @@ export const auth = createModel()({
           index: 0,
           routes: [{name: 'Wallet'}],
         });
+        // dispatch.users.getPeople();
       } catch (err) {
         console.log(err.message);
       } finally {

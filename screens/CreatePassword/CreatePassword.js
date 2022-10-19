@@ -22,7 +22,7 @@ const schema = object({
     .label('Confirm password'),
 });
 
-const CreatePassword = ({navigation}) => {
+const CreatePassword = ({handleContinue, navigation}) => {
   const dispatch = useDispatch();
   const loading = useSelector(state => state.auth.loading);
   const [formData, setFormData] = useState({
@@ -41,7 +41,7 @@ const CreatePassword = ({navigation}) => {
       return setErrors(validationErrors);
     }
     console.log(formData);
-    dispatch.auth.signUp({passwords: formData, navigation});
+    dispatch.auth.signUp({passwords: formData, handleContinue});
   };
   return (
     <View style={{flexGrow: 1}}>
