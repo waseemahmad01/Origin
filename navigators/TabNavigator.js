@@ -1,13 +1,13 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Image} from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Image } from 'react-native';
 import assets from '../assets';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import WalletGeneration from '../screens/Wallet/WalletGeneration/WalletGeneration';
 import Wallet from '../screens/Wallet/Wallet/Wallet';
 import Chats from '../screens/Chat/Chats/Chats';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import Profile from '../screens/Profile/Profile/Profile';
 import Settings from '../screens/Profile/Settings/Settings';
 import Privacy from '../screens/Profile/Privacy/Privacy';
@@ -40,21 +40,21 @@ const StackNavigator = () => {
   );
 };
 
-const ProfileNavigator = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}>
-      <Stack.Screen name="Profile1" component={Profile} />
-      <Stack.Screen name="Settings" component={Settings} />
-      <Stack.Screen name="Privacy" component={Privacy} />
-      <Stack.Screen name="Blocked" component={Blocked} />
-      <Stack.Screen name="Help" component={Help} />
-      <Stack.Screen name="About" component={AboutUs} />
-    </Stack.Navigator>
-  );
-};
+// const ProfileNavigator = () => {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerShown: false,
+//       }}>
+//       <Stack.Screen name="Profile1" component={Profile} />
+//       <Stack.Screen name="Settings" component={Settings} />
+//       <Stack.Screen name="Privacy" component={Privacy} />
+//       <Stack.Screen name="Blocked" component={Blocked} />
+//       <Stack.Screen name="Help" component={Help} />
+//       <Stack.Screen name="About" component={AboutUs} />
+//     </Stack.Navigator>
+//   );
+// };
 
 const CallNavigator = () => {
   return (
@@ -71,8 +71,8 @@ const CallNavigator = () => {
 const TabNavigator = () => {
   return (
     <Tab.Navigator
-      initialRouteName="wallet"
-      screenOptions={({route}) => ({
+      initialRouteName="Messages"
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarLabelStyle: {
           fontSize: 12,
@@ -92,7 +92,7 @@ const TabNavigator = () => {
         name="Calls"
         component={CallNavigator}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Image
               source={assets.phone}
               style={{
@@ -107,7 +107,7 @@ const TabNavigator = () => {
         name="Messages"
         component={Chats}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Image
               source={focused ? assets.chatActive : assets.msg}
               style={{
@@ -122,7 +122,7 @@ const TabNavigator = () => {
         name="wallet"
         component={StackNavigator}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Image
               source={assets.walletActive}
               style={{
@@ -138,7 +138,7 @@ const TabNavigator = () => {
         name="People"
         component={People}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Image
               source={assets.users}
               style={{
@@ -151,9 +151,9 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileNavigator}
+        component={Profile}
         options={{
-          tabBarIcon: ({focused}) => (
+          tabBarIcon: ({ focused }) => (
             <Image
               source={assets.user}
               style={{

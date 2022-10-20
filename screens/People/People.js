@@ -15,6 +15,8 @@ import {
 } from 'react-native';
 
 import {useDispatch, useSelector} from 'react-redux';
+
+import LinearGradient from 'react-native-linear-gradient';
 import assets from '../../assets';
 import theme from '../../theme';
 
@@ -67,7 +69,10 @@ const People = ({navigation}) => {
       style={{
         ...styles.gradient,
         paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}>
+      }}
+      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
       <SafeAreaView style={{flex: 1}}>
         <View style={styles.topBar}>

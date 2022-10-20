@@ -1,6 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {navigate} from '../utils/RootNavigation';
+import { navigate } from '../utils/RootNavigation';
 
 const api = axios.create({
   baseURL: 'http://3.83.29.205:5001/',
@@ -99,7 +99,7 @@ export const getAllChats = () => api.get('/v1/twilio/chats');
 
 export const getAllSMS = chatId => api.get(`/v1/twilio/messages/${chatId}`);
 
-export const sendMessage = data => api.post('/v1/twilio/send-sms', data);
+export const sendMessage = data => api.post('/v1/voxim/send-sms', data);
 
 // get available numbers
 

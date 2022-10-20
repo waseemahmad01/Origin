@@ -1,50 +1,58 @@
-import React, {useState} from 'react';
-
+import React, { useState, useEffect } from 'react';
+import LinearGradient from 'react-native-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   View,
   Text,
-  SafeAreaView,
-  StatusBar,
-  Platform,
   StyleSheet,
   Pressable,
   Image,
   TextInput,
   ScrollView,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+
 
 import theme from '../../../theme';
 import assets from '../../../assets';
+import { getImageUrl } from '../../../utils/getImageUrl';
+import { useDispatch, useSelector } from 'react-redux';
 
-const isIos = Platform.OS === 'ios';
-
-const ChatSearch = ({navigation}) => {
+const ChatSearch = ({ navigation }) => {
+  const { top } = useSafeAreaInsets();
   const [search, setSearch] = useState('');
+  const dispatch = useDispatch();
+  const users = useSelector(state => state.users.users);
+
+  useEffect(() => {
+    dispatch.users.getAllUsers();
+  }, []);
+
+  // const getAllUsers = async () => {
+  //   try {
+  //     const { data } = await allUsers();
+  //     setUsers(data);
+  //     console.log('response - ', data);
+  //   } catch (err) {
+  //     console.log('error - ', err);
+  //   }
+  // };
+
+
   return (
-    <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{flex: 1}}>
-        <View style={styles.header}>
-          <View style={styles.titleSection}>
-            <Text style={styles.headerTitle}>Chats</Text>
-            <Pressable onPress={() => navigation.goBack()}>
-              <Image
-                source={assets.closeIcon}
-                style={{
-                  height: 20,
-                  width: 20,
-                }}
-              />
+    <View>
+      <LinearGradient
+        colors={["#D8E3F3", '#B8F7FC',]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}>
+        <View style={styles.container}>
+          <View style={[styles.search, { marginTop: top }]}>
+            <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
+              <Image source={assets.backChat} />
             </Pressable>
+            <Text style={styles.messageText}>Messages</Text>
+            <View />
           </View>
+          <View />
           <View style={styles.searchBar}>
             <View style={styles.searchBarInner}>
               <Image
@@ -58,89 +66,130 @@ const ChatSearch = ({navigation}) => {
               <TextInput
                 style={styles.serachInput}
                 placeholder="Search"
-                placeholderTextColor={'#6E6E7E'}
+                placeholderTextColor={'#8FA8BD'}
                 value={search}
                 onChangeText={setSearch}
               />
+              <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => setSearch("")}>
+                <Image
+                  source={assets.crossIcon}
+                  style={{
+                    height: 15,
+                    width: 15,
+                  }}
+                  resizeMode="cover"
+                />
+              </Pressable>
             </View>
           </View>
         </View>
-        <ScrollView style={styles.bottom}>
-          <Text style={{...styles.title, marginTop: 24}}>Recents</Text>
-          <View style={styles.recentSearch}>
-            {Array.from({length: 6}, (_, i) => i).map(i => (
-              <Image
-                key={i}
-                source={assets.user}
-                style={{...styles.recentImages, marginLeft: i === 0 ? 0 : -10}}
-              />
-            ))}
-            <View style={styles.more}>
-              <Text style={styles.moreText}>30+</Text>
-            </View>
-          </View>
-          <Text style={{...styles.title, marginTop: 24}}>Suggested</Text>
-          {Array.from({length: 10}, (_, i) => i).map(i => (
-            <View style={styles.suggestedUser} key={i}>
-              <Image
-                source={assets.user}
-                style={{
-                  height: 48,
-                  width: 48,
-                  borderRadius: 48 / 2,
-                }}
-                resizeMode="cover"
-              />
-              <Text style={styles.userName}>Jenny Wilson</Text>
-            </View>
+      </LinearGradient >
+      <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
+
+        <ScrollView>
+          {users.map(user => (
+            <Pressable
+              style={styles.userBlock}
+              key={user?.id}
+              onPress={() => {
+                navigation.navigate('Chat', { chat: user });
+              }}>
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View>
+                  <Image
+                    source={getImageUrl(user.image_url, user.username)}
+                    style={{ height: 56, width: 56, borderRadius: 100, backgroundColor: '#f2f2f2' }}
+                    resizeMode="cover"
+                  />
+                </View>
+                <View style={{ marginLeft: 16 }}>
+                  <Text style={styles.textNormal}>
+                    {user?.username || user?.phone_number}
+                  </Text>
+                </View>
+              </View>
+            </Pressable>
           ))}
         </ScrollView>
-      </SafeAreaView>
-      <View style={styles.hider}></View>
-    </LinearGradient>
+      </LinearGradient>
+    </View >
   );
 };
 
 export default ChatSearch;
 
 const styles = StyleSheet.create({
-  gradient: {
+  background: {
     flex: 1,
-  },
-  header: {
-    paddingHorizontal: 24,
-    paddingBottom: 16,
-  },
-  bottom: {
-    flexGrow: 1,
-    backgroundColor: theme.COLORS.white,
-    zIndex: 2,
-    elevation: 2,
-    paddingHorizontal: 24,
-  },
-  hider: {
-    position: 'absolute',
-    backgroundColor: theme.COLORS.white,
-    bottom: 0,
     width: '100%',
-    height: 35,
-    zIndex: 0,
+    height: '100%'
   },
-  titleSection: {
-    marginTop: 26,
+  container: {
+    margin: 24,
+    marginBottom: 30
+  },
+  search: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center'
   },
-  headerTitle: {
-    ...theme.TYPOGRAPHY.h3,
-    fontWeight: '700',
+  textNormal: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0E0E2F',
     fontFamily: 'Inter',
-    color: theme.COLORS.white,
+  },
+  messageText: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#2C3482',
+    fontFamily: 'Inter',
+    marginRight: 25
+  },
+  body: {
+    height: '100%',
+    padding: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    marginTop: -10
+  },
+  userBlock: {
+    marginBottom: 15,
+  },
+  avatarContainer: {
+    marginLeft: 10,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  userName: {
+    fontWeight: '600',
+    fontSize: 18,
+    fontFamily: 'Inter',
+    color: '#2C3482',
+  },
+  userMetrics: {
+    fontFamily: 'Inter',
+    fontSize: 14,
+    color: '#2C3482',
+    fontWeight: '400',
+  },
+  onlineIndicator: {
+    position: 'absolute',
+    height: 16,
+    width: 16,
+    backgroundColor: theme.COLORS.primary,
+    borderRadius: 16 / 2,
+    borderWidth: 3,
+    borderColor: theme.COLORS.white,
+    right: 0,
+    bottom: 0,
   },
   searchBar: {
-    backgroundColor: theme.COLORS.white,
     height: 44,
+    borderWidth: 1,
+    backgroundColor: '#FAFDFE',
+    borderColor: 'white',
     justifyContent: 'center',
     borderRadius: 32,
     paddingHorizontal: 18,
@@ -158,55 +207,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontFamily: 'Inter',
     height: '100%',
-    color: '#1D1D35',
+    color: '#0E0E2F',
     marginHorizontal: 16,
     lineHeight: 20,
-  },
-  title: {
-    ...theme.TYPOGRAPHY.subtitle1,
-    color: '#B7B7BE',
-    fontWeight: '500',
-    fontFamily: 'Inter',
-  },
-  recentSearch: {
-    flexDirection: 'row',
-    marginTop: 12,
-  },
-  recentImages: {
-    height: 56,
-    width: 56,
-    borderRadius: 56 / 2,
-    borderWidth: 4,
-    borderColor: theme.COLORS.white,
-  },
-  more: {
-    height: 56,
-    width: 56,
-    borderRadius: 56 / 2,
-    borderWidth: 4,
-    borderColor: theme.COLORS.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#EBFAF3',
-    marginLeft: -10,
-  },
-  moreText: {
-    ...theme.TYPOGRAPHY.body2,
-    fontFamily: 'Inter',
-    fontWeight: '400',
-    color: '#4A4A5D',
-  },
-  suggestedUser: {
-    paddingVertical: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  userName: {
-    fontSize: 15,
-    fontWeight: '500',
-    fontFamily: 'Inter',
-    color: '#1D1D35',
-    lineHeight: 26,
-    marginLeft: 16,
   },
 });

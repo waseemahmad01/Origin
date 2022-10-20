@@ -6,10 +6,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 
 import TabNavigator from './TabNavigator';
-
+import Settings from '../screens/Profile/Settings/Settings';
+import Privacy from '../screens/Profile/Privacy/Privacy';
+import Blocked from '../screens/Profile/Blocked/Blocked';
+import Help from '../screens/Profile/Help/Help';
+import AboutUs from '../screens/Profile/AboutUs/AboutUs';
 import SplashScreen from '../screens/SplashScreen/SplashScreen';
 import Onboarding from '../screens/Onboarding/Onboarding';
 import Notification from '../screens/Notification/Notification';
+import Notifications from '../screens/Profile/Notifications/Notifications';
 import Register from '../screens/Register/Register';
 import MintPackages from '../screens/Wallet/MintPackages/MintPackages';
 // import Wallet from './screens/Wallet/Wallet/Wallet';
@@ -204,6 +209,12 @@ const StackNavigator = () => {
               name="Add-People"
               component={RequireAuthentication(AddPeople, loggedIn)}
             />
+            <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen name="Notifications" component={Notifications} />
+            <Stack.Screen name="Privacy" component={Privacy} />
+            <Stack.Screen name="Blocked" component={Blocked} />
+            <Stack.Screen name="Help" component={Help} />
+            <Stack.Screen name="About" component={AboutUs} />
           </Stack.Navigator>
         </>
       )}

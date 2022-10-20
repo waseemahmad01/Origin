@@ -1,30 +1,23 @@
-import React, {useState} from 'react';
-
+import React, { useState } from 'react';
+import LinearGradient from 'react-native-linear-gradient';
 import {
   View,
   Text,
   SafeAreaView,
-  StatusBar,
+  TextInput,
   Image,
   StyleSheet,
-  Platform,
-  ScrollView,
 } from 'react-native';
-
-import LinearGradient from 'react-native-linear-gradient';
-import {useSelector} from 'react-redux';
-
+import { useSelector } from 'react-redux';
 import theme from '../../../theme';
 import assets from '../../../assets';
-import GButton from '../../../components/GButton/GButton';
-import Input from '../../../components/Input/Input';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-const isIos = Platform.OS === 'ios';
-
-const EditProfile = ({navigation}) => {
+const EditProfile = ({ navigation }) => {
   const user = useSelector(state => state.auth.user);
-
+  const [hideOldPassword, setHideOldPassword] = useState(true)
+  const [hideNewPassword, setHideNewPassword] = useState(true)
   const [formData, setFormData] = useState({
     name: user?.username || '',
     email: user?.email || '',
@@ -35,177 +28,169 @@ const EditProfile = ({navigation}) => {
   });
 
   const handleChange = (text, name) => {
-    setFormData(prev => ({...prev, [name]: text}));
+    setFormData(prev => ({ ...prev, [name]: text }));
   };
 
   return (
     <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <SafeAreaView style={{flex: 1}}>
-        <StatusBar translucent={true} backgroundColor={'transparent'} />
-        <View style={styles.top}>
-          <View
-            style={{
-              ...styles.row,
-              justifyContent: 'space-between',
-              marginTop: 27.74,
-            }}>
-            <Pressable
-              onPress={() => navigation.goBack()}
-              style={{flexDirection: 'row', alignItems: 'center'}}>
+      colors={["#D8E3F3", '#B8F7FC',]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}>
+      <SafeAreaView styles={{ flex: 1 }}>
+        <View style={[styles.header]}>
+          <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
+            <Image source={assets.backChat} />
+          </Pressable>
+          <Text style={styles.messageText}>Edit Profile</Text>
+          <Pressable onPress={() => navigation.navigate('Settings')}>
+            <Image source={assets.settingBlue} />
+          </Pressable>
+        </View>
+        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
+          <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
+            <View style={styles.avatarBorder}>
               <Image
-                source={assets.chevronLeft}
-                style={{
-                  height: 20,
-                  width: 8,
-                  marginRight: 20,
-                }}
+                source={assets.editProfileImage}
+                resizeMode="cover"
               />
-              <Text style={styles.headTitle}>Edit Profile</Text>
-            </Pressable>
-          </View>
-        </View>
-        <View style={styles.bottom}>
-          <View style={styles.profileContainer}>
-            <Image source={assets.user} />
-            <Text style={styles.userName}>{user?.username}</Text>
-          </View>
-          <View style={styles.divider}></View>
-          <View style={{flexGrow: 1}}>
-            <ScrollView style={{flex: 1}}>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
-                  <Text style={styles.key}>Name</Text>
-                  <Input
-                    title="Annette Black"
-                    style={{
-                      width: 200,
-                      height: 40,
-                    }}
-                    value={formData.name}
-                    onChangeText={text => handleChange(text, 'name')}
-                  />
-                </View>
-              </View>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
-                  <Text style={styles.key}>Email</Text>
-                  <Input
-                    title="annette@gmail.com"
-                    style={{
-                      width: 200,
-                      height: 40,
-                    }}
-                    value={formData.email}
-                    onChangeText={text => handleChange(text, 'email')}
-                  />
-                </View>
-              </View>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
-                  <Text style={styles.key}>Phone</Text>
-                  <Input
-                    title="(316) 555-0116"
-                    style={{
-                      width: 200,
-                      height: 40,
-                    }}
-                    value={formData.phone}
-                    onChangeText={text => handleChange(text, 'phone')}
-                  />
-                </View>
-              </View>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
-                  <Text style={styles.key}>Address</Text>
-                  <Input
-                    title="New York, NVC"
-                    style={{
-                      width: 200,
-                      height: 40,
-                    }}
-                    value={formData.address}
-                    onChangeText={text => handleChange(text, 'address')}
-                  />
-                </View>
-              </View>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
-                  <Text style={styles.key}>Old Password</Text>
-                  <Input
-                    title="Old Password"
-                    style={{
-                      width: 200,
-                      height: 40,
-                    }}
-                    secureTextEntry
-                    value={formData.old_password}
-                    onChangeText={text => handleChange(text, 'old_password')}
-                  />
-                </View>
-              </View>
-              <View style={styles.userInfoBlock}>
-                <View style={{...styles.row, justifyContent: 'space-between'}}>
-                  <Text style={styles.key}>New Password</Text>
-                  <Input
-                    title="New Password"
-                    style={{
-                      width: 200,
-                      height: 40,
-                    }}
-                    secureTextEntry
-                    value={formData.new_password}
-                    onChangeText={text => handleChange(text, 'new_password')}
-                  />
-                </View>
-              </View>
-              <View style={{alignItems: 'flex-end', marginVertical: 12}}>
-                <View style={styles.row}>
-                  <Pressable style={styles.cancelBtn}>
-                    <Text style={styles.cancelText}>Cancel</Text>
-                  </Pressable>
-                  <GButton
-                    label="Edit profile"
-                    style={{
-                      width: 93,
-                      height: 32,
-                    }}
-                    textStyle={{
-                      fontSize: 12,
-                      lineHeight: 18,
-                    }}
-                  />
-                </View>
-              </View>
-            </ScrollView>
-          </View>
-        </View>
-        <View style={styles.hider}></View>
-      </SafeAreaView>
-    </LinearGradient>
+              <Pressable style={styles.addProfileImage}>
+                <Image style={styles.addProfileImageIcon} source={assets.addProfileImage} />
+              </Pressable>
+            </View>
+            <TextInput
+              placeholderColor="#8FA8BD"
+              title="Annette Black"
+              style={styles.input}
+              placeholder='User Name'
+              value={formData.name}
+              onChangeText={text => handleChange(text, 'name')}
+            />
+            <TextInput
+              placeholderColor="#8FA8BD"
+              title="annette@gmail.com"
+              style={styles.input}
+              placeholder='Email'
+              value={formData.email}
+              onChangeText={text => handleChange(text, 'email')}
+            />
+            <TextInput
+              placeholderColor="#8FA8BD"
+              title="(316) 555-0116"
+              placeholder='Phone'
+              style={styles.input}
+              value={formData.phone}
+              onChangeText={text => handleChange(text, 'phone')}
+            />
+            <TextInput
+              placeholderColor="#8FA8BD"
+              title="New York, NVC"
+              style={styles.input}
+              placeholder='Address'
+              value={formData.address}
+              onChangeText={text => handleChange(text, 'address')}
+            />
+            <View>
+              <TextInput
+                placeholderColor="#8FA8BD"
+                title="Old Password"
+                style={styles.input}
+                secureTextEntry={hideOldPassword}
+                placeholder='Old Password'
+                value={formData.old_password}
+                onChangeText={text => handleChange(text, 'old_password')}
+              />
+              <Pressable style={styles.showPassword} onPress={() => setHideOldPassword(!hideOldPassword)}>
+                <Image source={assets.showPassword} />
+              </Pressable>
+            </View>
+            <View>
+              <TextInput
+                placeholderColor="#8FA8BD"
+                title="New Password"
+                placeholder='New Password'
+                style={styles.input}
+                secureTextEntry={hideNewPassword}
+                value={formData.new_password}
+                onChangeText={text => handleChange(text, 'new_password')}
+              />
+              <Pressable style={styles.showPassword} onPress={() => setHideNewPassword(!hideNewPassword)}>
+                <Image source={assets.showPassword} />
+              </Pressable>
+            </View>
+            <View style={styles.saveButton}>
+              <Text style={[styles.textNormal, { color: 'white' }]}>Save update</Text>
+            </View>
+          </KeyboardAwareScrollView>
+        </LinearGradient>
+      </SafeAreaView >
+    </LinearGradient >
   );
 };
 
 export default EditProfile;
 
 const styles = StyleSheet.create({
-  gradient: {
+  background: {
     flex: 1,
+    width: '100%',
+    height: '100%',
+    zIndex: 1,
   },
   top: {
     paddingHorizontal: 24,
     paddingBottom: 19,
   },
-  headTitle: {
-    ...theme.TYPOGRAPHY.h3,
+  header: {
+    marginHorizontal: 24,
+    marginTop: 10,
+    marginBottom: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textNormal: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0E0E2F',
+    fontFamily: 'Inter',
+  },
+  messageText: {
+    fontSize: 24,
     fontWeight: '700',
-    color: theme.COLORS.white,
+    color: '#2C3482',
+    fontFamily: 'Inter',
+    marginLeft: 5
+  },
+  body: {
+    height: '100%',
+    padding: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    marginTop: -10
+  },
+  avatarBorder: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 100,
+    height: 100,
+    backgroundColor: '#DEE5EB',
+    borderRadius: 100,
+    marginBottom: 10,
+  },
+  addProfileImage: {
+    position: 'absolute',
+    bottom: 0,
+    right: -5,
+  },
+  addProfileImageIcon: {
+    height: 30,
+    width: 30
+  },
+  avatar: {
+    height: 75,
+    width: 75,
+    borderRadius: 100,
   },
   bottom: {
     paddingHorizontal: 24,
@@ -269,11 +254,32 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCF9',
     borderRadius: 23,
   },
-  cancelText: {
+  input: {
+    borderWidth: 1,
+    height: 48,
+    paddingHorizontal: 20,
+    borderColor: '#DEE5EB',
+    borderRadius: 24,
+    marginVertical: 15,
+    color: '#0E0E2F',
     fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: 16,
     fontFamily: 'Inter',
-    color: '#4A4A5D',
   },
+  showPassword: {
+    position: 'absolute',
+    right: 10,
+    top: 30,
+  },
+  saveButton: {
+    backgroundColor: '#3FD38C',
+    height: 48,
+    borderRadius: 48,
+    marginTop: 10,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
+
+

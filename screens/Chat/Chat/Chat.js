@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react'
+import { ImageBackground, KeyboardAvoidingView } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import LinearGradient from 'react-native-linear-gradient';
 
 import {
   View,
   Text,
-  StatusBar,
   SafeAreaView,
   ScrollView,
   Platform,
@@ -14,39 +15,67 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 
-import LinearGradient from 'react-native-linear-gradient';
 import ChatInput from '../../../components/ChatInput/ChatInput';
-import theme from '../../../theme';
-
-import assets from '../../../assets';
 import ChatMessage from '../../../components/ChatMessage/ChatMessage';
+import theme from '../../../theme';
+import assets from '../../../assets';
 // import IconButton from '../../../components/IconButton/IconButton';
-import {getAllSMS} from '../../../api';
+import { getAllSMS } from '../../../api';
+import { truncateString } from '../../../utils';
+import { getImageUrl } from '../../../utils/getImageUrl';
+import { useDispatch, useSelector } from 'react-redux';
 
 const isIos = Platform.OS === 'ios';
 
-const Chat = ({route, navigation}) => {
+const KEYBOARD_AVOID_VIEW_BEHAVIOR = Platform.select({
+  ios: 'padding',
+  default: undefined,
+})
+const Chat = ({ route, navigation }) => {
   const [allSMS, setSMS] = useState([]);
-  const {user} = route.params;
-  console.log(route.params);
+  const dispatch = useDispatch();
+  const scrollRef = useRef();
+  const user = useSelector(state => state.auth.user);
+  const users = useSelector(state => state.users.users);
+  const { bottom } = useSafeAreaInsets()
+  const chat = route?.params?.chat
+
   useEffect(() => {
     _getAllSMS();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      _getAllSMS()
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const _getAllSMS = async () => {
+    let chatId = chat.chat_id
+
+    if (!chatId) {
+      dispatch.users.getAllUsers();
+      const currentUser = users.find((user) => user.id == chat.id);
+      if (currentUser.chat_id) {
+        chatId = currentUser.chat_id
+      }
+    };
+
+    if (!chatId) return
+
     try {
-      const {data} = await getAllSMS(route?.params?.chat?.chat_id);
-      console.log('get messages - ', data);
+      const { data } = await getAllSMS(chatId);
       setSMS(data);
+      scrollRef.current?.scrollToEnd({ animated, offset: 0 })
     } catch (err) {
       console.log('error - ', err);
     }
   };
 
-  console.log('all sms - ', allSMS);
-
-  const my = route?.params?.chat?.sender_number || '';
-  const receiver = route?.params?.chat?.receiver_number;
+  const my = chat?.sender_number || user?.phone_number;
+  const receiver = chat?.receiver_number || chat?.phone_number;
 
   const makeCall = async () => {
     try {
@@ -75,71 +104,54 @@ const Chat = ({route, navigation}) => {
     }
   };
 
+
   return (
-    <LinearGradient
-      style={{
-        ...styles.gradient,
-        paddingTop: isIos ? 0 : StatusBar.currentHeight,
-      }}
-      colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{flex: 1}}>
+    <ImageBackground style={[StyleSheet.absoluteFill, styles.background]} source={assets.background}>
+      <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.header}>
-          <Pressable onPress={() => navigation.goBack()}>
-            <View>
-              <Text>Back button </Text>
-            </View>
+          <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
+            <Image source={assets.backChat} />
           </Pressable>
-          <View style={styles.userInfo}>
-            <Pressable onPress={() => navigation.goBack()}>
+          <View style={styles.avatarContainer}>
+            <View>
               <Image
-                source={assets.user}
-                style={{
-                  height: 40,
-                  width: 40,
-                  borderRadius: 40 / 2,
-                  marginTop: -5,
-                }}
+                source={getImageUrl(chat?.image_url, chat?.username)}
+                style={{ height: 56, width: 56, borderRadius: 100 }}
                 resizeMode="cover"
               />
-            </Pressable>
-            <View style={{marginLeft: 12}}>
-              {/* <Text style={styles.title}>{user?.username}</Text> */}
-              <Text style={styles.subtitle}>@kwatson - 32.5345 GCoins</Text>
-              <Text style={styles.subtitle}>Active 3m ago</Text>
+              <View style={styles.onlineIndicator}></View>
             </View>
-            <View style={styles.callIcons}>
-              <Pressable
-                onPress={() => {
-                  makeCall();
-                }}>
-                <Image
-                  source={assets.audioCall}
-                  style={{
-                    height: 16,
-                    width: 16,
-                  }}
-                  resizeMode="contain"
-                />
-              </Pressable>
-              <Pressable style={{marginLeft: 20}}>
-                <Image
-                  source={assets.videoCall}
-                  style={{
-                    height: 16,
-                    width: 18,
-                  }}
-                  resizeMode="contain"
-                />
-              </Pressable>
+            <View style={{ marginLeft: 16 }}>
+              <Text style={[styles.userMetrics, { marginBottom: 5, fontWeight: '600', fontSize: 16 }]}>
+                {chat?.username ? `@${chat?.username}` : receiver}
+              </Text>
+              <Text style={styles.userMetrics}>
+                {truncateString(chat?.origen_public_wallet_address)}
+              </Text>
             </View>
           </View>
+          <View style={{ flex: 1 }} />
+          <View style={styles.userInfo}>
+            <Pressable
+              onPress={() => {
+                makeCall();
+              }}>
+              <Image
+                source={assets.callIcon}
+              />
+            </Pressable>
+            {/* <Pressable style={{ marginLeft: 20 }}>
+              <Image
+                source={assets.cameraIcon}
+              />
+            </Pressable> */}
+          </View>
         </View>
-        <View style={styles.body}>
+        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
           <ScrollView
-            style={styles.schrollView}
+            style={styles.scrollView}
+            scrollRef={scrollRef}
+            contentContainerStyle={{ paddingBottom: 100 }}
             showsVerticalScrollIndicator={false}>
             {allSMS.map((sms, index) => (
               <ChatMessage
@@ -149,13 +161,14 @@ const Chat = ({route, navigation}) => {
               />
             ))}
           </ScrollView>
-          <View style={styles.inputContainer}>
-            <ChatInput refreshChat={_getAllSMS} sendTo={receiver} />
-          </View>
-        </View>
-        <View style={styles.hider}></View>
+        </LinearGradient>
       </SafeAreaView>
-    </LinearGradient>
+      <KeyboardAvoidingView behavior={KEYBOARD_AVOID_VIEW_BEHAVIOR}>
+        <View style={[styles.inputContainer, { paddingBottom: bottom - 12 }]}>
+          <ChatInput refreshChat={_getAllSMS} sendTo={receiver} />
+        </View>
+      </KeyboardAvoidingView>
+    </ImageBackground>
   );
 };
 
@@ -166,17 +179,44 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingBottom: 26,
-    paddingTop: 22,
-    paddingHorizontal: 24,
+    margin: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatarContainer: {
+    marginLeft: 10,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  userName: {
+    fontWeight: '600',
+    fontSize: 18,
+    fontFamily: 'Inter',
+    color: '#2C3482',
+  },
+  userMetrics: {
+    fontFamily: 'Inter',
+    fontSize: 14,
+    color: '#2C3482',
+    fontWeight: '400',
+  },
+  onlineIndicator: {
+    position: 'absolute',
+    height: 16,
+    width: 16,
+    backgroundColor: theme.COLORS.primary,
+    borderRadius: 16 / 2,
+    borderWidth: 3,
+    borderColor: theme.COLORS.white,
+    right: 0,
+    bottom: 0,
   },
   body: {
-    flexGrow: 1,
-    backgroundColor: theme.COLORS.white,
-    zIndex: 2,
-    elevation: 2,
+    height: '100%',
+    padding: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
   },
-
   hider: {
     position: 'absolute',
     width: '100%',
@@ -205,10 +245,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: theme.COLORS.white,
     marginTop: 1,
-  },
-  schrollView: {
-    flex: 1,
-    paddingHorizontal: 24,
   },
   inputContainer: {
     backgroundColor: theme.COLORS.white,
