@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {
   View,
@@ -26,6 +26,7 @@ const VerifyPassword = ({
   setVerifyTransaction,
 }) => {
   const {handleBiometric, sensorAvailable} = useBiometrics();
+  const [password, setPassword] = useState('');
   return (
     <Modal visible={verify} animationType="fade" transparent={true}>
       <View style={styles.container}>
@@ -42,7 +43,12 @@ const VerifyPassword = ({
             Press enter your password below
           </Text>
           <View>
-            <InputField label="Enter Password" value="" />
+            <InputField
+              secureTextEntry
+              label="Enter Password"
+              value={password}
+              onChangeText={setPassword}
+            />
           </View>
 
           <View style={styles.btnContainer}>
@@ -50,8 +56,8 @@ const VerifyPassword = ({
               <Button
                 label="Submit"
                 onPress={() => {
-                  AsyncStorage.setItem('verify', 'true');
-                  navigation.goBack();
+                  setVerifyTransaction(true);
+                  setVerify(false);
                 }}
               />
             </View>

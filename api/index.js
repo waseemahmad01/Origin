@@ -27,7 +27,7 @@ api.interceptors.response.use(
   },
   error => {
     if (error?.response?.status === 401) {
-      // navigate('Login');
+      navigate('Login');
       AsyncStorage.clear();
     }
     return Promise.reject(error);
