@@ -20,7 +20,6 @@
 		50C16B5169244F66B85D7B40 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2D57D876DDD0482397314E23 /* Inter-Bold.ttf */; };
 		5688E5E73D334E66B9A95BE6 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3927852641B24AF69CDC0958 /* Inter-Medium.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		9B7CC6DF208A9D8C664FF345 /* libPods-origin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F00DD4B867AC9F058E5F449 /* libPods-origin.a */; };
 		C437D11AC8204EB483C32A4A /* Inter-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 365FD3A39219426DB830F794 /* Inter-ExtraLight.ttf */; };
 		DBECC59F050344CE969B0D4D /* SF-Pro-Display-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2968FD769C614C55BCAA576F /* SF-Pro-Display-Regular.ttf */; };
 		E13A239B1F3F4CD59A3B3E35 /* Inter-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E93DE61091A3431CA0202095 /* Inter-Thin.ttf */; };
@@ -85,7 +84,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B7CC6DF208A9D8C664FF345 /* libPods-origin.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -53,7 +53,7 @@ const People = ({navigation}) => {
   const handleProfileClick = user => {
     console.log(user);
     // dispatch.users.setSelectedUser(user);
-    navigation.navigate('Chat', {user});
+    navigation.navigate('Chat', {chat: user});
   };
 
   useFocusEffect(
