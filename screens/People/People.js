@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   View,
@@ -13,7 +13,7 @@ import {
   Pressable,
 } from 'react-native';
 
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import LinearGradient from 'react-native-linear-gradient';
 import assets from '../../assets';
@@ -42,7 +42,7 @@ const testUser = {
   vox_user_password: '78816273',
 };
 
-const People = ({navigation}) => {
+const People = ({ navigation }) => {
   const dispatch = useDispatch();
   const users = useSelector(state => state.users.users);
   console.log('users =============>', users);
@@ -51,7 +51,7 @@ const People = ({navigation}) => {
   const handleProfileClick = user => {
     console.log(user);
     // dispatch.users.setSelectedUser(user);
-    navigation.navigate('Chat', {user});
+    navigation.navigate('Chat', { user });
   };
 
   useEffect(() => {
@@ -65,10 +65,10 @@ const People = ({navigation}) => {
         paddingTop: isIos ? 0 : StatusBar.currentHeight,
       }}
       colors={[theme.COLORS.primary, theme.COLORS.secondary]}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}>
       <StatusBar translucent={true} backgroundColor={'transparent'} />
-      <SafeAreaView style={{flex: 1}}>
+      <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.topBar}>
           <Text style={styles.topBarTitle}>People</Text>
           <View style={styles.searchBar}>
@@ -100,7 +100,7 @@ const People = ({navigation}) => {
           </View>
         </View>
         <View style={styles.bottom}>
-          <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
             <Pressable
               onPress={() => handleProfileClick(testUser)}
               style={{
@@ -108,7 +108,7 @@ const People = ({navigation}) => {
                 justifyContent: 'space-between',
                 marginVertical: 16,
               }}>
-              <View style={{...styles.row}}>
+              <View style={{ ...styles.row }}>
                 <View>
                   <Image
                     source={assets.user}
@@ -126,7 +126,7 @@ const People = ({navigation}) => {
               <View>
                 <Pressable
                   style={styles.btn}
-                  // onPress={() => handleProfileClick(user)}
+                // onPress={() => handleProfileClick(user)}
                 >
                   <Text style={styles.transferText}>Send</Text>
                 </Pressable>

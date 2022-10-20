@@ -46,27 +46,42 @@ const Privacy = ({ navigation }) => {
               <View style={styles.row}>
                 <Image source={assets.globe} />
                 <Text style={styles.value}>Everyone</Text>
-                <Image source={assets.globe} />
+                <Image source={assets.arrowDown} />
               </View>
-
             </View>
             <View style={styles.filter}>
               <Text style={styles.key}>Profile photo</Text>
-              <Text style={styles.value}>Value</Text>
+              <View style={styles.row}>
+                <Image source={assets.globe} />
+                <Text style={styles.value}>Everyone</Text>
+                <Image source={assets.arrowDown} />
+              </View>
             </View>
             <View style={styles.filter}>
               <Text style={styles.key}>About</Text>
-              <Text style={styles.value}>Value</Text>
+              <View style={styles.row}>
+                <Image source={assets.globe} />
+                <Text style={styles.value}>Everyone</Text>
+                <Image source={assets.arrowDown} />
+              </View>
             </View>
             <View style={styles.filter}>
               <Text style={styles.key}>Status</Text>
-              <Text style={styles.value}>Value</Text>
+              <View style={styles.row}>
+                <Image source={assets.globe} />
+                <Text style={styles.value}>Everyone</Text>
+                <Image source={assets.arrowDown} />
+              </View>
             </View>
             <Pressable
               onPress={() => navigation.navigate('Blocked')}
               style={styles.filter}>
               <Text style={styles.key}>Blocked persons</Text>
-              <Text style={styles.value}>8 Persons</Text>
+              <View style={styles.row}>
+                <Image source={assets.block} />
+                <Text style={styles.value}>8 Persons</Text>
+                <Image source={assets.arrowDown} />
+              </View>
             </Pressable>
           </View>
         </LinearGradient>
@@ -142,6 +157,7 @@ const styles = StyleSheet.create({
     color: '#0E0E2F',
     fontWeight: '600',
     fontSize: 16,
+    marginHorizontal: 10,
     fontFamily: 'Inter',
   },
 });

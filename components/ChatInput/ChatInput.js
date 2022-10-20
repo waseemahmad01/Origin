@@ -5,6 +5,7 @@ import {
   TextInput,
   Pressable,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import { sendMessage } from '../../api';
 import assets from '../../assets';
@@ -19,12 +20,13 @@ const ChatInput = ({ sendTo, refreshChat }) => {
     if (!message) return
     try {
       setLoading(true);
-      await sendMessage({ sendTo, messageBody: message })
+      await sendMessage({ receiver_number: sendTo, sms_body: message })
       setMessage("")
       refreshChat()
     } catch (err) {
       console.log('err - ', err)
     } finally {
+      setMessage("")
       setLoading(false);
     }
   }
@@ -40,13 +42,14 @@ const ChatInput = ({ sendTo, refreshChat }) => {
           placeholder="Type message"
           multiline
         />
-        <Pressable disabled={loading} style={styles.iconContainer} onPress={onSendMessage}>
-          <Image
-            style={{ width: 20, height: 20 }}
-            source={assets.arrowRight}
-            resizeMode="cover"
-          />
-        </Pressable>
+        {!loading &&
+          <TouchableOpacity disabled={loading} style={styles.iconContainer} onPress={onSendMessage}>
+            <Image
+              style={{ width: 20, height: 20 }}
+              source={assets.arrowRight}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>}
 
       </View>
     </View>

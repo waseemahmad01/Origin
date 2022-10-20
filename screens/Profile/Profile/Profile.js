@@ -15,14 +15,12 @@ import { useSelector } from 'react-redux';
 import theme from '../../../theme';
 import assets from '../../../assets';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import { getImageUrl } from '../../../utils/getImageUrl';
 
-const isIos = Platform.OS === 'ios';
-const { width, height } = Dimensions.get('window');
+const { width, } = Dimensions.get('window');
 
 const Profile = ({ navigation }) => {
   const user = useSelector(state => state.auth.user);
-
-  console.log('My data ===>', user);
 
   return (
     <ImageBackground style={[StyleSheet.absoluteFill, styles.background]} source={assets.profileBG}>
@@ -31,7 +29,7 @@ const Profile = ({ navigation }) => {
           <View>
             <View style={styles.avatarBorder}>
               <Image
-                source={assets.user}
+                source={getImageUrl(user?.image_url, user?.username)}
                 style={styles.avatar}
                 resizeMode="cover"
               />

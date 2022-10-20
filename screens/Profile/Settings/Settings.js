@@ -64,11 +64,6 @@ const Settings = ({ navigation }) => {
               </View>
               <Image
                 source={assets.arrowRight}
-                style={{
-                  height: 16,
-                  width: 8,
-                }}
-                resizeMode="contain"
               />
             </Pressable>
             <Pressable
@@ -82,11 +77,6 @@ const Settings = ({ navigation }) => {
               </View>
               <Image
                 source={assets.arrowRight}
-                style={{
-                  height: 16,
-                  width: 8,
-                }}
-                resizeMode="contain"
               />
             </Pressable>
             <Pressable
@@ -100,11 +90,6 @@ const Settings = ({ navigation }) => {
               </View>
               <Image
                 source={assets.arrowRight}
-                style={{
-                  height: 16,
-                  width: 8,
-                }}
-                resizeMode="contain"
               />
             </Pressable>
             <Pressable
@@ -114,23 +99,12 @@ const Settings = ({ navigation }) => {
                 <View style={styles.iconContainer}>
                   <Image
                     source={assets.settingInfo}
-                    style={{
-                      height: 16,
-                      width: 16,
-                    }}
-                    resizeMode="contain"
                   />
                 </View>
                 <Text style={styles.text}>About us</Text>
               </View>
               <Image
-                source={assets.arrowRight}
-                style={{
-                  height: 16,
-                  width: 8,
-                }}
-                resizeMode="contain"
-              />
+                source={assets.arrowRight} />
             </Pressable>
             <Pressable
               style={{ ...styles.row }}>
@@ -140,14 +114,6 @@ const Settings = ({ navigation }) => {
                 </View>
                 <Text style={styles.text}>Log out</Text>
               </View>
-              <Image
-                source={assets.arrowRight}
-                style={{
-                  height: 16,
-                  width: 8,
-                }}
-                resizeMode="contain"
-              />
             </Pressable>
           </ScrollView>
         </LinearGradient>

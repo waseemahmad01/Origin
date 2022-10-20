@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Voximplant } from 'react-native-voximplant';
 import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+
+import dayjs from 'dayjs';
 import {
   View,
   Text,
@@ -16,6 +19,12 @@ import theme from '../../../theme';
 import assets from '../../../assets';
 import { getAllChats } from '../../../api';
 import { truncateString } from '../../../utils';
+import { getImageUrl } from '../../../utils/getImageUrl';
+var relativeTime = require('dayjs/plugin/relativeTime')
+
+
+dayjs.extend(relativeTime)
+
 
 const client = Voximplant.getInstance();
 
@@ -25,6 +34,7 @@ const Chat = ({ navigation }) => {
   const balance = useSelector(state => state.wallet.balance);
   const [tab, setTab] = useState(0);
   const [chats, setChats] = useState([]);
+
 
   const handleVoxImplantLogin = async () => {
     let state = await client.getClientState();
@@ -40,9 +50,15 @@ const Chat = ({ navigation }) => {
     }
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch.users.getAllUsers();
+      getChats();
+    }, [])
+  );
+
+
   useEffect(() => {
-    dispatch.users.getAllUsers();
-    getChats();
     handleVoxImplantLogin();
   }, []);
 
@@ -75,8 +91,8 @@ const Chat = ({ navigation }) => {
           <View style={[styles.container, styles.avatarSubContainer]}>
             <View style={styles.avatarBorder}>
               <Image
-                source={assets.user}
-                style={styles.avatar}
+                source={getImageUrl(user.image_url, user.username)}
+                style={[styles.avatar]}
                 resizeMode="cover"
               />
             </View>
@@ -114,24 +130,24 @@ const Chat = ({ navigation }) => {
               </Text>
             </Pressable>
           </View>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {chats.map(chat => (
+          <ScrollView contentContainerStyle={{ paddingTop: 20 }} showsVerticalScrollIndicator={false}>
+            {chats.map((chat, index) => (
               <Pressable
                 style={styles.userBlock}
-                key={chat?.id}
+                key={chat?.id + index}
                 onPress={() => {
                   navigation.navigate('Chat', { chat });
                 }}>
                 <View style={styles.userContainer}>
                   <View style={{ flexDirection: 'row' }}>
                     <Image
-                      source={assets.user}
-                      style={{ height: 56, width: 56 }}
+                      source={getImageUrl(chat.image_url, chat.username)}
+                      style={{ height: 56, width: 56, borderRadius: 100 }}
                       resizeMode="cover"
                     />
                     <View style={{ flex: 1, marginHorizontal: 16 }}>
                       <Text style={styles.textNormal}>
-                        {chat?.username}
+                        {chat?.receiver_number}
                       </Text>
                       <Text
                         numberOfLines={1}
@@ -139,7 +155,7 @@ const Chat = ({ navigation }) => {
                         {chat?.last_message}
                       </Text>
                     </View>
-                    <Text style={styles.amount}>3m ago</Text>
+                    <Text style={styles.amount}>{dayjs(chat.last_message_time).fromNow()}</Text>
                   </View>
                 </View>
               </Pressable>
@@ -206,6 +222,7 @@ const styles = StyleSheet.create({
   avatar: {
     height: 64,
     width: 64,
+    backgroundColor: '#f2f2f2',
     borderRadius: 100,
   },
   userDetails: {

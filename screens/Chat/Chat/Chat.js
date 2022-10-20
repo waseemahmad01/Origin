@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { FlatList, ImageBackground, KeyboardAvoidingView } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { ImageBackground, KeyboardAvoidingView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import LinearGradient from 'react-native-linear-gradient';
 
 import {
   View,
@@ -14,15 +15,15 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 
-import LinearGradient from 'react-native-linear-gradient';
 import ChatInput from '../../../components/ChatInput/ChatInput';
-import theme from '../../../theme';
-
-import assets from '../../../assets';
 import ChatMessage from '../../../components/ChatMessage/ChatMessage';
+import theme from '../../../theme';
+import assets from '../../../assets';
 // import IconButton from '../../../components/IconButton/IconButton';
 import { getAllSMS } from '../../../api';
 import { truncateString } from '../../../utils';
+import { getImageUrl } from '../../../utils/getImageUrl';
+import { useDispatch, useSelector } from 'react-redux';
 
 const isIos = Platform.OS === 'ios';
 
@@ -32,6 +33,10 @@ const KEYBOARD_AVOID_VIEW_BEHAVIOR = Platform.select({
 })
 const Chat = ({ route, navigation }) => {
   const [allSMS, setSMS] = useState([]);
+  const dispatch = useDispatch();
+  const scrollRef = useRef();
+  const user = useSelector(state => state.auth.user);
+  const users = useSelector(state => state.users.users);
   const { bottom } = useSafeAreaInsets()
   const chat = route?.params?.chat
 
@@ -39,18 +44,38 @@ const Chat = ({ route, navigation }) => {
     _getAllSMS();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      _getAllSMS()
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const _getAllSMS = async () => {
+    let chatId = chat.chat_id
+
+    if (!chatId) {
+      dispatch.users.getAllUsers();
+      const currentUser = users.find((user) => user.id == chat.id);
+      if (currentUser.chat_id) {
+        chatId = currentUser.chat_id
+      }
+    };
+
+    if (!chatId) return
+
     try {
-      const { data } = await getAllSMS(chat.chat_id);
-      console.log('get messages - ', data);
+      const { data } = await getAllSMS(chatId);
       setSMS(data);
+      scrollRef.current?.scrollToEnd({ animated, offset: 0 })
     } catch (err) {
       console.log('error - ', err);
     }
   };
 
-  const my = chat.sender_number || '';
-  const receiver = chat.receiver_number;
+  const my = chat?.sender_number || user?.phone_number;
+  const receiver = chat?.receiver_number || chat?.phone_number;
 
   const makeCall = async () => {
     try {
@@ -90,15 +115,15 @@ const Chat = ({ route, navigation }) => {
           <View style={styles.avatarContainer}>
             <View>
               <Image
-                source={assets.user}
-                style={{ height: 56, width: 56 }}
+                source={getImageUrl(chat?.image_url, chat?.username)}
+                style={{ height: 56, width: 56, borderRadius: 100 }}
                 resizeMode="cover"
               />
               <View style={styles.onlineIndicator}></View>
             </View>
             <View style={{ marginLeft: 16 }}>
               <Text style={[styles.userMetrics, { marginBottom: 5, fontWeight: '600', fontSize: 16 }]}>
-                @{chat?.username}
+                {chat?.username ? `@${chat?.username}` : receiver}
               </Text>
               <Text style={styles.userMetrics}>
                 {truncateString(chat?.origen_public_wallet_address)}
@@ -115,16 +140,18 @@ const Chat = ({ route, navigation }) => {
                 source={assets.callIcon}
               />
             </Pressable>
-            <Pressable style={{ marginLeft: 20 }}>
+            {/* <Pressable style={{ marginLeft: 20 }}>
               <Image
                 source={assets.cameraIcon}
               />
-            </Pressable>
+            </Pressable> */}
           </View>
         </View>
         <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
           <ScrollView
             style={styles.scrollView}
+            scrollRef={scrollRef}
+            contentContainerStyle={{ paddingBottom: 100 }}
             showsVerticalScrollIndicator={false}>
             {allSMS.map((sms, index) => (
               <ChatMessage

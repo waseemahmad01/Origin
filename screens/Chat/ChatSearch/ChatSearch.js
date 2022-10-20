@@ -14,27 +14,28 @@ import {
 
 import theme from '../../../theme';
 import assets from '../../../assets';
-import { useSelector } from 'react-redux';
-import { allUsers } from '../../../api';
+import { getImageUrl } from '../../../utils/getImageUrl';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ChatSearch = ({ navigation }) => {
-  const { bottom, top } = useSafeAreaInsets();
-  const [users, setUsers] = useState([]);
+  const { top } = useSafeAreaInsets();
   const [search, setSearch] = useState('');
+  const dispatch = useDispatch();
+  const users = useSelector(state => state.users.users);
 
   useEffect(() => {
-    getAllUsers();
+    dispatch.users.getAllUsers();
   }, []);
 
-  const getAllUsers = async () => {
-    try {
-      const { data } = await allUsers();
-      setUsers(data);
-      console.log('response - ', data);
-    } catch (err) {
-      console.log('error - ', err);
-    }
-  };
+  // const getAllUsers = async () => {
+  //   try {
+  //     const { data } = await allUsers();
+  //     setUsers(data);
+  //     console.log('response - ', data);
+  //   } catch (err) {
+  //     console.log('error - ', err);
+  //   }
+  // };
 
 
   return (
@@ -91,23 +92,21 @@ const ChatSearch = ({ navigation }) => {
               style={styles.userBlock}
               key={user?.id}
               onPress={() => {
-                navigation.navigate('Chat', { user });
+                navigation.navigate('Chat', { chat: user });
               }}>
-              <View style={styles.transactionDetails}>
-                <View
-                  style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <View>
-                    <Image
-                      source={assets.user}
-                      style={{ height: 56, width: 56 }}
-                      resizeMode="cover"
-                    />
-                  </View>
-                  <View style={{ marginLeft: 16 }}>
-                    <Text style={styles.textNormal}>
-                      {user?.username}
-                    </Text>
-                  </View>
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View>
+                  <Image
+                    source={getImageUrl(user.image_url, user.username)}
+                    style={{ height: 56, width: 56, borderRadius: 100, backgroundColor: '#f2f2f2' }}
+                    resizeMode="cover"
+                  />
+                </View>
+                <View style={{ marginLeft: 16 }}>
+                  <Text style={styles.textNormal}>
+                    {user?.username || user?.phone_number}
+                  </Text>
                 </View>
               </View>
             </Pressable>
@@ -154,6 +153,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     marginTop: -10
+  },
+  userBlock: {
+    marginBottom: 15,
   },
   avatarContainer: {
     marginLeft: 10,
