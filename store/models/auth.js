@@ -106,9 +106,10 @@ export const auth = createModel()({
       try {
         dispatch.auth.setLoading(true);
         const {data} = await userLogin(formData);
-        const {accessToken, ...user} = data;
+        const {accessToken, ...rest} = data;
         dispatch.auth.setUser(user);
         await AsyncStorage.setItem('token', accessToken);
+        const {data: user} = await userData();
         dispatch.wallet.setPublicAddress(user.origen_public_wallet_address);
         dispatch.auth.setLoggedIn(true);
         navigation.reset({

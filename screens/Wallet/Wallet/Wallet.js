@@ -6,6 +6,7 @@ import IconButton from '../../../components/IconButton/IconButton';
 import TransactionsTab from './TransactionsTab';
 import {useSelector, useDispatch} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 import {
   View,
@@ -87,7 +88,7 @@ const Wallet = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       dispatch.wallet.getBalance();
-      console.log('console.log');
+      dispatch.sfts.getCurrentPackage();
     }, []),
   );
 
@@ -445,6 +446,14 @@ const Wallet = ({navigation}) => {
               </>
             )}
           </View>
+          {add && (
+            <ConfettiCannon
+              count={200}
+              autoStart={true}
+              origin={{x: -10, y: 0}}
+              fadeOut={true}
+            />
+          )}
         </View>
       </Modal>
       {modalVisible && (

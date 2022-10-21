@@ -6438,6 +6438,11 @@
     "jscodeshift" "^0.13.1"
     "nullthrows" "^1.1.1"
 
+"react-native-confetti-cannon@^1.5.2":
+  "integrity" "sha512-IZuWjlW7QsdxEGNnvpD6W+7iKCCQhnd5BvuNvMtirU7Nxm8WS2N6LPGMBz1ZYDuusG+GRZkoXXTNCdoAAGpCTg=="
+  "resolved" "https://registry.npmjs.org/react-native-confetti-cannon/-/react-native-confetti-cannon-1.5.2.tgz"
+  "version" "1.5.2"
+
 "react-native-dotenv@^3.3.1":
   "integrity" "sha512-gAKXout1XCwCqJ3QPGoQAF2eRzOHgOnwg3x19z+ssow8bDIksJeKBqvoHDyGziVilAIP1J0bEC9Jf+VF8nFang=="
   "resolved" "https://registry.npmjs.org/react-native-dotenv/-/react-native-dotenv-3.3.1.tgz"

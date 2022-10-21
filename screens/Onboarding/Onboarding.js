@@ -55,9 +55,10 @@ const Onboarding = ({navigation}) => {
     setActiveSlide(currentIndex);
   };
 
-  const goToNextSlide = () => {
+  const goToNextSlide = async () => {
     if (activeSlide === 2) {
       navigation.navigate('Notification');
+      await AsyncStorage.setItem('visited', 'true');
       return;
     }
     const newActiveIndex = activeSlide + 1;
