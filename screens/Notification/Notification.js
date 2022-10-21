@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {checkNotifications} from 'react-native-permissions';
 
 import {
   View,
@@ -25,6 +26,12 @@ const Notification = ({navigation}) => {
   //   console.log('running');
   //   Permission.checkPermission(PERMISSION_TYPE.notification);
   // }, []);
+
+  useEffect(() => {
+    // checkNotifications().then(({status, settings}) => {
+    //   console.log(status, settings);
+    // });
+  }, []);
 
   return (
     <ImageBackground

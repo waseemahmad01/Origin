@@ -39,6 +39,7 @@ const Chat = ({route, navigation}) => {
   const users = useSelector(state => state.users.users);
   const {bottom} = useSafeAreaInsets();
   const chat = route?.params?.chat;
+  const isChat = route?.params?.isChat;
 
   console.log('chat', chat);
 
@@ -55,7 +56,7 @@ const Chat = ({route, navigation}) => {
   }, []);
 
   const _getAllSMS = async () => {
-    let chatId = chat.chat_id;
+    let chatId = isChat === true ? chat.receiver_number : chat.phone_number;
 
     if (!chatId) {
       dispatch.users.getAllUsers();
@@ -65,10 +66,15 @@ const Chat = ({route, navigation}) => {
       }
     }
 
+    // console.log("send api - ", chatId)
+
     if (!chatId) return;
+
+    console.log('number', chatId);
 
     try {
       const {data} = await getAllSMS(chatId);
+      console.log('chat messages', data);
       setSMS(data);
       scrollRef.current?.scrollToEnd({animated, offset: 0});
     } catch (err) {
@@ -97,7 +103,8 @@ const Chat = ({route, navigation}) => {
         }
       }
       navigation.navigate('AudioCall', {
-        callee: user.phone_number,
+        callee: receiver,
+        user: chat,
         //
       });
       //

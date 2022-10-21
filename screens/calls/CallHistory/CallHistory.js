@@ -18,17 +18,17 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useSelector, useDispatch} from 'react-redux';
 import assets from '../../../assets';
 import theme from '../../../theme';
+import {getImageUrl} from '../../../utils/getImageUrl';
 
 const isIos = Platform.OS === 'ios';
 
 const CallHistory = ({navigation}) => {
   const dispatch = useDispatch();
   const callHistory = useSelector(state => state.calls.history);
-
+  console.log(callHistory);
   useFocusEffect(
     useCallback(() => {
       dispatch.calls.getCallHistory();
-      console.log('hellll');
     }, []),
   );
   return (
@@ -40,7 +40,8 @@ const CallHistory = ({navigation}) => {
         <StatusBar translucent={true} backgroundColor="transparent" />
         <View style={styles.header}>
           <View style={styles.headerRow}>
-            <Pressable onPress={() => navigation.navigate('Call-Search')}>
+            <Pressable
+              onPress={() => navigation.navigate('Call-Search', {callHistory})}>
               <Image
                 source={assets.searchBlue}
                 style={{
@@ -65,13 +66,18 @@ const CallHistory = ({navigation}) => {
                 <View style={{flexDirection: 'row'}}>
                   <View style={styles.iconContainer}>
                     <Image
-                      source={assets.user}
+                      source={getImageUrl(
+                        call?.image_url,
+                        call?.receiver_number,
+                      )}
                       style={{height: 48, width: 48, borderRadius: 48 / 2}}
                       resizeMode="cover"
                     />
                   </View>
                   <View style={{marginLeft: 16}}>
-                    <Text style={styles.transactionType}>{call?.username}</Text>
+                    <Text style={styles.transactionType}>
+                      {call?.receiver_number}
+                    </Text>
                     <View
                       style={{
                         flexDirection: 'row',

@@ -1,10 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 
 import LinearGradient from 'react-native-linear-gradient';
 import {LinearTextGradient} from 'react-native-text-gradient';
 import IconButton from '../../../components/IconButton/IconButton';
 import TransactionsTab from './TransactionsTab';
 import {useSelector, useDispatch} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
+import ConfettiCannon from 'react-native-confetti-cannon';
 
 import {
   View,
@@ -83,9 +85,16 @@ const Wallet = ({navigation}) => {
     dispatch.wallet.addTokens({formData, setAdd});
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      dispatch.wallet.getBalance();
+      dispatch.sfts.getCurrentPackage();
+    }, []),
+  );
+
   useEffect(() => {
-    dispatch.wallet.getBalance();
     dispatch.users.getAllUsers();
+    console.log('runnning walllet');
   }, []);
 
   return (
@@ -437,6 +446,14 @@ const Wallet = ({navigation}) => {
               </>
             )}
           </View>
+          {add && (
+            <ConfettiCannon
+              count={200}
+              autoStart={true}
+              origin={{x: -10, y: 0}}
+              fadeOut={true}
+            />
+          )}
         </View>
       </Modal>
       {modalVisible && (

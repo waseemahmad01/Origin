@@ -127,6 +127,10 @@ const assets = {
   arrowDown: require('./icons/arrow-down.png'),
   arrowRight: require('./icons/arrow-right.png'),
   myContacts: require('./icons/my-contacts.png'),
+  callEnd: require('./icons/callEnd.png'),
+  videoOff: require('./icons/videoOff.png'),
+  volume: require('./icons/volume.png'),
+  microphone: require('./icons/microphone.png'),
 };
 
 export default assets;

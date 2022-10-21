@@ -16,26 +16,37 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import assets from '../../../assets';
 import theme from '../../../theme';
 
-const Help = ({ navigation }) => {
+const isIos = Platform.OS === 'ios';
+
+const Help = ({navigation}) => {
   return (
     <LinearGradient
-      colors={["#D8E3F3", '#B8F7FC',]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}>
-      <SafeAreaView styles={{ flex: 1 }} >
-        <View style={[styles.header]}>
-          <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
+      colors={['#D8E3F3', '#B8F7FC']}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}>
+      <SafeAreaView styles={{flex: 1}}>
+        <View
+          style={[
+            styles.header,
+            {paddingTop: isIos ? 31 : 31 + StatusBar.currentHeight},
+          ]}>
+          <Pressable
+            hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+            onPress={() => navigation.goBack()}>
             <Image source={assets.backChat} />
           </Pressable>
           <Text style={styles.messageText}>Help</Text>
           <View></View>
         </View>
-        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
-          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} >
+        <LinearGradient
+          colors={['#fff', '#FEF7F7', '#FCEBEF']}
+          style={styles.body}>
+          <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>FAQ</Text>
 
             <Text style={styles.subtitle}>
-              If you don’t share your last seen, you won’t be able to see other people’s last seen
+              If you don’t share your last seen, you won’t be able to see other
+              people’s last seen
             </Text>
 
             <View style={styles.question}>
@@ -69,9 +80,7 @@ const Help = ({ navigation }) => {
               <Image source={assets.addBlackIcon} />
             </View>
             <View style={styles.question}>
-              <Text style={styles.questionText}>
-                Can I log out of freedom?
-              </Text>
+              <Text style={styles.questionText}>Can I log out of freedom?</Text>
               <Image source={assets.addBlackIcon} />
             </View>
             <View style={styles.question}>
@@ -90,7 +99,7 @@ const Help = ({ navigation }) => {
               <Text style={styles.questionText}>How to use freedom app?</Text>
               <Image source={assets.addBlackIcon} />
             </View>
-            <View style={{ height: 200 }}></View>
+            <View style={{height: 200}}></View>
           </ScrollView>
         </LinearGradient>
       </SafeAreaView>
@@ -120,14 +129,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#2C3482',
     fontFamily: 'Inter',
-    marginRight: 15
+    marginRight: 15,
   },
   body: {
     height: '100%',
     padding: 24,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    marginTop: -10
+    marginTop: -10,
   },
   title: {
     fontSize: 18,

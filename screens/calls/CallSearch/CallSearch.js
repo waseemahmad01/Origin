@@ -16,11 +16,14 @@ import {
 
 import assets from '../../../assets';
 import theme from '../../../theme';
+import {getImageUrl} from '../../../utils/getImageUrl';
 
 const isIos = Platform.OS === 'ios';
 
-const CallSearch = ({navigation}) => {
+const CallSearch = ({navigation, route}) => {
   const [search, setSearch] = useState('');
+  const callHistory = route?.params?.callHistory;
+  console.log(callHistory);
   return (
     <ImageBackground
       style={{flex: 1}}
@@ -78,52 +81,59 @@ const CallSearch = ({navigation}) => {
           style={styles.body}>
           <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
             <Text style={styles.title}>Recent search</Text>
-            <View style={styles.transactionDetails}>
-              <View style={{flexDirection: 'row'}}>
-                <View style={styles.iconContainer}>
-                  <Image
-                    source={assets.user}
-                    style={{height: 48, width: 48, borderRadius: 48 / 2}}
-                    resizeMode="cover"
-                  />
-                </View>
-                <View style={{marginLeft: 16}}>
-                  <Text style={styles.transactionType}>Fernando Sims</Text>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginTop: 4,
-                    }}>
+            {callHistory?.map((call, i) => (
+              <View style={styles.transactionDetails}>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={styles.iconContainer}>
                     <Image
-                      source={assets.outgoingCall}
-                      style={{
-                        height: 18,
-                        width: 18,
-                      }}
+                      source={getImageUrl(
+                        call?.image_url,
+                        call?.receiver_number,
+                      )}
+                      style={{height: 48, width: 48, borderRadius: 48 / 2}}
+                      resizeMode="cover"
                     />
-                    <Text style={styles.transactionInfo}> 8m ago</Text>
+                  </View>
+                  <View style={{marginLeft: 16}}>
+                    <Text style={styles.transactionType}>
+                      {call?.receiver_number}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginTop: 4,
+                      }}>
+                      <Image
+                        source={assets.outgoingCall}
+                        style={{
+                          height: 18,
+                          width: 18,
+                        }}
+                      />
+                      <Text style={styles.transactionInfo}> 8m ago</Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-              <View
-                style={{
-                  height: 48,
-                  width: 48,
-                  borderRadius: 48 / 2,
-                  backgroundColor: theme.COLORS.pastelBlue,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Image
-                  source={assets.calls}
+                <View
                   style={{
-                    height: 24,
-                    width: 24,
-                  }}
-                />
+                    height: 48,
+                    width: 48,
+                    borderRadius: 48 / 2,
+                    backgroundColor: theme.COLORS.pastelBlue,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Image
+                    source={assets.calls}
+                    style={{
+                      height: 24,
+                      width: 24,
+                    }}
+                  />
+                </View>
               </View>
-            </View>
+            ))}
           </ScrollView>
         </ImageBackground>
         <View style={styles.hider}></View>

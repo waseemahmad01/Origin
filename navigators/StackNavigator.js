@@ -57,6 +57,7 @@ const StackNavigator = () => {
     try {
       const visit = await AsyncStorage.getItem('visited');
       const token = await AsyncStorage.getItem('token');
+      console.log(visit);
       if (token) {
         console.log(token);
         const {data: user} = await userData();
@@ -129,6 +130,10 @@ const StackNavigator = () => {
         return 'Wallet';
       }
     } else {
+      console.log(visited);
+      if (visited) {
+        return 'Login';
+      }
       return 'Onboarding';
     }
   };

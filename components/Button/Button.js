@@ -14,12 +14,13 @@ const Button = ({label = 'label', style, labelStyle, loading, ...rest}) => {
       {...rest}
       style={[
         styles.container,
-        style,
+
         {
           backgroundColor: loading
             ? theme.COLORS.darkGreen
             : theme.COLORS.green,
         },
+        style,
       ]}
       disabled={loading}>
       {loading ? (

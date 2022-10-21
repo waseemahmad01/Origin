@@ -54,7 +54,7 @@ const InputField = ({
   }, [anim, floatLabel]);
 
   useEffect(() => {
-    if (value.length) {
+    if (value?.length) {
       setFloatLabel(true);
     }
   }, [value]);

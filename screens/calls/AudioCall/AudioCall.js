@@ -23,12 +23,14 @@ import {Voximplant} from 'react-native-voximplant';
 import useTimer from '../../../hooks/useTimer';
 import {getFormatedTime} from '../../../utils';
 import {addCallHistory} from '../../../api';
+import {getImageUrl} from '../../../utils/getImageUrl';
 
 const isIos = Platform.OS === 'ios';
 const height = Dimensions.get('window').height;
 
 const AudioCall = ({route, navigation}) => {
   const callee = route.params?.callee;
+  const user = route?.params?.user;
   const voximplant = Voximplant.getInstance();
   const {vox_phone_number} = useSelector(state => state.auth.user);
   const callRef = useRef(null);
@@ -205,7 +207,6 @@ const AudioCall = ({route, navigation}) => {
     //     },
     //   ]);
     // }
-
     makeCall();
     dispatch.sfts.getCurrentPackage();
     return function cleanup() {
@@ -222,7 +223,7 @@ const AudioCall = ({route, navigation}) => {
 
   return (
     <ImageBackground
-      source={assets.callBg}
+      source={assets.background}
       resizeMode="cover"
       style={styles.backgroundImage}>
       <SafeAreaView style={{flex: 1, zIndex: 10}}>
@@ -249,33 +250,103 @@ const AudioCall = ({route, navigation}) => {
           </View>
           <View style={{alignItems: 'center'}}>
             <View style={styles.userInfo}>
-              <Image source={assets.user} />
-              <Text style={styles.name}>Ralph Edwards</Text>
+              <Image
+                style={{
+                  height: 108,
+                  width: 108,
+                  borderRadius: 108 / 2,
+                }}
+                source={getImageUrl(user?.image_url, user?.username)}
+              />
+              <Text style={styles.name}>{user?.username}</Text>
               <Text style={styles.status}>
                 {start ? getFormatedTime(time) : callStatus}
               </Text>
             </View>
           </View>
           <View style={styles.bottom}>
-            <Pressable style={styles.button}></Pressable>
-            <Pressable style={styles.button}></Pressable>
-            <Pressable style={styles.button}></Pressable>
-            <Pressable
-              onPress={() => callRef.current.hangup()}
+            <LinearGradient
               style={{
                 ...styles.button,
-                backgroundColor: theme.COLORS.error,
-                opacity: 1,
-              }}>
-              <Image
-                source={assets.audioCall}
+                borderWidth: 1,
+                borderColor: '#ffffff33',
+              }}
+              colors={['#FFFFFF8F', '#FFFFFF00']}
+              start={{x: 1, y: 0.1}}
+              end={{x: 0.5, y: 0.5}}>
+              <Pressable style={styles.button}>
+                <Image
+                  source={assets.volume}
+                  style={{
+                    height: 32,
+                    width: 32,
+                  }}
+                />
+              </Pressable>
+            </LinearGradient>
+            <LinearGradient
+              style={{
+                ...styles.button,
+                borderWidth: 1,
+                borderColor: '#ffffff33',
+              }}
+              colors={['#FFFFFF8F', '#FFFFFF00']}
+              start={{x: 1, y: 0.1}}
+              end={{x: 0.5, y: 0.5}}>
+              <Pressable style={styles.button}>
+                <Image
+                  source={assets.microphone}
+                  style={{
+                    height: 32,
+                    width: 32,
+                  }}
+                />
+              </Pressable>
+            </LinearGradient>
+            <LinearGradient
+              style={{
+                ...styles.button,
+                borderWidth: 1,
+                borderColor: '#ffffff33',
+              }}
+              colors={['#FFFFFF8F', '#FFFFFF00']}
+              start={{x: 1, y: 0.1}}
+              end={{x: 0.5, y: 0.5}}>
+              <Pressable style={styles.button}>
+                <Image
+                  source={assets.videoOff}
+                  style={{
+                    height: 32,
+                    width: 32,
+                  }}
+                />
+              </Pressable>
+            </LinearGradient>
+            <LinearGradient
+              style={{
+                ...styles.button,
+                borderWidth: 1,
+                borderColor: '#ffffff33',
+              }}
+              colors={['#FFFFFF8F', '#FFFFFF00']}
+              start={{x: 1, y: 0.1}}
+              end={{x: 0.5, y: 0.5}}>
+              <Pressable
+                onPress={() => callRef.current.hangup()}
                 style={{
-                  transform: [{rotate: '135deg'}],
-                  height: 20,
-                  width: 20,
-                }}
-              />
-            </Pressable>
+                  ...styles.button,
+                  backgroundColor: theme.COLORS.error,
+                  opacity: 1,
+                }}>
+                <Image
+                  source={assets.callEnd}
+                  style={{
+                    height: 32,
+                    width: 32,
+                  }}
+                />
+              </Pressable>
+            </LinearGradient>
           </View>
         </View>
       </SafeAreaView>
@@ -335,17 +406,18 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   bottom: {
-    paddingHorizontal: 28,
     justifyContent: 'space-between',
     flexDirection: 'row',
     marginBottom: 15,
+    backgroundColor: '#0E0E2F99',
+    padding: 20,
+    borderRadius: 24,
   },
   button: {
     height: 56,
     width: 56,
     borderRadius: 56 / 2,
-    backgroundColor: '#F5FCF9',
-    opacity: 0.16,
+
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
