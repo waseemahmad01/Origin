@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   View,
   Text,
   SafeAreaView,
+
   TextInput,
   Image,
   StyleSheet,
@@ -13,6 +14,7 @@ import theme from '../../../theme';
 import assets from '../../../assets';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { FileService } from '../../../utils/createFileService';
 
 const EditProfile = ({ navigation }) => {
   const user = useSelector(state => state.auth.user);
@@ -30,6 +32,22 @@ const EditProfile = ({ navigation }) => {
   const handleChange = (text, name) => {
     setFormData(prev => ({ ...prev, [name]: text }));
   };
+
+  const onLaunchImageLibrary = useCallback(async () => {
+    const photo = await FileService.openMediaLibrary({
+      selectionLimit: 1,
+      mediaType: 'photo',
+      // show some toast message 
+      onOpenFailureWithToastMessage: () => { },
+    })
+
+    console.log("photo file - ", photo)
+
+    if (photo && photo[0]) {
+      // setIsVisible(false)
+      console.log("photo file - ", photo)
+    }
+  }, [])
 
   return (
     <LinearGradient
@@ -53,7 +71,7 @@ const EditProfile = ({ navigation }) => {
                 source={assets.editProfileImage}
                 resizeMode="cover"
               />
-              <Pressable style={styles.addProfileImage}>
+              <Pressable onPress={onLaunchImageLibrary} style={styles.addProfileImage}>
                 <Image style={styles.addProfileImageIcon} source={assets.addProfileImage} />
               </Pressable>
             </View>
