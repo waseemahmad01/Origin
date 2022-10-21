@@ -38,7 +38,7 @@ const NftMintPackage = ({data}) => {
         </View>
         <Text style={styles.title}>{data.title}</Text>
         <View style={styles.bottom}>
-          <Text style={styles.gradientText}>${data.price}/month</Text>
+          <Text style={styles.gradientText}>GCoins {data.price}/month</Text>
           <View>
             <View style={{...styles.perks}}>
               <Image
@@ -140,9 +140,6 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   outlinedButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: theme.COLORS.primary,
     marginTop: 24,
   },
   label: {

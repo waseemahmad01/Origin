@@ -16,6 +16,7 @@ import InputField from '../../../components/InputField/InputField';
 
 import theme from '../../../theme';
 import useBiometrics from '../../../hooks/useBiometrics';
+import {verifyPassword} from '../../../api';
 
 const isIos = Platform.OS === 'ios';
 
@@ -27,6 +28,17 @@ const VerifyPassword = ({
 }) => {
   const {handleBiometric, sensorAvailable} = useBiometrics();
   const [password, setPassword] = useState('');
+  const verifyByPassword = async () => {
+    try {
+      const {data} = await verifyPassword(password);
+      if (data) {
+        setVerifyTransaction(true);
+        setVerify(false);
+      }
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
   return (
     <Modal visible={verify} animationType="fade" transparent={true}>
       <View style={styles.container}>
@@ -53,13 +65,7 @@ const VerifyPassword = ({
 
           <View style={styles.btnContainer}>
             <View style={{flexGrow: 1, marginRight: 16}}>
-              <Button
-                label="Submit"
-                onPress={() => {
-                  setVerifyTransaction(true);
-                  setVerify(false);
-                }}
-              />
+              <Button label="Submit" onPress={verifyByPassword} />
             </View>
             <View>
               {sensorAvailable && (

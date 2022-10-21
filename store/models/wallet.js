@@ -73,7 +73,7 @@ export const wallet = createModel()({
         const {data} = await sendToken(formData);
         console.log(data);
         dispatch.wallet.getBalance();
-        navigation.navigate('Transaction-success');
+        navigation.navigate('Transaction-success', {data: formData});
       } catch (err) {
         console.log(err.message);
       } finally {

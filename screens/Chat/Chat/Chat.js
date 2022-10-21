@@ -97,7 +97,8 @@ const Chat = ({route, navigation}) => {
         }
       }
       navigation.navigate('AudioCall', {
-        callee: user.phone_number,
+        callee: receiver,
+        user: chat,
         //
       });
       //

@@ -18,19 +18,22 @@ import {
 import assets from '../../../assets';
 import theme from '../../../theme';
 import {userCallHistory} from '../../../api';
+import {getImageUrl} from '../../../utils/getImageUrl';
 
 const isIos = Platform.OS === 'ios';
 
 const CallDetails = ({navigation, route}) => {
   const {callee} = route.params;
-  console.log('newxkansldv ===>', callee);
+  // console.log('newxkansldv ===>', callee);
 
   const [history, setHistory] = useState([]);
 
   const handleGetCallHistory = async () => {
     try {
-      const {data} = await userCallHistory(callee.phone_number);
-      setHistory(data);
+      console.log(callee?.receiver_number);
+      const {data} = await userCallHistory(callee?.receiver_number);
+      console.log(data);
+      setHistory([...data]);
     } catch (err) {
       console.log(err.message);
     }
@@ -41,60 +44,66 @@ const CallDetails = ({navigation, route}) => {
     }, []),
   );
   return (
-    <ImageBackground
-      resizeMode="cover"
-      source={assets.background}
-      style={{flex: 1}}>
-      <SafeAreaView style={{flex: 1}}>
-        <StatusBar translucent={true} backgroundColor="transparent" />
-        <View style={styles.header}>
-          <View style={styles.headerRow}>
-            <Pressable onPress={() => navigation.goBack()}>
-              <Image
-                source={assets.chevronLeft}
-                style={{
-                  height: 32,
-                  width: 32,
-                }}
-              />
-            </Pressable>
-            <Text style={styles.headerTitle}>Details</Text>
-            <View style={{width: 32}} />
-          </View>
-        </View>
-        <ImageBackground source={assets.bgg} style={styles.body}>
-          <View style={{...styles.transactionDetails, paddingHorizontal: 24}}>
-            <View style={{flexDirection: 'row'}}>
-              <View>
+    <>
+      <ImageBackground
+        resizeMode="cover"
+        source={assets.background}
+        style={{flex: 1}}>
+        <SafeAreaView style={{flex: 1}}>
+          <StatusBar translucent={true} backgroundColor="transparent" />
+          <View style={styles.header}>
+            <View style={styles.headerRow}>
+              <Pressable onPress={() => navigation.goBack()}>
                 <Image
-                  source={assets.user}
-                  style={{height: 48, width: 48, borderRadius: 48 / 2}}
-                  resizeMode="cover"
-                />
-              </View>
-              <View style={{marginLeft: 16}}>
-                <Text style={styles.transactionType}>{callee?.username}</Text>
-
-                <Text style={styles.transactionInfo}>
-                  {callee?.phone_number}
-                </Text>
-              </View>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <View
-                style={{
-                  ...styles.btn,
-                  marginRight: 12,
-                }}>
-                <Image
-                  source={assets.calls}
+                  source={assets.chevronLeft}
                   style={{
-                    height: 24,
-                    width: 24,
+                    height: 32,
+                    width: 32,
                   }}
                 />
+              </Pressable>
+              <Text style={styles.headerTitle}>Details</Text>
+              <View style={{width: 32}} />
+            </View>
+          </View>
+          <ImageBackground source={assets.bgg} style={styles.body}>
+            <View style={{...styles.transactionDetails, paddingHorizontal: 24}}>
+              <View style={{flexDirection: 'row'}}>
+                <View>
+                  <Image
+                    source={getImageUrl(
+                      callee?.image_url,
+                      callee?.receiver_number,
+                    )}
+                    style={{height: 48, width: 48, borderRadius: 48 / 2}}
+                    resizeMode="cover"
+                  />
+                </View>
+                <View style={{marginLeft: 16}}>
+                  <Text style={styles.transactionType}>
+                    {callee?.receiver_number}
+                  </Text>
+
+                  <Text style={styles.transactionInfo}>
+                    {callee?.receiver_number}
+                  </Text>
+                </View>
               </View>
-              <View
+              <View style={{flexDirection: 'row'}}>
+                <View
+                  style={{
+                    ...styles.btn,
+                    marginRight: 12,
+                  }}>
+                  <Image
+                    source={assets.calls}
+                    style={{
+                      height: 24,
+                      width: 24,
+                    }}
+                  />
+                </View>
+                {/* <View
                 style={{
                   ...styles.btn,
                 }}>
@@ -105,65 +114,69 @@ const CallDetails = ({navigation, route}) => {
                     width: 24,
                   }}
                 />
+              </View> */}
               </View>
             </View>
-          </View>
-          <ImageBackground
-            source={assets.containerBox}
-            style={styles.mainContainer}>
-            <ScrollView style={{flex: 1}}>
-              <Text style={styles.title}>Today</Text>
-              {history.map((call, i) => (
-                <View
-                  key={i}
-                  style={{...styles.transactionDetails, marginBottom: 24}}>
-                  <View style={{flexDirection: 'row'}}>
-                    <View
-                      style={{
-                        ...styles.iconContainer,
-                        backgroundColor: theme.COLORS.blue,
-                      }}>
-                      <Image
-                        source={assets.incomingWhite}
-                        style={{height: 24, width: 24}}
-                        resizeMode="cover"
-                      />
-                    </View>
-                    <View style={{marginLeft: 16}}>
-                      <Text
+            <ImageBackground
+              source={assets.containerBox}
+              style={styles.mainContainer}>
+              <ScrollView
+                style={{flex: 1}}
+                showsVerticalScrollIndicator={false}>
+                <Text style={styles.title}>Today</Text>
+                {history.map((call, i) => (
+                  <View
+                    key={i}
+                    style={{...styles.transactionDetails, marginBottom: 24}}>
+                    <View style={{flexDirection: 'row'}}>
+                      <View
                         style={{
-                          ...styles.transactionType,
-                          fontSize: 16,
-                          color: theme.COLORS.grey900,
+                          ...styles.iconContainer,
+                          backgroundColor: theme.COLORS.blue,
                         }}>
-                        Outgoing call
-                      </Text>
+                        <Image
+                          source={assets.incomingWhite}
+                          style={{height: 24, width: 24}}
+                          resizeMode="cover"
+                        />
+                      </View>
+                      <View style={{marginLeft: 16}}>
+                        <Text
+                          style={{
+                            ...styles.transactionType,
+                            fontSize: 16,
+                            color: theme.COLORS.grey900,
+                          }}>
+                          Outgoing call
+                        </Text>
 
-                      <Text
-                        style={{
-                          ...styles.transactionInfo,
-                          fontSize: 14,
-                          color: theme.COLORS.grey700,
-                          fontWeight: '400',
-                        }}>
-                        59 seconds . 36 GCoins
-                      </Text>
+                        <Text
+                          style={{
+                            ...styles.transactionInfo,
+                            fontSize: 14,
+                            color: theme.COLORS.grey700,
+                            fontWeight: '400',
+                          }}>
+                          {call?.call_duration} seconds .{' '}
+                          {call?.call_reward_coins} GCoins
+                        </Text>
+                      </View>
                     </View>
+                    <Text
+                      style={{
+                        ...theme.TYPOGRAPHY.body2,
+                        color: theme.COLORS.grey700,
+                      }}>
+                      1:27 PM
+                    </Text>
                   </View>
-                  <Text
-                    style={{
-                      ...theme.TYPOGRAPHY.body2,
-                      color: theme.COLORS.grey700,
-                    }}>
-                    1:27 PM
-                  </Text>
-                </View>
-              ))}
-            </ScrollView>
+                ))}
+              </ScrollView>
+            </ImageBackground>
           </ImageBackground>
-        </ImageBackground>
-      </SafeAreaView>
-    </ImageBackground>
+        </SafeAreaView>
+      </ImageBackground>
+    </>
   );
 };
 

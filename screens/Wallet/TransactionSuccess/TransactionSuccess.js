@@ -17,7 +17,9 @@ import theme from '../../../theme';
 
 const isIos = Platform.OS === 'ios';
 
-const TransactionSuccess = ({navigation}) => {
+const TransactionSuccess = ({navigation, route}) => {
+  const data = route?.params?.data;
+  console.log(data);
   return (
     <ImageBackground
       source={assets.background}
@@ -57,7 +59,8 @@ const TransactionSuccess = ({navigation}) => {
                     fontWeight: '600',
                     color: theme.COLORS.grey900,
                   }}>
-                  5.00 Gcoins
+                  {' '}
+                  {data?.amount_of_tokens} Gcoins
                 </Text>{' '}
                 to your wallet from this wallet{' '}
                 <Text
@@ -65,7 +68,7 @@ const TransactionSuccess = ({navigation}) => {
                     fontWeight: '600',
                     color: theme.COLORS.grey900,
                   }}>
-                  @johnsmith 0x...4A1F
+                  {data?.target_wallet_address}
                 </Text>
               </Text>
             </View>

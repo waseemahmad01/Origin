@@ -1,44 +1,60 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {
-  View,
-  Text,
-  SafeAreaView,
-  TextInput,
-  Image,
-  StyleSheet,
-} from 'react-native';
-import { useSelector } from 'react-redux';
+import {View, Text, SafeAreaView, Image, StyleSheet} from 'react-native';
+import {useSelector} from 'react-redux';
 import theme from '../../../theme';
 import assets from '../../../assets';
+import InputField from '../../../components/InputField/InputField';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {updatePassword, updateUser} from '../../../api';
+import Button from '../../../components/Button/Button';
 
-const EditProfile = ({ navigation }) => {
+const EditProfile = ({navigation}) => {
   const user = useSelector(state => state.auth.user);
-  const [hideOldPassword, setHideOldPassword] = useState(true)
-  const [hideNewPassword, setHideNewPassword] = useState(true)
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.username || '',
     email: user?.email || '',
     phone: user?.phone_number || '',
-    address: '',
-    old_password: '',
+    location: user?.location || '',
+    password: '',
     new_password: '',
   });
 
   const handleChange = (text, name) => {
-    setFormData(prev => ({ ...prev, [name]: text }));
+    setFormData(prev => ({...prev, [name]: text}));
+  };
+
+  const handleUpdateProfile = async () => {
+    try {
+      const {password, new_password, name, location} = formData;
+      setLoading(true);
+      const {data: profile} = await updateUser({name, location});
+      console.log(profile);
+
+      if (password && new_password) {
+        console.log('updating password');
+        const {data: res} = await updatePassword({password, new_password});
+        console.log(res);
+      }
+    } catch (err) {
+      console.log(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <LinearGradient
-      colors={["#D8E3F3", '#B8F7FC',]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}>
-      <SafeAreaView styles={{ flex: 1 }}>
+      colors={['#D8E3F3', '#B8F7FC']}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}>
+      <SafeAreaView styles={{flex: 1}}>
         <View style={[styles.header]}>
-          <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
+          <Pressable
+            hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+            onPress={() => navigation.goBack()}>
             <Image source={assets.backChat} />
           </Pressable>
           <Text style={styles.messageText}>Edit Profile</Text>
@@ -46,84 +62,86 @@ const EditProfile = ({ navigation }) => {
             <Image source={assets.settingBlue} />
           </Pressable>
         </View>
-        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
-          <KeyboardAwareScrollView contentContainerStyle={{ flex: 1 }}>
+        <LinearGradient
+          colors={['#fff', '#FEF7F7', '#FCEBEF']}
+          style={styles.body}>
+          <KeyboardAwareScrollView contentContainerStyle={{flex: 1}}>
             <View style={styles.avatarBorder}>
-              <Image
-                source={assets.editProfileImage}
-                resizeMode="cover"
-              />
+              <Image source={assets.editProfileImage} resizeMode="cover" />
               <Pressable style={styles.addProfileImage}>
-                <Image style={styles.addProfileImageIcon} source={assets.addProfileImage} />
+                <Image
+                  style={styles.addProfileImageIcon}
+                  source={assets.addProfileImage}
+                />
               </Pressable>
             </View>
-            <TextInput
+            <InputField
               placeholderColor="#8FA8BD"
               title="Annette Black"
               style={styles.input}
-              placeholder='User Name'
+              placeholder="User Name"
               value={formData.name}
               onChangeText={text => handleChange(text, 'name')}
             />
-            <TextInput
+            <InputField
               placeholderColor="#8FA8BD"
               title="annette@gmail.com"
+              editable={false}
               style={styles.input}
-              placeholder='Email'
+              placeholder="Email"
               value={formData.email}
               onChangeText={text => handleChange(text, 'email')}
             />
-            <TextInput
+            <InputField
               placeholderColor="#8FA8BD"
               title="(316) 555-0116"
-              placeholder='Phone'
+              placeholder="Phone"
+              editable={false}
               style={styles.input}
               value={formData.phone}
-              onChangeText={text => handleChange(text, 'phone')}
+              // onChangeText={text => handleChange(text, 'phone')}
             />
-            <TextInput
+            <InputField
               placeholderColor="#8FA8BD"
               title="New York, NVC"
               style={styles.input}
-              placeholder='Address'
-              value={formData.address}
-              onChangeText={text => handleChange(text, 'address')}
+              placeholder="Location"
+              value={formData.location}
+              onChangeText={text => handleChange(text, 'location')}
             />
             <View>
-              <TextInput
+              <InputField
                 placeholderColor="#8FA8BD"
                 title="Old Password"
                 style={styles.input}
-                secureTextEntry={hideOldPassword}
-                placeholder='Old Password'
-                value={formData.old_password}
-                onChangeText={text => handleChange(text, 'old_password')}
+                secureTextEntry
+                placeholder="Old Password"
+                value={formData.password}
+                onChangeText={text => handleChange(text, 'password')}
               />
-              <Pressable style={styles.showPassword} onPress={() => setHideOldPassword(!hideOldPassword)}>
-                <Image source={assets.showPassword} />
-              </Pressable>
             </View>
             <View>
-              <TextInput
+              <InputField
                 placeholderColor="#8FA8BD"
                 title="New Password"
-                placeholder='New Password'
+                placeholder="New Password"
+                secureTextEntry
                 style={styles.input}
-                secureTextEntry={hideNewPassword}
                 value={formData.new_password}
                 onChangeText={text => handleChange(text, 'new_password')}
               />
-              <Pressable style={styles.showPassword} onPress={() => setHideNewPassword(!hideNewPassword)}>
-                <Image source={assets.showPassword} />
-              </Pressable>
             </View>
-            <View style={styles.saveButton}>
-              <Text style={[styles.textNormal, { color: 'white' }]}>Save update</Text>
-            </View>
+
+            <Button
+              style={{marginTop: 20}}
+              label="Save Update"
+              loading={loading}
+              onPress={handleUpdateProfile}
+            />
           </KeyboardAwareScrollView>
         </LinearGradient>
-      </SafeAreaView >
-    </LinearGradient >
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
@@ -159,14 +177,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#2C3482',
     fontFamily: 'Inter',
-    marginLeft: 5
+    marginLeft: 5,
   },
   body: {
     height: '100%',
     padding: 24,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    marginTop: -10
+    marginTop: -10,
   },
   avatarBorder: {
     alignSelf: 'center',
@@ -185,7 +203,7 @@ const styles = StyleSheet.create({
   },
   addProfileImageIcon: {
     height: 30,
-    width: 30
+    width: 30,
   },
   avatar: {
     height: 75,
@@ -278,8 +296,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     width: '100%',
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
-
-

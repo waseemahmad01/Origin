@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 
 import LinearGradient from 'react-native-linear-gradient';
 import {LinearTextGradient} from 'react-native-text-gradient';
 import IconButton from '../../../components/IconButton/IconButton';
 import TransactionsTab from './TransactionsTab';
 import {useSelector, useDispatch} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 
 import {
   View,
@@ -83,9 +84,16 @@ const Wallet = ({navigation}) => {
     dispatch.wallet.addTokens({formData, setAdd});
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      dispatch.wallet.getBalance();
+      console.log('console.log');
+    }, []),
+  );
+
   useEffect(() => {
-    dispatch.wallet.getBalance();
     dispatch.users.getAllUsers();
+    console.log('runnning walllet');
   }, []);
 
   return (

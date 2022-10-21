@@ -1,6 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { navigate } from '../utils/RootNavigation';
+import {navigate} from '../utils/RootNavigation';
 
 const api = axios.create({
   baseURL: 'http://3.83.29.205:5001/',
@@ -27,8 +27,8 @@ api.interceptors.response.use(
   },
   error => {
     if (error?.response?.status === 401) {
-      navigate('Login');
       AsyncStorage.clear();
+      navigate('Login');
     }
     return Promise.reject(error);
   },
@@ -136,4 +136,25 @@ export const callHistory = () => api.get('/v1/voxim/call-history');
 // get user call history
 
 export const userCallHistory = number =>
-  api.get(`/v1/voxim/call-history?phone_number=${number}`);
+  api.get(`/v1/voxim/call-history/${number}`);
+
+// claim reward
+
+export const claimReward = id =>
+  api.post('/v1/account/claim-call-reward', {callId: id});
+
+// verify password
+
+export const verifyPassword = password =>
+  api.post('/v1/auth/verify-by-password', {
+    password,
+  });
+
+// updated user data
+
+export const updateUser = data => api.patch('/v1/user/profile', data);
+
+// update password
+
+export const updatePassword = data =>
+  api.patch('/v1/user/update-password', data);
