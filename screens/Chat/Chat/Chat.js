@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ImageBackground, KeyboardAvoidingView } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, {useEffect, useRef, useState} from 'react';
+import {ImageBackground, KeyboardAvoidingView} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 
 import {
@@ -20,10 +20,10 @@ import ChatMessage from '../../../components/ChatMessage/ChatMessage';
 import theme from '../../../theme';
 import assets from '../../../assets';
 // import IconButton from '../../../components/IconButton/IconButton';
-import { getAllSMS } from '../../../api';
-import { truncateString } from '../../../utils';
-import { getImageUrl } from '../../../utils/getImageUrl';
-import { useDispatch, useSelector } from 'react-redux';
+import {getAllSMS} from '../../../api';
+import {truncateString} from '../../../utils';
+import {getImageUrl} from '../../../utils/getImageUrl';
+import {useDispatch, useSelector} from 'react-redux';
 
 const isIos = Platform.OS === 'ios';
 
@@ -31,13 +31,13 @@ const KEYBOARD_AVOID_VIEW_BEHAVIOR = Platform.select({
   ios: 'padding',
   default: undefined,
 });
-const Chat = ({ route, navigation }) => {
+const Chat = ({route, navigation}) => {
   const [allSMS, setSMS] = useState([]);
   const dispatch = useDispatch();
   const scrollRef = useRef();
   const user = useSelector(state => state.auth.user);
   const users = useSelector(state => state.users.users);
-  const { bottom } = useSafeAreaInsets();
+  const {bottom} = useSafeAreaInsets();
   const chat = route?.params?.chat;
   const isChat = route?.params?.isChat;
 
@@ -73,15 +73,10 @@ const Chat = ({ route, navigation }) => {
     console.log('number', chatId);
 
     try {
-<<<<<<< HEAD
       const {data} = await getAllSMS(chatId);
       console.log('chat messages', data);
-=======
-      const { data } = await getAllSMS(chatId);
-      console.log("send api - ", chatId)
->>>>>>> 54893cf052648167f16306d64e6a5b2f2a7bb3b0
       setSMS(data);
-      scrollRef.current?.scrollToEnd({ animated, offset: 0 });
+      scrollRef.current?.scrollToEnd({animated, offset: 0});
     } catch (err) {
       console.log('error - ', err);
     }
@@ -122,10 +117,10 @@ const Chat = ({ route, navigation }) => {
     <ImageBackground
       style={[StyleSheet.absoluteFill, styles.background]}
       source={assets.background}>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{flex: 1}}>
         <View style={styles.header}>
           <Pressable
-            hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }}
+            hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
             onPress={() => navigation.goBack()}>
             <Image source={assets.backChat} />
           </Pressable>
@@ -133,16 +128,16 @@ const Chat = ({ route, navigation }) => {
             <View>
               <Image
                 source={getImageUrl(chat?.image_url, chat?.username)}
-                style={{ height: 56, width: 56, borderRadius: 100 }}
+                style={{height: 56, width: 56, borderRadius: 100}}
                 resizeMode="cover"
               />
               <View style={styles.onlineIndicator}></View>
             </View>
-            <View style={{ marginLeft: 16 }}>
+            <View style={{marginLeft: 16}}>
               <Text
                 style={[
                   styles.userMetrics,
-                  { marginBottom: 5, fontWeight: '600', fontSize: 16 },
+                  {marginBottom: 5, fontWeight: '600', fontSize: 16},
                 ]}>
                 {chat?.username ? `@${chat?.username}` : receiver}
               </Text>
@@ -151,7 +146,7 @@ const Chat = ({ route, navigation }) => {
               </Text>
             </View>
           </View>
-          <View style={{ flex: 1 }} />
+          <View style={{flex: 1}} />
           <View style={styles.userInfo}>
             <Pressable
               onPress={() => {
@@ -172,7 +167,7 @@ const Chat = ({ route, navigation }) => {
           <ScrollView
             style={styles.scrollView}
             scrollRef={scrollRef}
-            contentContainerStyle={{ paddingBottom: 100 }}
+            contentContainerStyle={{paddingBottom: 100}}
             showsVerticalScrollIndicator={false}>
             {allSMS.map((sms, index) => (
               <ChatMessage
@@ -185,7 +180,7 @@ const Chat = ({ route, navigation }) => {
         </LinearGradient>
       </SafeAreaView>
       <KeyboardAvoidingView behavior={KEYBOARD_AVOID_VIEW_BEHAVIOR}>
-        <View style={[styles.inputContainer, { paddingBottom: bottom - 12 }]}>
+        <View style={[styles.inputContainer, {paddingBottom: bottom - 12}]}>
           <ChatInput refreshChat={_getAllSMS} sendTo={receiver} />
         </View>
       </KeyboardAvoidingView>
