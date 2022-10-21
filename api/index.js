@@ -159,3 +159,12 @@ export const updateUser = data => api.patch('/v1/user/profile', data);
 
 export const updatePassword = data =>
   api.patch('/v1/user/update-password', data);
+
+// add profile
+
+export const addProfile = data => api.put('/v1/user/profile', data);
+
+// transaction History
+
+export const transactionHistory = () =>
+  api.get('/v1/account/etherscan/transactions');

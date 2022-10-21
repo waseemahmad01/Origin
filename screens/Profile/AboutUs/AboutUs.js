@@ -7,6 +7,8 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
@@ -14,23 +16,35 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import assets from '../../../assets';
 import theme from '../../../theme';
 
-const AboutUs = ({ navigation }) => {
+const isIos = Platform.OS === 'ios';
+
+const AboutUs = ({navigation}) => {
   return (
     <LinearGradient
-      colors={["#D8E3F3", '#B8F7FC',]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}>
-      <SafeAreaView styles={{ flex: 1 }} >
-        <View style={[styles.header]}>
-          <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
+      colors={['#D8E3F3', '#B8F7FC']}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}>
+      <SafeAreaView styles={{flex: 1}}>
+        <View
+          style={[
+            styles.header,
+            {paddingTop: isIos ? 31 : 31 + StatusBar.currentHeight},
+          ]}>
+          <Pressable
+            hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+            onPress={() => navigation.goBack()}>
             <Image source={assets.backChat} />
           </Pressable>
           <Text style={styles.messageText}>About Us</Text>
           <View></View>
         </View>
-        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
-          <View style={{ flex: 1 }}>
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flex: 1, paddingBottom: 200 }}>
+        <LinearGradient
+          colors={['#fff', '#FEF7F7', '#FCEBEF']}
+          style={styles.body}>
+          <View style={{flex: 1}}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{flex: 1, paddingBottom: 200}}>
               <Text style={styles.title}>Know about freedom app</Text>
               <Image
                 source={assets.aboutImage}
@@ -40,18 +54,19 @@ const AboutUs = ({ navigation }) => {
                 }}
                 resizeMode="cover"
               />
-              <Text style={{ ...styles.subtitle, marginTop: 24, marginBottom: 20 }}>
-                It is a long established fact that a reader will be distracted by
-                the readable content of a page when looking at its layout. The
-                point of using lorem ipsum is that it has a more normal
+              <Text
+                style={{...styles.subtitle, marginTop: 24, marginBottom: 20}}>
+                It is a long established fact that a reader will be distracted
+                by the readable content of a page when looking at its layout.
+                The point of using lorem ipsum is that it has a more normal
                 distribution.
               </Text>
-              <Text style={{ ...styles.title, marginBottom: 12 }}>Chatting</Text>
-              <Text style={{ ...styles.subtitle }}>
-                It is a long established fact that a reader will be distracted by
-                the readable content of a page when looking.
+              <Text style={{...styles.title, marginBottom: 12}}>Chatting</Text>
+              <Text style={{...styles.subtitle}}>
+                It is a long established fact that a reader will be distracted
+                by the readable content of a page when looking.
               </Text>
-              <Text style={{ ...styles.subtitle, marginTop: 20 }}>
+              <Text style={{...styles.subtitle, marginTop: 20}}>
                 The point of using lorem ipsum is that it has a more normal
                 distribution.
               </Text>
@@ -85,14 +100,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#2C3482',
     fontFamily: 'Inter',
-    marginRight: 15
+    marginRight: 15,
   },
   body: {
     height: '100%',
     padding: 24,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    marginTop: -10
+    marginTop: -10,
   },
   headTitle: {
     ...theme.TYPOGRAPHY.h3,
@@ -132,4 +147,3 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
 });
-

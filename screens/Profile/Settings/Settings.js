@@ -19,23 +19,31 @@ import theme from '../../../theme';
 
 const isIos = Platform.OS === 'ios';
 
-const Settings = ({ navigation }) => {
+const Settings = ({navigation}) => {
   return (
     <LinearGradient
-      colors={["#D8E3F3", '#B8F7FC',]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}>
-      <SafeAreaView styles={{ flex: 1 }} >
-        <View style={[styles.header]}>
-          <Pressable hitSlop={{ top: 15, right: 15, bottom: 15, left: 15 }} onPress={() => navigation.goBack()}>
+      colors={['#D8E3F3', '#B8F7FC']}
+      start={{x: 0, y: 0}}
+      end={{x: 1, y: 0}}>
+      <SafeAreaView styles={{flex: 1}}>
+        <View
+          style={[
+            styles.header,
+            {paddingTop: isIos ? 31 : 31 + StatusBar.currentHeight},
+          ]}>
+          <Pressable
+            hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
+            onPress={() => navigation.goBack()}>
             <Image source={assets.backChat} />
           </Pressable>
           <Text style={styles.messageText}>Settings</Text>
           <View></View>
         </View>
-        <LinearGradient colors={['#fff', "#FEF7F7", '#FCEBEF',]} style={styles.body}>
+        <LinearGradient
+          colors={['#fff', '#FEF7F7', '#FCEBEF']}
+          style={styles.body}>
           <ScrollView>
-            <View style={{ ...styles.row }}>
+            {/* <View style={{ ...styles.row }}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View style={styles.iconContainer}>
                   <Image source={assets.settingShow} />
@@ -78,38 +86,33 @@ const Settings = ({ navigation }) => {
               <Image
                 source={assets.arrowRight}
               />
-            </Pressable>
+            </Pressable> */}
             <Pressable
               onPress={() => navigation.navigate('Help')}
-              style={{ ...styles.row }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              style={{...styles.row}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={styles.iconContainer}>
                   <Image source={assets.settingHelp} />
                 </View>
                 <Text style={styles.text}>Help</Text>
               </View>
-              <Image
-                source={assets.arrowRight}
-              />
+              <Image source={assets.arrowRight} />
             </Pressable>
             <Pressable
               onPress={() => navigation.navigate('About')}
-              style={{ ...styles.row }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              style={{...styles.row}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View style={styles.iconContainer}>
-                  <Image
-                    source={assets.settingInfo}
-                  />
+                  <Image source={assets.settingInfo} />
                 </View>
                 <Text style={styles.text}>About us</Text>
               </View>
-              <Image
-                source={assets.arrowRight} />
+              <Image source={assets.arrowRight} />
             </Pressable>
-            <Pressable
-              style={{ ...styles.row }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View style={[styles.iconContainer, { backgroundColor: '#F43C3C' }]}>
+            <Pressable style={{...styles.row}}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View
+                  style={[styles.iconContainer, {backgroundColor: '#F43C3C'}]}>
                   <Image source={assets.settingLogout} />
                 </View>
                 <Text style={styles.text}>Log out</Text>
@@ -118,7 +121,7 @@ const Settings = ({ navigation }) => {
           </ScrollView>
         </LinearGradient>
       </SafeAreaView>
-    </LinearGradient >
+    </LinearGradient>
   );
 };
 
@@ -144,14 +147,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#2C3482',
     fontFamily: 'Inter',
-    marginRight: 15
+    marginRight: 15,
   },
   body: {
     height: '100%',
     padding: 24,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    marginTop: -10
+    marginTop: -10,
   },
   row: {
     flexDirection: 'row',

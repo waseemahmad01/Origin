@@ -1,4 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {ethers} from 'ethers';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 import {
   View,
@@ -8,23 +11,37 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
+
+import {useSelector, useDispatch} from 'react-redux';
+
 import assets from '../../../assets';
 import theme from '../../../theme';
+import {truncateString} from '../../../utils';
 
-const data = [1, 2, 3, 4, 5, 6, 7];
+dayjs.extend(utc);
 
 const TransactionsTab = () => {
+  const dispatch = useDispatch();
+  const transactions = useSelector(
+    state => state.transactions.transactionHistory,
+  );
+  const wallet = useSelector(state => state.wallet.publicAddress);
+  // console.log(transactions);
+  // console.log('wallet Address', wallet);
+  useEffect(() => {
+    dispatch.transactions.getTransactionHistroy();
+  }, []);
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>
-          {data.length === 0
+          {transactions.length === 0
             ? "You don't have any transactions here"
             : 'Yesterday '}
         </Text>
-        {data.map(i => (
+        {transactions.map((tx, i) => (
           <View style={styles.transactionDetails} key={i}>
             <View style={{flexDirection: 'row'}}>
               <ImageBackground
@@ -37,24 +54,31 @@ const TransactionsTab = () => {
                 />
               </ImageBackground>
               <View style={{marginLeft: 16}}>
-                <Text style={styles.transactionType}>Send</Text>
+                <Text style={styles.transactionType}>
+                  {tx.from.toLowerCase() === wallet.toLowerCase()
+                    ? 'Send'
+                    : 'Recieve'}
+                </Text>
                 <View style={{flexDirection: 'row'}}>
                   <Text
                     style={{
                       ...styles.transactionInfo,
                       color: theme.COLORS.blue,
                     }}>
-                    Sep 20
+                    {dayjs.unix(tx.timeStamp).utc().format('MMM DD').toString()}
                   </Text>
                   <Text style={styles.transactionInfo}>
                     {' '}
-                    . From: 0x5574a...e3af
+                    . From: {truncateString(tx.from)}
                   </Text>
                 </View>
               </View>
             </View>
             <View>
-              <Text style={styles.amount}>+0.25</Text>
+              <Text style={styles.amount}>
+                {tx.from.toLowerCase() === wallet.toLowerCase() ? '-' : '+'}{' '}
+                {ethers.utils.formatEther(tx.value)}
+              </Text>
             </View>
           </View>
         ))}

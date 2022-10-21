@@ -1,24 +1,31 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {
   View,
   Text,
   SafeAreaView,
-  TextInput,
   Image,
   StyleSheet,
+  StatusBar,
+  Platform,
+  ScrollView,
+  ImageBackground,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import theme from '../../../theme';
 import assets from '../../../assets';
 import InputField from '../../../components/InputField/InputField';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {updatePassword, updateUser} from '../../../api';
+import {FileService} from '../../../utils/createFileService';
+import {addProfile, updatePassword, updateUser} from '../../../api';
 import Button from '../../../components/Button/Button';
 
+const isIos = Platform.OS === 'ios';
+
 const EditProfile = ({navigation}) => {
+  const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
+  const [image, setImage] = useState(user?.image_url);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.username || '',
@@ -35,8 +42,14 @@ const EditProfile = ({navigation}) => {
 
   const handleUpdateProfile = async () => {
     try {
-      const {password, new_password, name, location} = formData;
       setLoading(true);
+      if (typeof image === 'object') {
+        const upload = new FormData();
+        upload.append('image', image);
+        await addProfile(upload);
+      }
+      const {password, new_password, name, location} = formData;
+
       const {data: profile} = await updateUser({name, location});
       console.log(profile);
 
@@ -45,6 +58,7 @@ const EditProfile = ({navigation}) => {
         const {data: res} = await updatePassword({password, new_password});
         console.log(res);
       }
+      dispatch.auth.getUserData();
     } catch (err) {
       console.log(err.message);
     } finally {
@@ -64,17 +78,19 @@ const EditProfile = ({navigation}) => {
 
     if (photo && photo[0]) {
       // setIsVisible(false)
+      setImage(photo[0]);
       console.log('photo file - ', photo);
     }
   }, []);
 
   return (
-    <LinearGradient
-      colors={['#D8E3F3', '#B8F7FC']}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 0}}>
-      <SafeAreaView styles={{flex: 1}}>
-        <View style={[styles.header]}>
+    <ImageBackground source={assets.background} style={{flex: 1}}>
+      <SafeAreaView style={{flexGrow: 1}}>
+        <View
+          style={[
+            styles.header,
+            {paddingTop: isIos ? 31 : 31 + StatusBar.currentHeight},
+          ]}>
           <Pressable
             hitSlop={{top: 15, right: 15, bottom: 15, left: 15}}
             onPress={() => navigation.goBack()}>
@@ -85,13 +101,23 @@ const EditProfile = ({navigation}) => {
             <Image source={assets.settingBlue} />
           </Pressable>
         </View>
-        <LinearGradient
-          colors={['#fff', '#FEF7F7', '#FCEBEF']}
-          style={styles.body}>
-          <KeyboardAwareScrollView contentContainerStyle={{flex: 1}}>
-            <View style={styles.avatarBorder}>
-              <Image source={assets.editProfileImage} resizeMode="cover" />
-              <Pressable style={styles.addProfileImage}>
+        <ImageBackground source={assets.containerBox} style={styles.body}>
+          <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+            <View style={{...styles.avatarBorder, marginTop: 20}}>
+              <Image
+                source={
+                  typeof image === 'string' ? {uri: image} : {uri: image?.uri}
+                }
+                style={{
+                  width: 120,
+                  height: 120,
+                  borderRadius: 120 / 2,
+                }}
+                resizeMode="cover"
+              />
+              <Pressable
+                onPress={onLaunchImageLibrary}
+                style={styles.addProfileImage}>
                 <Image
                   style={styles.addProfileImageIcon}
                   source={assets.addProfileImage}
@@ -161,10 +187,11 @@ const EditProfile = ({navigation}) => {
               loading={loading}
               onPress={handleUpdateProfile}
             />
-          </KeyboardAwareScrollView>
-        </LinearGradient>
+          </ScrollView>
+        </ImageBackground>
       </SafeAreaView>
-    </LinearGradient>
+      <View style={styles.hider} />
+    </ImageBackground>
   );
 };
 
@@ -184,7 +211,7 @@ const styles = StyleSheet.create({
   header: {
     marginHorizontal: 24,
     marginTop: 10,
-    marginBottom: 30,
+    marginBottom: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -203,11 +230,13 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   body: {
-    height: '100%',
+    flexGrow: 1,
     padding: 24,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    marginTop: -10,
+    overflow: 'hidden',
+    zIndex: 2,
+    elevation: 4,
   },
   avatarBorder: {
     alignSelf: 'center',
@@ -320,5 +349,14 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  hider: {
+    position: 'absolute',
+    backgroundColor: theme.COLORS.white,
+    bottom: 0,
+    width: '100%',
+    height: 35,
+    opacity: 0.25,
+    zIndex: 0,
   },
 });
