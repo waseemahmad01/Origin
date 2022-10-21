@@ -1,6 +1,13 @@
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {View, Text, SafeAreaView, Image, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  TextInput,
+  Image,
+  StyleSheet,
+} from 'react-native';
 import {useSelector} from 'react-redux';
 import theme from '../../../theme';
 import assets from '../../../assets';
@@ -44,6 +51,22 @@ const EditProfile = ({navigation}) => {
       setLoading(false);
     }
   };
+
+  const onLaunchImageLibrary = useCallback(async () => {
+    const photo = await FileService.openMediaLibrary({
+      selectionLimit: 1,
+      mediaType: 'photo',
+      // show some toast message
+      onOpenFailureWithToastMessage: () => {},
+    });
+
+    console.log('photo file - ', photo);
+
+    if (photo && photo[0]) {
+      // setIsVisible(false)
+      console.log('photo file - ', photo);
+    }
+  }, []);
 
   return (
     <LinearGradient

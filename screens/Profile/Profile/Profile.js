@@ -7,7 +7,6 @@ import {
   Image,
   StyleSheet,
   ImageBackground,
-  Platform,
   Dimensions,
 } from 'react-native';
 
@@ -21,6 +20,7 @@ const { width, } = Dimensions.get('window');
 
 const Profile = ({ navigation }) => {
   const user = useSelector(state => state.auth.user);
+
 
   return (
     <ImageBackground style={[StyleSheet.absoluteFill, styles.background]} source={assets.profileBG}>
