@@ -6,6 +6,8 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
+    "generate-apk": "cd android && ./gradlew clean && ./gradlew assembleRelease && cd ..",
+    "run-apk": "cd android && adb install -r ./app/build/outputs/apk/release/app-release.apk && cd ..",
     "test": "jest",
     "lint": "eslint ."
   },
